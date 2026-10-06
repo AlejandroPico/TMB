@@ -60,7 +60,7 @@ for (const city of cities)
         assert(
           n.routes[t[0]] &&
             s.services[t[1]] &&
-            n.shapes[t[2]]?.length >= 2 &&
+            Array.isArray(n.shapes[t[2]]) &&
             s.heads[t[3]] !== undefined,
         );
         const p = s.patterns[t[4]];
@@ -71,7 +71,18 @@ for (const city of cities)
           if (k) assert(p[2][k - 1] <= p[1][k]);
         });
       }
-      assert.equal(dayTrips(s, "2030-01-01").length, 0);
+      const last = s.services
+        .flatMap((service) => [
+          ...service.dates,
+          ...(service.calendar ? [service.calendar[1]] : []),
+        ])
+        .sort()
+        .at(-1);
+      const beyond = new Date(
+        `${last.slice(0, 4)}-${last.slice(4, 6)}-${last.slice(6, 8)}T12:00:00Z`,
+      );
+      beyond.setUTCDate(beyond.getUTCDate() + 2);
+      assert.equal(dayTrips(s, beyond.toISOString().slice(0, 10)).length, 0);
     },
   );
 test("extended GTFS types and FGC rail override match their transport group", () => {

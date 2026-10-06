@@ -1,0 +1,160 @@
+{
+  "generatedAt": "2026-10-06T08:12:56.709773+00:00",
+  "policy": "No stop-to-stop fallback. Missing shapes are empty and are neither drawn nor animated. Rail-network alignments are inferred infrastructure paths, not operator-confirmed service itineraries.",
+  "cities": [
+    {
+      "id": "almeria",
+      "shapes": 62,
+      "unavailableShapes": 1,
+      "scheduledTripsByGeometry": {
+        "ctan-almeria": {
+          "gtfs": 734,
+          "missing": 1
+        }
+      }
+    },
+    {
+      "id": "barcelona",
+      "shapes": 328,
+      "unavailableShapes": 0,
+      "scheduledTripsByGeometry": {
+        "tmb": {
+          "gtfs": 57105
+        },
+        "fgc": {
+          "gtfs": 13518
+        }
+      }
+    },
+    {
+      "id": "cadiz",
+      "shapes": 127,
+      "unavailableShapes": 0,
+      "scheduledTripsByGeometry": {
+        "ctan-cadiz": {
+          "gtfs": 1249
+        }
+      }
+    },
+    {
+      "id": "cordoba",
+      "shapes": 22,
+      "unavailableShapes": 0,
+      "scheduledTripsByGeometry": {
+        "ctan-cordoba": {
+          "gtfs": 220
+        }
+      }
+    },
+    {
+      "id": "espana",
+      "shapes": 1125,
+      "unavailableShapes": 145,
+      "scheduledTripsByGeometry": {
+        "renfe": {
+          "rail-network": 6502,
+          "missing": 994
+        },
+        "cercanias": {
+          "gtfs": 105231,
+          "rail-network": 804
+        }
+      }
+    },
+    {
+      "id": "gibraltar",
+      "shapes": 25,
+      "unavailableShapes": 0,
+      "scheduledTripsByGeometry": {
+        "ctan-gibraltar": {
+          "gtfs": 521
+        }
+      }
+    },
+    {
+      "id": "granada",
+      "shapes": 137,
+      "unavailableShapes": 0,
+      "scheduledTripsByGeometry": {
+        "ctan-granada": {
+          "gtfs": 3155
+        }
+      }
+    },
+    {
+      "id": "huelva",
+      "shapes": 75,
+      "unavailableShapes": 0,
+      "scheduledTripsByGeometry": {
+        "ctan-huelva": {
+          "gtfs": 563
+        }
+      }
+    },
+    {
+      "id": "jaen",
+      "shapes": 75,
+      "unavailableShapes": 0,
+      "scheduledTripsByGeometry": {
+        "ctan-jaen": {
+          "gtfs": 465
+        }
+      }
+    },
+    {
+      "id": "madrid",
+      "shapes": 508,
+      "unavailableShapes": 0,
+      "scheduledTripsByGeometry": {
+        "metro-madrid": {
+          "gtfs": 120
+        },
+        "emt": {
+          "gtfs": 86871
+        },
+        "ml-madrid": {
+          "gtfs": 3001
+        }
+      }
+    },
+    {
+      "id": "malaga",
+      "shapes": 182,
+      "unavailableShapes": 0,
+      "scheduledTripsByGeometry": {
+        "ctan-malaga": {
+          "gtfs": 3084
+        }
+      }
+    },
+    {
+      "id": "sevilla",
+      "shapes": 450,
+      "unavailableShapes": 0,
+      "scheduledTripsByGeometry": {
+        "tussam": {
+          "municipal": 27845
+        },
+        "metro-sevilla": {
+          "osm-route": 104
+        },
+        "ctas": {
+          "gtfs": 4621
+        }
+      }
+    },
+    {
+      "id": "zaragoza",
+      "shapes": 89,
+      "unavailableShapes": 0,
+      "scheduledTripsByGeometry": {
+        "avanza-zaragoza": {
+          "gtfs": 29320
+        },
+        "tranvia-zaragoza": {
+          "gtfs": 5107
+        }
+      }
+    }
+  ]
+}

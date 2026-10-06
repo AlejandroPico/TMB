@@ -17,7 +17,7 @@
           "source": "https://files.mobilitydatabase.org/mdb-2359/mdb-2359-202610030154/mdb-2359-202610030154.zip",
           "website": "https://developer.tmb.cat/",
           "license": "https://developer.tmb.cat/docs/terms-conditions",
-          "fetchedAt": "2026-10-06T06:31:28.678363+00:00",
+          "fetchedAt": "2026-10-06T07:58:45.775115+00:00",
           "version": "082602102026002",
           "start": "20261002",
           "end": "20270529",
@@ -28,7 +28,10 @@
           "skippedTrips": 0,
           "approximateShapes": 0,
           "timezone": "Europe/Madrid",
-          "frequencyPolicy": "expand"
+          "frequencyPolicy": "expand",
+          "originalMissingShapes": 0,
+          "missingShapes": 0,
+          "reconstructedShapes": 0
         },
         {
           "id": "fgc",
@@ -36,7 +39,7 @@
           "source": "https://www.fgc.cat/google/google_transit.zip",
           "website": "https://dadesobertes.fgc.cat/",
           "license": "https://creativecommons.org/licenses/by/4.0/",
-          "fetchedAt": "2026-10-06T06:31:30.271850+00:00",
+          "fetchedAt": "2026-10-06T07:58:48.317586+00:00",
           "version": "2026-10-02T13:25:51+02:00_not tagged",
           "start": "20240101",
           "end": "20261231",
@@ -47,7 +50,10 @@
           "skippedTrips": 0,
           "approximateShapes": 0,
           "timezone": "Europe/Madrid",
-          "frequencyPolicy": "expand"
+          "frequencyPolicy": "expand",
+          "originalMissingShapes": 0,
+          "missingShapes": 0,
+          "reconstructedShapes": 0
         }
       ],
       "source": "https://developer.tmb.cat/",
@@ -78,7 +84,7 @@
           "source": "https://www.arcgis.com/sharing/rest/content/items/5c7f2951962540d69ffe8f640d94c246/data",
           "website": "https://datos.crtm.es/",
           "license": "https://www.crtm.es/licencia-de-uso",
-          "fetchedAt": "2026-10-06T06:21:30.908313+00:00",
+          "fetchedAt": "2026-10-06T07:58:49.522609+00:00",
           "version": "20250527",
           "start": "20250101",
           "end": "20260527",
@@ -89,7 +95,10 @@
           "skippedTrips": 0,
           "approximateShapes": 0,
           "timezone": "Europe/Madrid",
-          "frequencyPolicy": "expand"
+          "frequencyPolicy": "expand",
+          "originalMissingShapes": 0,
+          "missingShapes": 0,
+          "reconstructedShapes": 0
         },
         {
           "id": "emt",
@@ -97,7 +106,7 @@
           "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip",
           "website": "https://datos.emtmadrid.es/",
           "license": "https://www.crtm.es/licencia-de-uso",
-          "fetchedAt": "2026-10-06T06:22:04.845288+00:00",
+          "fetchedAt": "2026-10-06T07:59:15.890974+00:00",
           "version": "61328df991ef",
           "start": "20261005",
           "end": "20261231",
@@ -108,7 +117,10 @@
           "skippedTrips": 0,
           "approximateShapes": 0,
           "timezone": "Europe/Madrid",
-          "frequencyPolicy": "scheduled"
+          "frequencyPolicy": "scheduled",
+          "originalMissingShapes": 0,
+          "missingShapes": 0,
+          "reconstructedShapes": 0
         },
         {
           "id": "ml-madrid",
@@ -116,7 +128,7 @@
           "source": "https://www.arcgis.com/sharing/rest/content/items/aaed26cc0ff64b0c947ac0bc3e033196/data",
           "website": "https://datos.crtm.es/",
           "license": "https://www.crtm.es/licencia-de-uso",
-          "fetchedAt": "2026-10-06T06:22:06.092034+00:00",
+          "fetchedAt": "2026-10-06T07:59:16.850184+00:00",
           "version": "20260722",
           "start": "20260101",
           "end": "20270722",
@@ -127,7 +139,10 @@
           "skippedTrips": 0,
           "approximateShapes": 0,
           "timezone": "Europe/Madrid",
-          "frequencyPolicy": "expand"
+          "frequencyPolicy": "expand",
+          "originalMissingShapes": 0,
+          "missingShapes": 0,
+          "reconstructedShapes": 0
         }
       ],
       "source": "https://datos.crtm.es/",
@@ -158,7 +173,7 @@
           "source": "https://files.mobilitydatabase.org/mdb-2770/mdb-2770-202609300035/mdb-2770-202609300035.zip",
           "website": "https://www.tussam.es/",
           "license": "https://nap.transportes.gob.es/licencia-datos",
-          "fetchedAt": "2026-10-06T06:15:06.356498+00:00",
+          "fetchedAt": "2026-10-06T08:05:24.881696+00:00",
           "version": "20260928",
           "start": "20260928",
           "end": "20270117",
@@ -167,8 +182,15 @@
           "stops": 1055,
           "trips": 27845,
           "skippedTrips": 0,
-          "approximateShapes": 225,
-          "timezone": "Europe/Madrid"
+          "approximateShapes": 0,
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand",
+          "missingShapes": 0,
+          "reconstructedShapes": 225,
+          "geometrySources": [
+            "https://services1.arcgis.com/hcmP7kr0Cx3AcTJk/arcgis/rest/services/TUSSAM_Lineas/FeatureServer/0"
+          ],
+          "originalMissingShapes": 225
         },
         {
           "id": "metro-sevilla",
@@ -176,7 +198,7 @@
           "source": "https://files.mobilitydatabase.org/mdb-2781/mdb-2781-202604160110/mdb-2781-202604160110.zip",
           "website": "https://www.metro-sevilla.es/",
           "license": "https://nap.transportes.gob.es/licencia-datos",
-          "fetchedAt": "2026-10-06T06:15:06.444498+00:00",
+          "fetchedAt": "2026-10-06T08:05:27.635450+00:00",
           "version": "2.13",
           "start": "20250101",
           "end": "20261231",
@@ -185,8 +207,15 @@
           "stops": 21,
           "trips": 104,
           "skippedTrips": 0,
-          "approximateShapes": 4,
-          "timezone": "Europe/Madrid"
+          "approximateShapes": 0,
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand",
+          "missingShapes": 0,
+          "reconstructedShapes": 4,
+          "geometrySources": [
+            "https://www.openstreetmap.org/relation/255088"
+          ],
+          "originalMissingShapes": 4
         },
         {
           "id": "ctas",
@@ -194,7 +223,7 @@
           "source": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip",
           "website": "https://api.ctan.es/",
           "license": "https://api.ctan.es/avisolegal.html",
-          "fetchedAt": "2026-10-06T06:15:09.585583+00:00",
+          "fetchedAt": "2026-10-06T08:05:31.130222+00:00",
           "version": "3d70c9fa54fa",
           "start": "20200914",
           "end": "20270711",
@@ -204,7 +233,11 @@
           "trips": 4621,
           "skippedTrips": 0,
           "approximateShapes": 0,
-          "timezone": "Europe/Madrid"
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand",
+          "originalMissingShapes": 0,
+          "missingShapes": 0,
+          "reconstructedShapes": 0
         }
       ],
       "source": "https://api.ctan.es/",
@@ -235,7 +268,7 @@
           "source": "https://files.mobilitydatabase.org/mdb-2773/mdb-2773-202607010006/mdb-2773-202607010006.zip",
           "website": "https://www.zaragoza.es/web/espacio-de-datos/servicio/catalogo/335",
           "license": "https://nap.transportes.gob.es/licencia-datos",
-          "fetchedAt": "2026-10-06T06:15:17.885651+00:00",
+          "fetchedAt": "2026-10-06T07:59:45.567351+00:00",
           "version": "20260623_AUZSA_Y_TRANVIA",
           "start": "20260623",
           "end": "20261005",
@@ -245,7 +278,11 @@
           "trips": 29320,
           "skippedTrips": 0,
           "approximateShapes": 0,
-          "timezone": "Europe/Madrid"
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand",
+          "originalMissingShapes": 0,
+          "missingShapes": 0,
+          "reconstructedShapes": 0
         },
         {
           "id": "tranvia-zaragoza",
@@ -253,7 +290,7 @@
           "source": "https://files.mobilitydatabase.org/mdb-2801/mdb-2801-202607080131/mdb-2801-202607080131.zip",
           "website": "https://www.tranviasdezaragoza.es/",
           "license": "https://nap.transportes.gob.es/licencia-datos",
-          "fetchedAt": "2026-10-06T06:15:19.045574+00:00",
+          "fetchedAt": "2026-10-06T07:59:46.873494+00:00",
           "version": "20260623_TRANVIA",
           "start": "20260623",
           "end": "20261231",
@@ -263,7 +300,11 @@
           "trips": 5107,
           "skippedTrips": 0,
           "approximateShapes": 0,
-          "timezone": "Europe/Madrid"
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand",
+          "originalMissingShapes": 0,
+          "missingShapes": 0,
+          "reconstructedShapes": 0
         }
       ],
       "source": "https://www.zaragoza.es/web/espacio-de-datos/servicio/catalogo/335",
@@ -277,6 +318,366 @@
       "trips": 34427,
       "network": "./data/zaragoza/network.json",
       "schedule": "./data/zaragoza/schedule.json"
+    },
+    {
+      "id": "cadiz",
+      "name": "Bahía de Cádiz",
+      "region": "Andalucía",
+      "center": [
+        -6.29,
+        36.53
+      ],
+      "zoom": 11.8,
+      "feeds": [
+        {
+          "id": "ctan-cadiz",
+          "publisher": "Consorcio de Bahía de Cádiz",
+          "source": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip",
+          "website": "https://api.ctan.es/",
+          "license": "https://api.ctan.es/avisolegal.html",
+          "fetchedAt": "2026-10-06T08:08:54.399271+00:00",
+          "version": "3d70c9fa54fa",
+          "start": "20210605",
+          "end": "20261231",
+          "sha256": "3d70c9fa54fad33dd6d5c82dd1a877ba4902d4d827866b293c8ef0c38caffeb6",
+          "routes": 67,
+          "stops": 253,
+          "trips": 1249,
+          "skippedTrips": 0,
+          "approximateShapes": 0,
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand",
+          "originalMissingShapes": 0,
+          "missingShapes": 0,
+          "reconstructedShapes": 0
+        }
+      ],
+      "source": "https://api.ctan.es/",
+      "coverage": "Red publicada por el Consorcio de Bahía de Cádiz. Cobertura metropolitana parcial; no incluye todos los autobuses urbanos ni operadores de la provincia.",
+      "journey": [
+        "Estación de Autobuses",
+        "Centro"
+      ],
+      "routes": 67,
+      "stops": 253,
+      "trips": 1249,
+      "network": "./data/cadiz/network.json",
+      "schedule": "./data/cadiz/schedule.json"
+    },
+    {
+      "id": "granada",
+      "name": "Granada",
+      "region": "Andalucía",
+      "center": [
+        -3.5986,
+        37.1773
+      ],
+      "zoom": 11.8,
+      "feeds": [
+        {
+          "id": "ctan-granada",
+          "publisher": "Consorcio de Granada",
+          "source": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip",
+          "website": "https://api.ctan.es/",
+          "license": "https://api.ctan.es/avisolegal.html",
+          "fetchedAt": "2026-10-06T08:08:57.521759+00:00",
+          "version": "3d70c9fa54fa",
+          "start": "20200701",
+          "end": "20380430",
+          "sha256": "3d70c9fa54fad33dd6d5c82dd1a877ba4902d4d827866b293c8ef0c38caffeb6",
+          "routes": 69,
+          "stops": 1290,
+          "trips": 3155,
+          "skippedTrips": 0,
+          "approximateShapes": 0,
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand",
+          "originalMissingShapes": 0,
+          "missingShapes": 0,
+          "reconstructedShapes": 0
+        }
+      ],
+      "source": "https://api.ctan.es/",
+      "coverage": "Red publicada por el Consorcio de Granada. Cobertura metropolitana parcial; no incluye todos los autobuses urbanos ni operadores de la provincia.",
+      "journey": [
+        "Estación de Autobuses",
+        "Centro"
+      ],
+      "routes": 69,
+      "stops": 1290,
+      "trips": 3155,
+      "network": "./data/granada/network.json",
+      "schedule": "./data/granada/schedule.json"
+    },
+    {
+      "id": "malaga",
+      "name": "Málaga",
+      "region": "Andalucía",
+      "center": [
+        -4.4214,
+        36.7213
+      ],
+      "zoom": 11.8,
+      "feeds": [
+        {
+          "id": "ctan-malaga",
+          "publisher": "Consorcio de Málaga",
+          "source": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip",
+          "website": "https://api.ctan.es/",
+          "license": "https://api.ctan.es/avisolegal.html",
+          "fetchedAt": "2026-10-06T08:09:00.649762+00:00",
+          "version": "3d70c9fa54fa",
+          "start": "20200518",
+          "end": "20301231",
+          "sha256": "3d70c9fa54fad33dd6d5c82dd1a877ba4902d4d827866b293c8ef0c38caffeb6",
+          "routes": 94,
+          "stops": 1315,
+          "trips": 3084,
+          "skippedTrips": 0,
+          "approximateShapes": 0,
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand",
+          "originalMissingShapes": 0,
+          "missingShapes": 0,
+          "reconstructedShapes": 0
+        }
+      ],
+      "source": "https://api.ctan.es/",
+      "coverage": "Red publicada por el Consorcio de Málaga. Cobertura metropolitana parcial; no incluye todos los autobuses urbanos ni operadores de la provincia.",
+      "journey": [
+        "Estación de Autobuses",
+        "Centro"
+      ],
+      "routes": 94,
+      "stops": 1315,
+      "trips": 3084,
+      "network": "./data/malaga/network.json",
+      "schedule": "./data/malaga/schedule.json"
+    },
+    {
+      "id": "gibraltar",
+      "name": "Campo de Gibraltar",
+      "region": "Andalucía",
+      "center": [
+        -5.4505,
+        36.1333
+      ],
+      "zoom": 11.8,
+      "feeds": [
+        {
+          "id": "ctan-gibraltar",
+          "publisher": "Consorcio de Campo de Gibraltar",
+          "source": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip",
+          "website": "https://api.ctan.es/",
+          "license": "https://api.ctan.es/avisolegal.html",
+          "fetchedAt": "2026-10-06T08:09:03.752359+00:00",
+          "version": "3d70c9fa54fa",
+          "start": "20210601",
+          "end": "20451231",
+          "sha256": "3d70c9fa54fad33dd6d5c82dd1a877ba4902d4d827866b293c8ef0c38caffeb6",
+          "routes": 13,
+          "stops": 118,
+          "trips": 521,
+          "skippedTrips": 0,
+          "approximateShapes": 0,
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand",
+          "originalMissingShapes": 0,
+          "missingShapes": 0,
+          "reconstructedShapes": 0
+        }
+      ],
+      "source": "https://api.ctan.es/",
+      "coverage": "Red publicada por el Consorcio de Campo de Gibraltar. Cobertura metropolitana parcial; no incluye todos los autobuses urbanos ni operadores de la provincia.",
+      "journey": [
+        "Estación de Autobuses",
+        "Centro"
+      ],
+      "routes": 13,
+      "stops": 118,
+      "trips": 521,
+      "network": "./data/gibraltar/network.json",
+      "schedule": "./data/gibraltar/schedule.json"
+    },
+    {
+      "id": "almeria",
+      "name": "Almería",
+      "region": "Andalucía",
+      "center": [
+        -2.4637,
+        36.834
+      ],
+      "zoom": 11.8,
+      "feeds": [
+        {
+          "id": "ctan-almeria",
+          "publisher": "Consorcio de Almería",
+          "source": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip",
+          "website": "https://api.ctan.es/",
+          "license": "https://api.ctan.es/avisolegal.html",
+          "fetchedAt": "2026-10-06T08:09:07.626963+00:00",
+          "version": "3d70c9fa54fa",
+          "start": "20170101",
+          "end": "20270709",
+          "sha256": "3d70c9fa54fad33dd6d5c82dd1a877ba4902d4d827866b293c8ef0c38caffeb6",
+          "routes": 31,
+          "stops": 522,
+          "trips": 735,
+          "skippedTrips": 0,
+          "approximateShapes": 1,
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand",
+          "originalMissingShapes": 1,
+          "missingShapes": 1,
+          "reconstructedShapes": 0
+        }
+      ],
+      "source": "https://api.ctan.es/",
+      "coverage": "Red publicada por el Consorcio de Almería. Cobertura metropolitana parcial; no incluye todos los autobuses urbanos ni operadores de la provincia.",
+      "journey": [
+        "Estación de Autobuses",
+        "Centro"
+      ],
+      "routes": 31,
+      "stops": 522,
+      "trips": 735,
+      "network": "./data/almeria/network.json",
+      "schedule": "./data/almeria/schedule.json"
+    },
+    {
+      "id": "jaen",
+      "name": "Jaén",
+      "region": "Andalucía",
+      "center": [
+        -3.7903,
+        37.7796
+      ],
+      "zoom": 11.8,
+      "feeds": [
+        {
+          "id": "ctan-jaen",
+          "publisher": "Consorcio de Jaén",
+          "source": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip",
+          "website": "https://api.ctan.es/",
+          "license": "https://api.ctan.es/avisolegal.html",
+          "fetchedAt": "2026-10-06T08:09:10.488785+00:00",
+          "version": "3d70c9fa54fa",
+          "start": "20220118",
+          "end": "20270831",
+          "sha256": "3d70c9fa54fad33dd6d5c82dd1a877ba4902d4d827866b293c8ef0c38caffeb6",
+          "routes": 39,
+          "stops": 79,
+          "trips": 465,
+          "skippedTrips": 0,
+          "approximateShapes": 0,
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand",
+          "originalMissingShapes": 0,
+          "missingShapes": 0,
+          "reconstructedShapes": 0
+        }
+      ],
+      "source": "https://api.ctan.es/",
+      "coverage": "Red publicada por el Consorcio de Jaén. Cobertura metropolitana parcial; no incluye todos los autobuses urbanos ni operadores de la provincia.",
+      "journey": [
+        "Estación de Autobuses",
+        "Centro"
+      ],
+      "routes": 39,
+      "stops": 79,
+      "trips": 465,
+      "network": "./data/jaen/network.json",
+      "schedule": "./data/jaen/schedule.json"
+    },
+    {
+      "id": "cordoba",
+      "name": "Córdoba",
+      "region": "Andalucía",
+      "center": [
+        -4.7794,
+        37.8882
+      ],
+      "zoom": 11.8,
+      "feeds": [
+        {
+          "id": "ctan-cordoba",
+          "publisher": "Consorcio de Córdoba",
+          "source": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip",
+          "website": "https://api.ctan.es/",
+          "license": "https://api.ctan.es/avisolegal.html",
+          "fetchedAt": "2026-10-06T08:09:13.301896+00:00",
+          "version": "3d70c9fa54fa",
+          "start": "20260608",
+          "end": "20300630",
+          "sha256": "3d70c9fa54fad33dd6d5c82dd1a877ba4902d4d827866b293c8ef0c38caffeb6",
+          "routes": 11,
+          "stops": 120,
+          "trips": 220,
+          "skippedTrips": 0,
+          "approximateShapes": 0,
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand",
+          "originalMissingShapes": 0,
+          "missingShapes": 0,
+          "reconstructedShapes": 0
+        }
+      ],
+      "source": "https://api.ctan.es/",
+      "coverage": "Red publicada por el Consorcio de Córdoba. Cobertura metropolitana parcial; no incluye todos los autobuses urbanos ni operadores de la provincia.",
+      "journey": [
+        "Estación de Autobuses",
+        "Centro"
+      ],
+      "routes": 11,
+      "stops": 120,
+      "trips": 220,
+      "network": "./data/cordoba/network.json",
+      "schedule": "./data/cordoba/schedule.json"
+    },
+    {
+      "id": "huelva",
+      "name": "Huelva",
+      "region": "Andalucía",
+      "center": [
+        -6.9447,
+        37.2614
+      ],
+      "zoom": 11.8,
+      "feeds": [
+        {
+          "id": "ctan-huelva",
+          "publisher": "Consorcio de Huelva",
+          "source": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip",
+          "website": "https://api.ctan.es/",
+          "license": "https://api.ctan.es/avisolegal.html",
+          "fetchedAt": "2026-10-06T08:09:15.920675+00:00",
+          "version": "3d70c9fa54fa",
+          "start": "20260901",
+          "end": "20270630",
+          "sha256": "3d70c9fa54fad33dd6d5c82dd1a877ba4902d4d827866b293c8ef0c38caffeb6",
+          "routes": 39,
+          "stops": 214,
+          "trips": 563,
+          "skippedTrips": 0,
+          "approximateShapes": 0,
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand",
+          "originalMissingShapes": 0,
+          "missingShapes": 0,
+          "reconstructedShapes": 0
+        }
+      ],
+      "source": "https://api.ctan.es/",
+      "coverage": "Red publicada por el Consorcio de Huelva. Cobertura metropolitana parcial; no incluye todos los autobuses urbanos ni operadores de la provincia.",
+      "journey": [
+        "Estación de Autobuses",
+        "Centro"
+      ],
+      "routes": 39,
+      "stops": 214,
+      "trips": 563,
+      "network": "./data/huelva/network.json",
+      "schedule": "./data/huelva/schedule.json"
     },
     {
       "id": "espana",
@@ -294,7 +695,7 @@
           "source": "https://ssl.renfe.com/gtransit/Fichero_AV_LD/google_transit.zip",
           "website": "https://data.renfe.com/",
           "license": "https://creativecommons.org/licenses/by/4.0/",
-          "fetchedAt": "2026-10-06T06:15:20.539725+00:00",
+          "fetchedAt": "2026-10-06T08:05:31.238228+00:00",
           "version": "52a7c4fda036",
           "start": "20261005",
           "end": "20270124",
@@ -303,8 +704,15 @@
           "stops": 1006,
           "trips": 7496,
           "skippedTrips": 0,
-          "approximateShapes": 984,
-          "timezone": "Europe/Madrid"
+          "approximateShapes": 145,
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand",
+          "missingShapes": 145,
+          "reconstructedShapes": 839,
+          "geometrySources": [
+            "https://api-features.idee.es/collections/railwaylink"
+          ],
+          "originalMissingShapes": 984
         },
         {
           "id": "cercanias",
@@ -312,7 +720,7 @@
           "source": "https://ssl.renfe.com/ftransit/Fichero_CER_FOMENTO/fomento_transit.zip",
           "website": "https://data.renfe.com/",
           "license": "https://creativecommons.org/licenses/by/4.0/",
-          "fetchedAt": "2026-10-06T06:15:38.151145+00:00",
+          "fetchedAt": "2026-10-06T08:08:06.087646+00:00",
           "version": "adf3b8e58699",
           "start": "20261005",
           "end": "20261103",
@@ -321,8 +729,15 @@
           "stops": 924,
           "trips": 106035,
           "skippedTrips": 756,
-          "approximateShapes": 4,
-          "timezone": "Europe/Madrid"
+          "approximateShapes": 0,
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand",
+          "missingShapes": 0,
+          "reconstructedShapes": 4,
+          "geometrySources": [
+            "https://api-features.idee.es/collections/railwaylink"
+          ],
+          "originalMissingShapes": 4
         }
       ],
       "source": "https://data.renfe.com/",

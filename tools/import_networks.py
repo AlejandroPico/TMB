@@ -8,6 +8,7 @@ import re
 import urllib.request
 import zipfile
 from gtfs import parse_gtfs, merge_networks
+from geometry import enrich, clear_missing, retain_published_geometry
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 CONFIG = json.loads((ROOT/'tools/providers.json').read_text(encoding='utf-8'))
@@ -64,6 +65,11 @@ def write_city(city, parts):
     network, schedule = merge_networks(parts, city)
     if not schedule['trips']: raise ValueError('No usable trips')
     out = ROOT/'public/data'/city['id']; out.mkdir(parents=True, exist_ok=True)
+    if (out/'network.json').exists() and (out/'schedule.json').exists():
+        old_network=json.loads((out/'network.json').read_text(encoding='utf-8'))
+        old_schedule=json.loads((out/'schedule.json').read_text(encoding='utf-8'))
+        retained=retain_published_geometry(network,schedule,old_network,old_schedule)
+        if retained:print(city['id']+': retained '+str(retained)+' exact published alignments',flush=True)
     serialized = [(out/(name+'.json'), json.dumps(obj, ensure_ascii=False, separators=(',', ':'))) for name,obj in [('network',network),('schedule',schedule)]]
     for path, content in serialized:
         temp = path.with_suffix('.tmp'); temp.write_text(content, encoding='utf-8'); temp.replace(path)
@@ -73,7 +79,7 @@ def write_city(city, parts):
 
 def main():
     parser=argparse.ArgumentParser(); parser.add_argument('--local', action='store_true'); parser.add_argument('--city')
-    args=parser.parse_args(); feedmap={f['id']:f for f in CONFIG['feeds']}; cached={}
+    args=parser.parse_args(); feedmap={f['id']:f for f in CONFIG['feeds']}; cached={}; shared_archive=None
     cities=[]
     for city in CONFIG['cities']:
         out=ROOT/'public/data'/city['id']/'network.json'
@@ -86,7 +92,18 @@ def main():
                     feed=feedmap[fid]
                     if fid not in cached:
                         print('Importing '+fid, flush=True)
-                        raw,source=fetch_feed(feed,args.local); cached[fid]=parse_gtfs(raw,feed,source)
+                        if feed['cache']=='andalucia' and shared_archive:
+                            raw,source=shared_archive
+                        else:
+                            raw,source=fetch_feed(feed,args.local)
+                            if feed['cache']=='andalucia':shared_archive=(raw,source)
+                        cached[fid]=parse_gtfs(raw,feed,source)
+                        n,s=cached[fid]
+                        try: enrich(n,s,feed)
+                        except Exception as error:
+                            n.pop('_trips',None)
+                            print(fid+': geometry enrichment unavailable ('+type(error).__name__+'); no schematic fallback',flush=True)
+                        clear_missing(n)
                     parts.append(cached[fid])
                 meta=write_city(city,parts)
             except Exception as error:

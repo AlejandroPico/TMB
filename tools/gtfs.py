@@ -87,9 +87,10 @@ def parse_gtfs(raw, feed, source):
     for point in rows('shapes.txt'):
         if point['shape_id'] in used_shapes:
             points[point['shape_id']].append((number(point['shape_pt_sequence']), [round(float(point['shape_pt_lon']), 6), round(float(point['shape_pt_lat']), 6)]))
-    shapes = []; shapeindex = {}
+    shapes = []; shapeindex = {}; shapeinfo = []
     for sid, values in points.items():
         shapeindex[sid] = len(shapes); shapes.append([p for _, p in sorted(values)])
+        shapeinfo.append({'kind':'gtfs','source':source})
     patterns = []; patternindex = {}; heads = []; headindex = {}; trips = []; tripids = []; tripindex = {}; directions = collections.defaultdict(list)
     approximated = set(); skipped = 0
     for tid, trip in triprows.items():
@@ -117,6 +118,7 @@ def parse_gtfs(raw, feed, source):
             if sid not in shapeindex:
                 shapeindex[sid] = len(shapes); shapes.append([[stops[st[1]]['lon'], stops[st[1]]['lat']] for st in sequence])
                 approximated.add(shapeindex[sid])
+                shapeinfo.append({'kind':'missing','source':source})
         ri, pi, sh = routeindex[trip['route_id']], patternindex[pkey], shapeindex[sid]
         tripindex[tid] = len(trips); tripids.append(prefix + tid)
         trips.append([ri, serviceindex[trip['service_id']], sh, headindex[head], pi, start])
@@ -166,18 +168,19 @@ def parse_gtfs(raw, feed, source):
             'sha256': hashlib.sha256(raw).hexdigest(), 'routes': len(routes), 'stops': sum(st['kind'] == 0 for st in stops),
             'trips': len(trips), 'skippedTrips': skipped, 'approximateShapes': len(approximated), 'timezone': 'Europe/Madrid',
             'frequencyPolicy': feed.get('frequencyPolicy', 'expand')}
-    return {'meta': meta, 'routes': routes, 'stops': stops, 'shapes': shapes, 'transfers': transfers, 'pathways': pathways}, \
+    return {'meta': meta, 'routes': routes, 'stops': stops, 'shapes': shapes, 'shapeInfo': shapeinfo, 'transfers': transfers, 'pathways': pathways}, \
            {'services': services, 'patterns': patterns, 'heads': heads, 'trips': trips, 'tripIds': tripids, 'frequencies': frequencies}
 
 
 def merge_networks(parts, city):
-    network = {key: [] for key in ['routes', 'stops', 'shapes', 'transfers', 'pathways']}
+    network = {key: [] for key in ['routes', 'stops', 'shapes', 'shapeInfo', 'transfers', 'pathways']}
     schedule = {key: [] for key in ['services', 'patterns', 'heads', 'trips', 'tripIds', 'frequencies']}
     feeds = []
     for n, s in parts:
         ro, so, sho = len(network['routes']), len(network['stops']), len(network['shapes'])
         se, po, ho, to = len(schedule['services']), len(schedule['patterns']), len(schedule['heads']), len(schedule['trips'])
         network['stops'].extend(n['stops']); network['shapes'].extend(n['shapes'])
+        network['shapeInfo'].extend(n.get('shapeInfo',[]))
         network['routes'].extend([{**r, 'stops': [i+so for i in r['stops']], 'directions': [{**d, 'shape': d['shape']+sho, 'stops': [i+so for i in d['stops']]} for d in r['directions']]} for r in n['routes']])
         for key in ['transfers', 'pathways']: network[key].extend([[a+so, b+so, *rest] for a, b, *rest in n[key]])
         schedule['services'].extend(s['services']); schedule['heads'].extend(s['heads']); schedule['tripIds'].extend(s['tripIds'])
@@ -186,7 +189,7 @@ def merge_networks(parts, city):
         schedule['frequencies'].extend([[trip+to, *rest] for trip, *rest in s['frequencies']])
         feeds.append(n['meta'])
     network['meta'] = {'publisher': city['name'], 'city': city['id'], 'center': city['center'], 'zoom': city.get('zoom', 12.3), 'feeds': feeds,
-                       'source': city['source'], 'fetchedAt': max(f['fetchedAt'] for f in feeds), 'version': 'multifeed-v2',
+                       'source': city['source'], 'fetchedAt': max(f['fetchedAt'] for f in feeds), 'version': 'multifeed-v3',
                        'start': min(f['start'] for f in feeds), 'end': max(f['end'] for f in feeds), 'routes': len(network['routes']),
                        'stops': sum(st['kind'] == 0 for st in network['stops']), 'trips': len(schedule['trips']), 'timezone': 'Europe/Madrid'}
     return network, schedule

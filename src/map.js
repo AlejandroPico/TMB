@@ -1,14 +1,16 @@
 import * as maplibregl from "maplibre-gl";
 import mapWorkerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { distance, transportGroup } from "./transit.js";
+import { transportGroup } from "./transit.js";
+import { trustedShape } from "./geometry.js";
 maplibregl.setWorkerUrl(mapWorkerUrl);
 export class CityMap {
   constructor(
     network,
-    { onStop, onRoute, onStory, onVehicle, onGPS, onReady, onError },
+    { onStop, onRoute, onStory, onVehicle, onGPS, onReady, onError, movement },
   ) {
     this.network = network;
+    this.movement = movement;
     this.callbacks = { onStop, onRoute, onStory, onVehicle };
     this.ready = false;
     this.map = new maplibregl.Map({
@@ -17,7 +19,7 @@ export class CityMap {
       center: network.meta.center || [2.165, 41.391],
       zoom: network.meta.zoom || 12.5,
       pitch: 35,
-      bearing: -18,
+      bearing: 0,
       attributionControl: false,
       maxPitch: 70,
     });
@@ -51,6 +53,28 @@ export class CityMap {
         }
       }
     });
+    let rightClick = null;
+    const canvas = this.map.getCanvas();
+    const describeView = () =>
+      canvas.setAttribute(
+        "aria-label",
+        `Mapa del transporte. Orientación ${Math.round(this.map.getBearing())}°; inclinación ${Math.round(this.map.getPitch())}°.`,
+      );
+    describeView();
+    this.map.on("moveend", describeView);
+    canvas.addEventListener("contextmenu", (e) => e.preventDefault());
+    canvas.addEventListener("pointerup", (e) => {
+      if (e.button !== 2) return;
+      const now = performance.now();
+      if (
+        rightClick &&
+        now - rightClick.time < 450 &&
+        Math.hypot(e.clientX - rightClick.x, e.clientY - rightClick.y) < 12
+      ) {
+        this.map.easeTo({ bearing: 0, pitch: 0, duration: 400 });
+        rightClick = null;
+      } else rightClick = { time: now, x: e.clientX, y: e.clientY };
+    });
     for (const layer of ["stops", "routes", "stories", "vehicles", "gps"]) {
       this.map.on(
         "mouseenter",
@@ -72,17 +96,21 @@ export class CityMap {
   }
   setup() {
     const n = this.network;
+    const routeShapes = n.routes.map(() => new Set());
+    for (const t of this.movement.s.trips) routeShapes[t[0]].add(t[2]);
     const routeFeatures = n.routes.flatMap((r, i) =>
-      r.directions.map((d) => ({
-        type: "Feature",
-        geometry: { type: "LineString", coordinates: n.shapes[d.shape] },
-        properties: {
-          index: i,
-          name: r.name,
-          color: r.color,
-          mode: transportGroup(r),
-        },
-      })),
+      [...routeShapes[i]]
+        .filter((id) => trustedShape(n, id))
+        .map((id) => ({
+          type: "Feature",
+          geometry: { type: "LineString", coordinates: n.shapes[id] },
+          properties: {
+            index: i,
+            name: r.name,
+            color: r.color,
+            mode: transportGroup(r),
+          },
+        })),
     );
     this.source("routes", routeFeatures);
     this.map.addLayer({
@@ -91,7 +119,17 @@ export class CityMap {
       source: "routes",
       paint: {
         "line-color": ["get", "color"],
-        "line-width": 10,
+        "line-width": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          5,
+          2,
+          10,
+          7,
+          15,
+          10,
+        ],
         "line-opacity": 0.1,
         "line-blur": 4,
       },
@@ -106,6 +144,10 @@ export class CityMap {
           "interpolate",
           ["linear"],
           ["zoom"],
+          5,
+          0.55,
+          8,
+          1,
           10,
           1.5,
           14,
@@ -304,21 +346,44 @@ export class CityMap {
         .getSource(name)
         ?.setData({ type: "FeatureCollection", features });
   }
-  filters({ mode, route, stops, stories, vehicles }) {
+  filters({
+    mode,
+    route,
+    stops,
+    stories,
+    vehicles,
+    routes = true,
+    railStops = true,
+    busStops = true,
+    otherStops = true,
+    railMovement = true,
+    busMovement = false,
+    otherMovement = false,
+    gps = true,
+  }) {
     if (!this.ready) return;
     const routeFilter = [
       "all",
       ...(mode === "all" ? [] : [["==", ["get", "mode"], mode]]),
       ...(route == null ? [] : [["==", ["get", "index"], route]]),
     ];
-    for (const id of ["routes", "route-glow"])
+    for (const id of ["routes", "route-glow"]) {
       this.map.setFilter(id, routeFilter);
-    this.map.setFilter(
-      "stops",
-      mode === "all" ? null : ["==", ["get", "mode"], mode],
-    );
-    for (const id of ["stops", "stop-labels"])
+      this.map.setLayoutProperty(id, "visibility", routes ? "visible" : "none");
+    }
+    const stopModes = [
+      ...(railStops ? ["rail"] : []),
+      ...(busStops ? ["bus"] : []),
+      ...(otherStops ? ["ferry", "other"] : []),
+    ];
+    for (const id of ["stops", "stop-labels"]) {
+      this.map.setFilter(id, [
+        "all",
+        ["in", ["get", "mode"], ["literal", stopModes]],
+        ...(mode === "all" ? [] : [["==", ["get", "mode"], mode]]),
+      ]);
       this.map.setLayoutProperty(id, "visibility", stops ? "visible" : "none");
+    }
     this.map.setLayoutProperty(
       "stories",
       "visibility",
@@ -328,10 +393,32 @@ export class CityMap {
       this.map.setLayoutProperty(
         id,
         "visibility",
-        vehicles ? "visible" : "none",
+        (
+          id.startsWith("gps")
+            ? gps
+            : vehicles && (railMovement || busMovement || otherMovement)
+        )
+          ? "visible"
+          : "none",
       );
       this.map.setFilter(id, [
         "all",
+        ...(id.startsWith("gps")
+          ? []
+          : [
+              [
+                "in",
+                ["get", "mode"],
+                [
+                  "literal",
+                  [
+                    ...(railMovement ? ["rail"] : []),
+                    ...(busMovement ? ["bus"] : []),
+                    ...(otherMovement ? ["ferry", "other"] : []),
+                  ],
+                ],
+              ],
+            ]),
         ...(mode === "all" ? [] : [["==", ["get", "mode"], mode]]),
         ...(route == null ? [] : [["==", ["get", "route"], route]]),
       ]);
@@ -354,9 +441,15 @@ export class CityMap {
     });
   }
   focusRoute(i) {
-    const points = this.network.routes[i].directions.flatMap(
-      (d) => this.network.shapes[d.shape],
+    const points = this.network.routes[i].directions.flatMap((d) =>
+      trustedShape(this.network, d.shape) ? this.network.shapes[d.shape] : [],
     );
+    if (!points.length) {
+      for (const stopId of this.network.routes[i].stops) {
+        const s = this.network.stops[stopId];
+        points.push([s.lon, s.lat]);
+      }
+    }
     if (!points.length) return;
     const b = points.reduce(
       (b, p) => b.extend(p),
@@ -369,7 +462,7 @@ export class CityMap {
       center: this.network.meta.center || [2.165, 41.391],
       zoom: this.network.meta.zoom || 12.5,
       pitch: 35,
-      bearing: -18,
+      bearing: 0,
       duration: 1200,
     });
   }
@@ -397,50 +490,48 @@ export class CityMap {
       }
       return coords;
     };
-    const features = it.legs.map((l) => ({
-      type: "Feature",
-      geometry: {
-        type: "LineString",
-        coordinates: l.legGeometry?.points
-          ? decode(l.legGeometry.points)
-          : [
-              [l.from.lon, l.from.lat],
-              [l.to.lon, l.to.lat],
-            ],
-      },
-      properties: {
-        color:
-          l.mode === "WALK"
-            ? "#deead1"
-            : /^[0-9a-f]{6}$/i.test(l.routeColor || "")
-              ? "#" + l.routeColor
-              : "#d7eaa1",
-      },
-    }));
+    const features = it.legs
+      .filter((l) => l.legGeometry?.points)
+      .map((l) => ({
+        type: "Feature",
+        geometry: {
+          type: "LineString",
+          coordinates: l.legGeometry?.points
+            ? decode(l.legGeometry.points)
+            : [
+                [l.from.lon, l.from.lat],
+                [l.to.lon, l.to.lat],
+              ],
+        },
+        properties: {
+          color:
+            l.mode === "WALK"
+              ? "#deead1"
+              : /^[0-9a-f]{6}$/i.test(l.routeColor || "")
+                ? "#" + l.routeColor
+                : "#d7eaa1",
+        },
+      }));
     this.set("journey", features);
+    if (!features.length) return;
     const b = new maplibregl.LngLatBounds();
     features.flatMap((f) => f.geometry.coordinates).forEach((c) => b.extend(c));
     this.map.fitBounds(b, { padding: 100, duration: 1200, maxZoom: 15 });
   }
   journey(result) {
-    this.set(
-      "journey",
-      result
-        ? result.legs.map((l) => ({
-            type: "Feature",
-            geometry: {
-              type: "LineString",
-              coordinates: (l.via || [l.from, l.to]).map((i) => [
-                this.network.stops[i].lon,
-                this.network.stops[i].lat,
-              ]),
+    const features = (result?.legs || []).flatMap((l) => {
+      const coords = this.movement.leg(l);
+      return coords
+        ? [
+            {
+              type: "Feature",
+              geometry: { type: "LineString", coordinates: coords },
+              properties: { color: this.network.routes[l.route].color },
             },
-            properties: {
-              color: l.walk ? "#dee1d1" : this.network.routes[l.route].color,
-            },
-          }))
-        : [],
-    );
+          ]
+        : [];
+    });
+    this.set("journey", features);
     if (result?.legs.length) {
       const ids = result.legs.flatMap((l) => [l.from, l.to]),
         pts = ids.map((i) => this.network.stops[i]);
@@ -448,104 +539,5 @@ export class CityMap {
       pts.forEach((s) => b.extend([s.lon, s.lat]));
       this.map.fitBounds(b, { padding: 100, duration: 1000, maxZoom: 15 });
     }
-  }
-}
-export class Movement {
-  constructor(network, schedule) {
-    this.n = network;
-    this.s = schedule;
-    this.cache = new Map();
-    this.shapes = network.shapes.map((coords) => {
-      let d = [0];
-      for (let k = 1; k < coords.length; k++)
-        d.push(
-          d[k - 1] +
-            distance(
-              { lon: coords[k - 1][0], lat: coords[k - 1][1] },
-              { lon: coords[k][0], lat: coords[k][1] },
-            ),
-        );
-      return { coords, d };
-    });
-  }
-  path(trip) {
-    const t = trip.t,
-      key = t[2] + "-" + t[4];
-    if (this.cache.has(key)) return this.cache.get(key);
-    const shape = this.shapes[t[2]],
-      p = this.s.patterns[t[4]],
-      positions = [];
-    let last = 0;
-    for (const stop of p[0]) {
-      let best = Infinity,
-        idx = last;
-      const s = this.n.stops[stop];
-      for (let k = last; k < shape.coords.length; k++) {
-        const c = shape.coords[k],
-          dd =
-            (c[0] - s.lon) ** 2 * Math.cos((s.lat * Math.PI) / 180) ** 2 +
-            (c[1] - s.lat) ** 2;
-        if (dd < best) {
-          best = dd;
-          idx = k;
-        }
-      }
-      positions.push(shape.d[idx]);
-      last = idx;
-    }
-    const path = { ...shape, positions };
-    this.cache.set(key, path);
-    return path;
-  }
-  features(trips, time) {
-    const features = [];
-    for (const trip of trips) {
-      const t = trip.t,
-        p = this.s.patterns[t[4]],
-        local = time - trip.start;
-      if (local < p[1][0] || local > p[2].at(-1)) continue;
-      let k = 0;
-      while (k < p[0].length - 1 && local > p[1][k + 1]) k++;
-      const path = this.path(trip),
-        next = Math.min(k + 1, p[0].length - 1),
-        a = p[2][k],
-        b = p[1][next],
-        mix = local <= a ? 0 : Math.min(1, (local - a) / Math.max(1, b - a)),
-        d =
-          path.positions[k] + (path.positions[next] - path.positions[k]) * mix;
-      let lo = 0,
-        hi = path.d.length - 1;
-      while (lo < hi) {
-        const mid = (lo + hi) >> 1;
-        if (path.d[mid] < d) lo = mid + 1;
-        else hi = mid;
-      }
-      const idx = Math.max(1, lo),
-        c1 = path.coords[idx - 1],
-        c2 = path.coords[idx] || c1,
-        progress =
-          (d - path.d[idx - 1]) /
-          Math.max(0.01, (path.d[idx] || d) - path.d[idx - 1]);
-      const r = this.n.routes[t[0]];
-      features.push({
-        type: "Feature",
-        geometry: {
-          type: "Point",
-          coordinates: [
-            c1[0] + (c2[0] - c1[0]) * progress,
-            c1[1] + (c2[1] - c1[1]) * progress,
-          ],
-        },
-        properties: {
-          id: trip.id,
-          route: t[0],
-          color: r.color,
-          mode: transportGroup(r),
-          next: p[0][next],
-          head: this.s.heads[t[3]],
-        },
-      });
-    }
-    return features;
   }
 }

@@ -101,6 +101,78 @@
       "website": "https://data.renfe.com/",
       "license": "https://creativecommons.org/licenses/by/4.0/",
       "url": "https://ssl.renfe.com/ftransit/Fichero_CER_FOMENTO/fomento_transit.zip"
+    },
+    {
+      "id": "ctan-cadiz",
+      "name": "Consorcio de Bahía de Cádiz",
+      "cache": "andalucia",
+      "website": "https://api.ctan.es/",
+      "license": "https://api.ctan.es/avisolegal.html",
+      "url": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip",
+      "agency": "CMTBC"
+    },
+    {
+      "id": "ctan-granada",
+      "name": "Consorcio de Granada",
+      "cache": "andalucia",
+      "website": "https://api.ctan.es/",
+      "license": "https://api.ctan.es/avisolegal.html",
+      "url": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip",
+      "agency": "CTAG"
+    },
+    {
+      "id": "ctan-malaga",
+      "name": "Consorcio de Málaga",
+      "cache": "andalucia",
+      "website": "https://api.ctan.es/",
+      "license": "https://api.ctan.es/avisolegal.html",
+      "url": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip",
+      "agency": "CTMAM"
+    },
+    {
+      "id": "ctan-gibraltar",
+      "name": "Consorcio de Campo de Gibraltar",
+      "cache": "andalucia",
+      "website": "https://api.ctan.es/",
+      "license": "https://api.ctan.es/avisolegal.html",
+      "url": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip",
+      "agency": "CTMCG"
+    },
+    {
+      "id": "ctan-almeria",
+      "name": "Consorcio de Almería",
+      "cache": "andalucia",
+      "website": "https://api.ctan.es/",
+      "license": "https://api.ctan.es/avisolegal.html",
+      "url": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip",
+      "agency": "CTAL"
+    },
+    {
+      "id": "ctan-jaen",
+      "name": "Consorcio de Jaén",
+      "cache": "andalucia",
+      "website": "https://api.ctan.es/",
+      "license": "https://api.ctan.es/avisolegal.html",
+      "url": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip",
+      "agency": "CTJA"
+    },
+    {
+      "id": "ctan-cordoba",
+      "name": "Consorcio de Córdoba",
+      "cache": "andalucia",
+      "website": "https://api.ctan.es/",
+      "license": "https://api.ctan.es/avisolegal.html",
+      "url": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip",
+      "agency": "CTMAC"
+    },
+    {
+      "id": "ctan-huelva",
+      "name": "Consorcio de Huelva",
+      "cache": "andalucia",
+      "website": "https://api.ctan.es/",
+      "license": "https://api.ctan.es/avisolegal.html",
+      "url": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip",
+      "agency": "CTHU"
     }
   ],
   "cities": [
@@ -147,6 +219,94 @@
       "source": "https://www.zaragoza.es/web/espacio-de-datos/servicio/catalogo/335",
       "coverage": "Avanza y tranvía. Comprueba la vigencia del calendario de cada operador.",
       "journey": ["Plaza de España", "Universidad"]
+    },
+    {
+      "id": "cadiz",
+      "name": "Bahía de Cádiz",
+      "region": "Andalucía",
+      "center": [-6.29, 36.53],
+      "zoom": 11.8,
+      "feeds": ["ctan-cadiz"],
+      "source": "https://api.ctan.es/",
+      "coverage": "Red publicada por el Consorcio de Bahía de Cádiz. Cobertura metropolitana parcial; no incluye todos los autobuses urbanos ni operadores de la provincia.",
+      "journey": ["Estación de Autobuses", "Centro"]
+    },
+    {
+      "id": "granada",
+      "name": "Granada",
+      "region": "Andalucía",
+      "center": [-3.5986, 37.1773],
+      "zoom": 11.8,
+      "feeds": ["ctan-granada"],
+      "source": "https://api.ctan.es/",
+      "coverage": "Red publicada por el Consorcio de Granada. Cobertura metropolitana parcial; no incluye todos los autobuses urbanos ni operadores de la provincia.",
+      "journey": ["Estación de Autobuses", "Centro"]
+    },
+    {
+      "id": "malaga",
+      "name": "Málaga",
+      "region": "Andalucía",
+      "center": [-4.4214, 36.7213],
+      "zoom": 11.8,
+      "feeds": ["ctan-malaga"],
+      "source": "https://api.ctan.es/",
+      "coverage": "Red publicada por el Consorcio de Málaga. Cobertura metropolitana parcial; no incluye todos los autobuses urbanos ni operadores de la provincia.",
+      "journey": ["Estación de Autobuses", "Centro"]
+    },
+    {
+      "id": "gibraltar",
+      "name": "Campo de Gibraltar",
+      "region": "Andalucía",
+      "center": [-5.4505, 36.1333],
+      "zoom": 11.8,
+      "feeds": ["ctan-gibraltar"],
+      "source": "https://api.ctan.es/",
+      "coverage": "Red publicada por el Consorcio de Campo de Gibraltar. Cobertura metropolitana parcial; no incluye todos los autobuses urbanos ni operadores de la provincia.",
+      "journey": ["Estación de Autobuses", "Centro"]
+    },
+    {
+      "id": "almeria",
+      "name": "Almería",
+      "region": "Andalucía",
+      "center": [-2.4637, 36.834],
+      "zoom": 11.8,
+      "feeds": ["ctan-almeria"],
+      "source": "https://api.ctan.es/",
+      "coverage": "Red publicada por el Consorcio de Almería. Cobertura metropolitana parcial; no incluye todos los autobuses urbanos ni operadores de la provincia.",
+      "journey": ["Estación de Autobuses", "Centro"]
+    },
+    {
+      "id": "jaen",
+      "name": "Jaén",
+      "region": "Andalucía",
+      "center": [-3.7903, 37.7796],
+      "zoom": 11.8,
+      "feeds": ["ctan-jaen"],
+      "source": "https://api.ctan.es/",
+      "coverage": "Red publicada por el Consorcio de Jaén. Cobertura metropolitana parcial; no incluye todos los autobuses urbanos ni operadores de la provincia.",
+      "journey": ["Estación de Autobuses", "Centro"]
+    },
+    {
+      "id": "cordoba",
+      "name": "Córdoba",
+      "region": "Andalucía",
+      "center": [-4.7794, 37.8882],
+      "zoom": 11.8,
+      "feeds": ["ctan-cordoba"],
+      "source": "https://api.ctan.es/",
+      "coverage": "Red publicada por el Consorcio de Córdoba. Cobertura metropolitana parcial; no incluye todos los autobuses urbanos ni operadores de la provincia.",
+      "journey": ["Estación de Autobuses", "Centro"]
+    },
+    {
+      "id": "huelva",
+      "name": "Huelva",
+      "region": "Andalucía",
+      "center": [-6.9447, 37.2614],
+      "zoom": 11.8,
+      "feeds": ["ctan-huelva"],
+      "source": "https://api.ctan.es/",
+      "coverage": "Red publicada por el Consorcio de Huelva. Cobertura metropolitana parcial; no incluye todos los autobuses urbanos ni operadores de la provincia.",
+      "journey": ["Estación de Autobuses", "Centro"]
     },
     {
       "id": "espana",

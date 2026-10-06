@@ -10,25 +10,30 @@ También puedes cambiarlo en GitHub → Settings → Secrets and variables → A
 
 **[favicon.svg](favicon.svg)** está en la raíz de `main`. Es el único original: la compilación lo utiliza como icono del navegador y lo publica además como `/TMB/favicon.svg`.
 
-## Cobertura inicial
+## Cobertura
 
-| Vista          | Operadores                                            |
-| -------------- | ----------------------------------------------------- |
-| Barcelona      | TMB y FGC, incluidas sus líneas regionales publicadas |
-| Madrid         | Metro, EMT y Metro Ligero                             |
-| Sevilla        | TUSSAM, Metro y Consorcio del Área de Sevilla         |
-| Zaragoza       | Avanza urbana y tranvía                               |
-| España · Renfe | AVE, Larga y Media Distancia, Cercanías y Rodalies    |
+| Vista          | Operadores                                                                                         |
+| -------------- | -------------------------------------------------------------------------------------------------- |
+| Barcelona      | TMB y FGC, incluidas sus líneas regionales publicadas                                              |
+| Madrid         | Metro, EMT y Metro Ligero                                                                          |
+| Sevilla        | TUSSAM, Metro y Consorcio del Área de Sevilla                                                      |
+| Zaragoza       | Avanza urbana y tranvía                                                                            |
+| Andalucía      | Consorcios de Bahía de Cádiz, Granada, Málaga, Campo de Gibraltar, Almería, Jaén, Córdoba y Huelva |
+| España · Renfe | AVE, Larga y Media Distancia, Cercanías y Rodalies                                                 |
 
-Cinco vistas y 12 fuentes dentro de una misma aplicación. No cubre todavía todos los operadores de España. Cercanías se explora en la vista nacional; no se planifican enlaces entre vistas. Las líneas GTFS pueden representar variantes de un servicio, no números comerciales únicos. Los datos se cargan al seleccionar cada vista. Puedes compartirla con `?city=madrid`, `sevilla`, `zaragoza`, `barcelona` o `espana`.
+Trece vistas: cuatro ciudades iniciales, ocho áreas adicionales de consorcios andaluces y la red nacional de Renfe. Las áreas adicionales muestran los servicios del consorcio, no todos los autobuses urbanos de cada ciudad. No cubre todavía todos los operadores de España. Cercanías se explora en la vista nacional; no se planifican enlaces entre vistas. Las líneas GTFS pueden representar variantes de un servicio, no números comerciales únicos. Los datos se cargan al seleccionar cada vista. Puedes compartirla con `?city=madrid`, `sevilla`, `zaragoza`, `barcelona` o `espana`.
 
-**El calendario público consultado de Metro de Madrid termina el 27 de mayo de 2026, y el de Avanza Zaragoza el 5 de octubre de 2026.** Se conservan sus redes y horarios archivados con un aviso visible. No se extienden las fechas. El resto de operadores tiene calendarios independientes. «Datos» muestra procedencia, licencia, versión, vigencia y SHA-256 por operador.
+**El calendario público consultado de Metro de Madrid termina el 27 de mayo de 2026, y el de Avanza Zaragoza el 5 de octubre de 2026.** Se conservan sus redes y horarios archivados con un aviso visible. No se extienden las fechas. El resto de operadores tiene calendarios independientes. «Fuentes» muestra procedencia, licencia, versión, vigencia y SHA-256 por operador.
 
 ## Funciones
 
-- Mapas con trazados, paradas y edificios 3D donde hay cartografía disponible; filtros de buses o transporte sobre raíles.
+- Mapa a pantalla completa, menú lateral contraído y paneles que se despliegan a la derecha. En móvil, hamburguesa. Sin cabecera ni tarjetas promocionales. Paneles y botones con esquinas rectas.
+- Filtros separados de recorridos, paradas de bus/raíles, movimiento de bus/raíles, GPS e historias. Historias y movimiento de autobuses apagados al iniciar.
+- Rueda/pellizco para zoom; giro con botón derecho o dos dedos. Doble clic derecho restablece norte y vista plana. Vista general y 3D en el lateral.
+- Selección de red por geolocalización si no hay ciudad explícita en la URL. Requiere permiso del navegador; coordenadas procesadas localmente. Si no hay una red urbana cercana, se abre Renfe. «Paradas cerca de mí» está en Explorar.
+- Acerca de: favicon original, nombre configurable, versión de package.json, autor, portfolio y repositorio.
 - Búsqueda, salidas por parada, accesibilidad publicada, accesos y favoritos locales.
-- Calendario y reloj con pausa y reproducción a 1×, 10× y 60×.
+- Reloj compacto con pausa y control deslizante; fecha y velocidades 1×, 10× y 60× se despliegan al pulsar el reloj.
 - Planificación entre paradas y alcance en 15, 30 y 45 minutos. Horizonte de tres horas en ciudades y 24 horas en Renfe.
 - Historias documentadas de Barcelona, Madrid, Sevilla y Zaragoza; tres recorridos editoriales en Barcelona.
 - Selector de ciudad y catálogo de cobertura y fuentes.
@@ -39,11 +44,28 @@ En Barcelona, los **puntos azules** son coordenadas de la [API pública de FGC](
 
 Se consulta cada 30 segundos con el reloj en «Ahora», movimiento activado y página visible. Se ocultan publicaciones de más de tres minutos. La hora corresponde a la actualización del **conjunto** de FGC, no a la medición individual de cada tren. Al cambiar fecha, acelerar o pausar desaparece GPS. Con GPS vigente se omiten los vehículos estimados de FGC para evitar duplicaciones.
 
-Los demás puntos son **interpolaciones por horario, no GPS**. Los recorridos sin geometría son esquemas entre estaciones, señalados en la ficha de línea. Las horas intermedias vacías se estiman; los servicios por frecuencia también. Se contemplan viajes del día anterior después de medianoche.
+Los demás puntos son **interpolaciones por horario, no GPS**. Los recorridos sin geometría válida conservan horarios y paradas, pero no se dibujan ni se animan. No hay líneas rectas de sustitución. Las horas intermedias vacías se estiman; los servicios por frecuencia también. Se contemplan viajes del día anterior después de medianoche.
 
 EMT publica itinerarios completos en `stop_times` y ventanas de frecuencia asociadas a esos mismos viajes. Su adaptador conserva las horas individuales y evita expandir repetidamente ventanas, que multiplicarían artificialmente los vehículos. La política específica figura en `tools/providers.json` y los metadatos.
 
-No se incluyen incidencias, cancelaciones ni ascensores fuera de servicio. Los enlaces peatonales entre paradas próximas son aproximados y no siguen calles. Se respetan los transbordos prohibidos y restricciones de embarque/desembarque. El filtro accesible exige `wheelchair_boarding=1`; no garantiza todo el itinerario. El alcance muestra puntos por horario, no una isócrona peatonal.
+No se incluyen incidencias, cancelaciones ni ascensores fuera de servicio. Los enlaces peatonales entre paradas próximas se calculan de forma aproximada y no se dibujan como trazados. Los tramos de transporte de los viajes utilizan la geometría del viaje elegido, recortada entre embarque y desembarque; el mismo recorrido sirve para animar vehículos. Se respetan los transbordos prohibidos y restricciones de embarque/desembarque. El filtro accesible exige `wheelchair_boarding=1`; no garantiza todo el itinerario. El alcance muestra puntos por horario, no una isócrona peatonal.
+
+## Geometrías y revisión
+
+`tools/geometry.py` recupera trazados ausentes y guarda la procedencia individual en `shapeInfo`:
+
+- TMB, FGC, Madrid, Consorcios y Zaragoza: geometría GTFS del operador.
+- TUSSAM: [recorridos municipales del Ayuntamiento de Sevilla](https://www.arcgis.com/home/item.html?id=c5e6ecf63aa944c8a09eb1e65e72d8f4), asociados a línea y secuencia de paradas. Se rechazan emparejamientos a más de 120 m.
+- Metro de Sevilla: [relación OSM 255088](https://www.openstreetmap.org/relation/255088), ensamblada sin unir piezas desconectadas. ODbL.
+- Renfe sin shapes: grafo de [enlaces ferroviarios IGN / INSPIRE](https://api-features.idee.es/collections/railwaylink?f=html). Pasa por las estaciones publicadas, con preferencia por vías de 1435 mm en AVE/Avlo y reparación de precisión de extremos inferior a un metro. Las curvas se simplifican con tolerancia de 8 m.
+
+**Los corredores reconstruidos de Renfe son inferidos sobre infraestructura real; no son confirmaciones del itinerario exacto de un servicio.** El GTFS no aporta esa información. No se enlazan componentes ferroviarios desconectados. En esta revisión se recuperaron 839 de 984 shapes ausentes de larga/media distancia y cuatro de Cercanías; 145 siguen sin recorrido verificable, incluyendo servicios internacionales y casos de infraestructura o estaciones que no encajan. Se omiten sus líneas y vehículos. TUSSAM recupera 225 shapes y Metro de Sevilla cuatro.
+
+La animación proyecta paradas sobre segmentos del trazado, conserva el avance y recorre sus vértices. Los vehículos no saltan de una parada a otra. Se omite una animación si sus paradas no encajan con el trazado (150 m en bus, 550 m sobre raíles). Se dibujan también variantes de trazado utilizadas por los viajes. En redes de bus con un único color oficial, una paleta estable distingue líneas; el color original se conserva en `sourceColor`.
+
+`python tools/audit_geometry.py` revisa todas las referencias y geometrías y publica [el informe](public/data/geometry-audit.json). Los tests verifican curvas, proyección, itinerarios compartidos, rechazo de geometrías ausentes o desconectadas y el corredor AVE Barcelona–Madrid, de unos 671 km. Una auditoría estructural no confirma cierres de calles, cambios de vía o incidencias en tiempo real.
+
+Si falla una fuente de geometría, se recupera el último trazado publicado **solo cuando coinciden exactamente operador, ruta y secuencia de paradas**. La cartografía se cachea por mes en Actions; las credenciales nunca se guardan en estos ficheros.
 
 ## Claves TMB
 
@@ -52,7 +74,7 @@ La descarga oficial GTFS con los secretos de GitHub se ha comprobado en Actions.
 1. Copia `.env.example` a `.env` en el servidor y rellena las claves.
 2. Ejecuta `pnpm build` y `pnpm start`. Abre `http://127.0.0.1:8787`.
 3. En desarrollo inicia también `pnpm dev`; Vite conecta con ese servidor.
-4. Para Pages, aloja el servidor en HTTPS, configura `HOST=0.0.0.0` y `ALLOWED_ORIGINS=https://alejandropico.github.io`, y añade su URL en «Datos → Servidor TMB para datos en directo».
+4. Para Pages, aloja el servidor en HTTPS, configura `HOST=0.0.0.0` y `ALLOWED_ORIGINS=https://alejandropico.github.io`, y añade su URL en «Fuentes → Servidor TMB para datos en directo».
 
 Las claves permanecen en el servidor. Se limitan consultas y recursos y se cachean respuestas. iBus solo se consulta en paradas TMB y con respuestas recientes. El planificador oficial se utiliza entre paradas TMB; el cálculo local es la alternativa. Estas APIs autenticadas en directo no se han podido verificar con las claves de GitHub, que no son legibles después de guardarlas.
 
@@ -86,6 +108,7 @@ El [Punto de Acceso Nacional](https://nap.transportes.gob.es/) reúne GTFS, GTFS
 - [Consorcios de Andalucía](https://api.ctan.es/), [TUSSAM](https://www.tussam.es/) y [Metro de Sevilla](https://www.metro-sevilla.es/).
 - [Zaragoza](https://www.zaragoza.es/web/espacio-de-datos/servicio/catalogo/335), [Tranvía de Zaragoza](https://www.tranviasdezaragoza.es/) y [Renfe](https://data.renfe.com/).
 - Powered by [MIMTRANS](https://www.transportes.gob.es/). Archivos públicos conservados por [Mobility Database](https://mobilitydatabase.org/).
+- © [Instituto Geográfico Nacional](https://www.ign.es/resources/licencia/Condiciones_licenciaUso_IGN.pdf): infraestructura ferroviaria transformada en corredores inferidos. Ayuntamiento de Sevilla: recorridos TUSSAM.
 - Cartografía © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright), OpenMapTiles y OpenFreeMap. MapLibre, iconos Lucide, fuentes DM Sans y Manrope.
 
 La cartografía, fuentes y APIs requieren conexión. Proyecto independiente de los operadores.
