@@ -1,3 +1,4 @@
+import { cityThemes, accentText } from "./city-themes.js";
 export const themes = {
   morning: {
     name: "Mañana",
@@ -29,51 +30,31 @@ export const themes = {
     border: "#34413b",
     accent: "#d7eaa1",
   },
-  operator: {
-    name: "Ciudad",
-    style: "positron",
-    bg: "#f5f5f5",
-    surface: "#ffffff",
-    text: "#20252b",
-    muted: "#59636e",
-    border: "#d6dadd",
-    accent: "#d71920",
-  },
+  ...cityThemes,
 };
-// Operator references are listed in docs/operator-identities.json. This is an
-// independent interface using their identifying colours, not an official service.
-export const cityAccents = {
-  barcelona: "#cc0018",
-  madrid: "#005aa9",
-  sevilla: "#cf202e",
-  zaragoza: "#bf1727",
-  cadiz: "#005e72",
-  granada: "#007749",
-  malaga: "#00704a",
-  gibraltar: "#005f83",
-  almeria: "#16783b",
-  jaen: "#257640",
-  cordoba: "#3f7652",
-  huelva: "#126f54",
-  espana: "#8b0053",
-  bilbao: "#c34e04",
-  donostia: "#005a8b",
-  vitoria: "#347515",
-};
+export const resolveTheme = (id, city = "barcelona") =>
+  id === "operator"
+    ? cityThemes[city]
+      ? city
+      : "barcelona"
+    : themes[id]
+      ? id
+      : "night";
 export function applyTheme(id, city) {
-  const theme = themes[id] || themes.night;
+  id = resolveTheme(id, city);
+  const theme = themes[id];
   document.documentElement.dataset.theme = id;
   document.documentElement.style.colorScheme =
     id === "night" ? "dark" : "light";
   document.documentElement.style.setProperty(
     "--ui-on-accent",
-    id === "night" ? "#17201d" : "#fff",
+    accentText(theme.accent),
   );
-  for (const [name, value] of Object.entries({
-    ...theme,
-    accent: id === "operator" ? cityAccents[city] || "#005e72" : theme.accent,
-  }))
-    if (name !== "name" && name !== "style")
-      document.documentElement.style.setProperty("--ui-" + name, value);
+  for (const name of ["bg", "surface", "text", "muted", "border", "accent"])
+    document.documentElement.style.setProperty("--ui-" + name, theme[name]);
+  document.documentElement.style.setProperty(
+    "--ui-secondary",
+    theme.secondary || theme.accent,
+  );
   return theme.style;
 }

@@ -188,6 +188,40 @@ select,
   display: grid;
   gap: 12px;
 }
+.theme-group {
+  margin-bottom: 24px;
+}
+.theme-group:last-of-type .theme-options {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.theme-group:last-of-type .theme-option {
+  grid-template-columns: 20px minmax(0, 1fr);
+  padding: 12px;
+  gap: 5px 8px;
+}
+.theme-group:last-of-type .theme-option > span {
+  height: 36px;
+}
+.theme-group:last-of-type .theme-option b {
+  font-size: 13px;
+}
+.theme-group:last-of-type .theme-option small {
+  font-size: 10px;
+  line-height: 1.4;
+}
+.theme-group h3 {
+  font-size: 12px;
+  color: var(--ui-muted);
+  font-weight: 500;
+  margin: 0 0 12px;
+}
+.theme-source {
+  font-size: 12px;
+  line-height: 1.6;
+}
+.theme-source a {
+  color: var(--ui-accent);
+}
 .theme-option {
   display: grid;
   grid-template-columns: 44px 1fr;
@@ -203,6 +237,7 @@ select,
   height: 44px;
   background: var(--sample-bg);
   border-left: 8px solid var(--sample-accent);
+  border-right: 5px solid var(--sample-secondary);
   border-top: 1px solid var(--ui-border);
   border-bottom: 1px solid var(--ui-border);
 }
@@ -317,6 +352,47 @@ select,
   object-fit: contain;
   background: #fff;
   padding: 3px;
+}
+.operator-identity {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.operator-identity [hidden] {
+  display: none;
+}
+.operator-logo.logo-square {
+  width: 30px;
+  padding: 0;
+}
+.operator-logo.logo-tussam {
+  width: 100px;
+  background: #b40129;
+}
+.operator-logo[src$="euskotren.svg"] {
+  width: 88px;
+}
+.operator-logo[src$="metro-madrid.gif"] {
+  width: 32px;
+  height: 30px;
+  padding: 0;
+}
+.station-heading {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin: 14px 0 16px;
+}
+.station-heading h2 {
+  margin: 0;
+  min-width: 0;
+}
+.station-operators {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  max-width: 110px;
+  flex-shrink: 0;
 }
 .station-extras > summary {
   cursor: pointer;
@@ -457,6 +533,9 @@ select,
   border-top: 1px solid var(--ui-border);
   margin-bottom: 12px;
 }
+.schematic-line[open]:not([data-built]) .schematic-tracks {
+  min-height: 430px;
+}
 .schematic-line > summary {
   cursor: pointer;
   display: flex;
@@ -490,11 +569,61 @@ select,
 }
 .schematic-scroll {
   overflow-x: auto;
+  overflow-y: hidden;
   padding: 0 0 6px;
   overscroll-behavior-x: contain;
+  cursor: grab;
+  touch-action: pan-x pan-y;
+  user-select: none;
+  scrollbar-color: var(--ui-muted) var(--ui-surface);
+}
+.schematic-scroll.dragging,
+.schematic-scroll.dragging * {
+  cursor: grabbing;
+}
+.schematic-calendar {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--ui-muted);
+  border-left: 2px solid var(--ui-accent);
+  padding: 4px 12px;
+  max-width: 650px;
+  margin: 0 0 12px;
+}
+.schematic-calendar[hidden] {
+  display: none;
+}
+.schematic-connections {
+  position: absolute;
+  top: 136px;
+  width: 100px;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.schematic-connections button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.schematic-connections .line-badge {
+  height: 20px;
+  min-width: 23px;
+  font-size: 11px;
+  padding: 0 3px;
+  letter-spacing: 0;
+}
+.schematic-connections button:hover,
+.schematic-connections button:focus-visible {
+  outline: 2px solid var(--ui-text);
+  outline-offset: 2px;
 }
 .schematic-direction {
-  height: 185px;
+  min-height: 215px;
+  height: var(--track-height, 215px);
   position: relative;
 }
 .schematic-direction-title {

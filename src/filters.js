@@ -1,4 +1,4 @@
-import { transportMode } from "./transit.js";
+import { transportMode, matchesTransport } from "./transit.js";
 
 export const typeNames = {
   metro: "Metro",
@@ -53,6 +53,13 @@ export class NetworkFilters {
   }
   ids(layer) {
     return [...this.layers[layer]];
+  }
+  visible(layer, mode = "all", selected = null) {
+    return this.ids(layer).filter(
+      (i) =>
+        matchesTransport(this.network.routes[i], mode) &&
+        (selected == null || selected === i),
+    );
   }
   stops() {
     return [

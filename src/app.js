@@ -37,7 +37,8 @@ import {
 import { NetworkFilters, typeNames } from "./filters.js";
 import { stationPlatforms, departureGroups, countdown } from "./boards.js";
 import { Schematic } from "./schematic.js";
-import { themes, applyTheme } from "./themes.js";
+import { operatorIdentity, stationOperators } from "./operators.js";
+import { themes, applyTheme, resolveTheme } from "./themes.js";
 import { CityMap } from "./map.js";
 import { Movement, applyRouteColors } from "./geometry.js";
 import project from "../package.json";
@@ -71,7 +72,7 @@ let themeId = "night";
 try {
   themeId = localStorage.getItem("enruta-theme") || "night";
 } catch {}
-if (!themes[themeId]) themeId = "night";
+if (!themes[themeId] && themeId !== "operator") themeId = "night";
 applyTheme(themeId);
 let networkFilters,
   schematic,
@@ -290,14 +291,27 @@ function renderPanel() {
   if (tab === "appearance")
     html =
       header("Temas", "Elige la luz y los colores de la interfaz.") +
-      `<div class="theme-options">${Object.entries(themes)
+      [
+        ["Luz", Object.entries(themes).filter(([, t]) => !t.family)],
+        [
+          "Ciudades y redes",
+          Object.entries(themes).filter(([, t]) => t.family === "city"),
+        ],
+      ]
         .map(
-          ([id, t]) =>
-            `<button data-theme="${id}" aria-pressed="${themeId === id}" class="theme-option ${themeId === id ? "active" : ""}" style="--sample-bg:${t.surface};--sample-accent:${t.accent}"><span></span><b>${t.name}</b><small>${id === "operator" ? "Colores identificativos de " + esc(city.name) : id === "morning" ? "Claro y fresco" : id === "afternoon" ? "Cálido" : "Oscuro"}</small></button>`,
+          ([title, entries]) =>
+            `<section class="theme-group"><h3>${title}</h3><div class="theme-options">${entries
+              .map(
+                ([id, t]) =>
+                  `<button data-theme="${id}" aria-pressed="${themeId === id}" class="theme-option ${themeId === id ? "active" : ""}" style="--sample-bg:${t.surface};--sample-accent:${t.accent};--sample-secondary:${t.secondary || t.accent}"><span></span><b>${t.name}</b><small>${t.reference || (id === "morning" ? "Claro y fresco" : id === "afternoon" ? "Cálido" : "Oscuro")}</small></button>`,
+              )
+              .join("")}</div></section>`,
         )
-        .join(
-          "",
-        )}</div><p class="footnote">Las líneas conservan sus colores para reconocerlas en cualquier tema. El tema Ciudad se inspira en los operadores; esta aplicación es independiente.</p>`;
+        .join("") +
+      (themes[themeId]?.source
+        ? `<p class="theme-source">Referencia de ${esc(themes[themeId].name)}: <a href="${themes[themeId].source}" target="_blank" rel="noopener">${esc(themes[themeId].reference)} ↗</a></p>`
+        : "") +
+      `<p class="footnote">Paletas comprobadas en las webs de los operadores. Puedes usar cualquier estilo en cualquier ciudad. Las líneas conservan sus colores.</p>`;
   if (tab === "stories") {
     html =
       header(
@@ -468,18 +482,51 @@ function refreshFilterChecks() {
 }
 function refreshSchematic() {
   if (!schematic || !n) return;
-  const ids = networkFilters
-    .ids("routes")
-    .filter(
-      (i) =>
-        (mode === "all" || transportGroup(n.routes[i]) === mode) &&
-        (selectedRoute == null || selectedRoute === i),
-    );
-  schematic.render(n, s, ids);
-  schematic.update(
-    rawMovementFeatures.filter((f) =>
-      networkFilters.layers.motion.has(f.properties.route),
+  const view = schematic.n === n ? schematic.view() : null;
+  schematic.render(
+    n,
+    s,
+    routesVisible ? networkFilters.visible("routes", mode, selectedRoute) : [],
+    {
+      stops: visibleStops(),
+      date: simDate,
+    },
+  );
+  schematic.restore(view);
+  schematic.update(schematicVehicles(), simDate);
+}
+function visibleStops() {
+  if (!stopsVisible) return [];
+  return [
+    ...new Set(
+      networkFilters
+        .visible("stops", mode, selectedRoute)
+        .flatMap((i) => n.routes[i].stops),
     ),
+  ].filter((i) =>
+    transportGroup(n.stops[i]) === "rail"
+      ? railStopsVisible
+      : transportGroup(n.stops[i]) === "bus"
+        ? busStopsVisible
+        : otherStopsVisible,
+  );
+}
+function schematicVehicles() {
+  if (!vehiclesVisible || !routesVisible) return [];
+  const routes = new Set(networkFilters.visible("routes", mode, selectedRoute));
+  const ids = new Set(
+    networkFilters
+      .visible("motion", mode, selectedRoute)
+      .filter((id) => routes.has(id)),
+  );
+  return rawMovementFeatures.filter(
+    (f) =>
+      ids.has(f.properties.route) &&
+      (f.properties.mode === "rail"
+        ? railMovement
+        : f.properties.mode === "bus"
+          ? busMovement
+          : otherMovement),
   );
 }
 function rememberDetail() {
@@ -507,10 +554,7 @@ function closeDetail(restore = true) {
     detailContext = null;
   } else selectedRoute = null;
   applyFilters();
-  if (linearView) {
-    refreshSchematic();
-    schematic.restore(previousLinear);
-  }
+  if (linearView) schematic.restore(previousLinear);
   if (n) renderPanel();
 }
 function bindPanel() {
@@ -540,7 +584,6 @@ function bindPanel() {
           refreshFilterChecks();
           applyFilters();
           drawMovement();
-          if (linearView) refreshSchematic();
         }),
     );
     $$("[data-only-line]").forEach(
@@ -552,7 +595,6 @@ function bindPanel() {
           refreshFilterChecks();
           applyFilters();
           drawMovement();
-          if (linearView) refreshSchematic();
         }),
     );
     $("#filters-reset").onclick = () => {
@@ -565,7 +607,6 @@ function bindPanel() {
       renderPanel();
       applyFilters();
       drawMovement();
-      if (linearView) refreshSchematic();
     };
     $("#filters-none").onclick = () => {
       for (const layer of Object.keys(networkFilters.layers))
@@ -573,7 +614,6 @@ function bindPanel() {
       refreshFilterChecks();
       applyFilters();
       drawMovement();
-      if (linearView) refreshSchematic();
     };
   }
   $$("button[data-theme]").forEach(
@@ -625,6 +665,7 @@ function bindPanel() {
         query = "";
         renderPanel();
         applyFilters();
+        drawMovement();
       }),
   );
   if ($("#search"))
@@ -693,14 +734,9 @@ function setTab(next, force = false) {
 function applyFilters() {
   map?.filters({
     mode,
-    routeIds: networkFilters?.ids("routes"),
-    stopIds: networkFilters
-      ?.stops()
-      .filter(
-        (i) =>
-          selectedRoute == null || n.routes[selectedRoute].stops.includes(i),
-      ),
-    motionIds: networkFilters?.ids("motion"),
+    routeIds: networkFilters?.visible("routes", mode, selectedRoute),
+    stopIds: networkFilters ? visibleStops() : [],
+    motionIds: networkFilters?.visible("motion", mode, selectedRoute),
     route: selectedRoute,
     stops: stopsVisible,
     railStops: railStopsVisible,
@@ -714,6 +750,7 @@ function applyFilters() {
     stories: storiesVisible,
     vehicles: vehiclesVisible,
   });
+  if (linearView) refreshSchematic();
 }
 function showDetail(html) {
   closePanel();
@@ -723,6 +760,11 @@ function showDetail(html) {
   $("#detail").innerHTML =
     `<button class="close-detail" aria-label="Cerrar detalle">${icon("x")}</button>${html}`;
   $("#detail").hidden = false;
+  for (const image of $$("#detail .operator-identity img"))
+    image.addEventListener("error", () => {
+      image.hidden = true;
+      image.nextElementSibling.hidden = false;
+    });
   refreshIcons();
   $(".close-detail").onclick = () => closeDetail();
 }
@@ -738,7 +780,7 @@ async function showStop(i) {
   closePanel();
   map.focusStop(i);
   showDetail(
-    `<div class="eyebrow">${esc(modeLabel(st.mode).toUpperCase())} · ${esc(st.feed.toUpperCase())} · ${esc(st.code)}</div><h2>${esc(st.name)}</h2><div class="detail-badges">${rs.map((r) => operatorSymbol(r) + badge(r)).join("")}</div><div class="detail-actions"><button id="save-stop">${icon(favorites.includes(st.id) ? "bookmark-check" : "bookmark")} ${favorites.includes(st.id) ? "Guardada" : "Guardar"}</button><button id="route-from">${icon("route")} Salir de aquí</button></div><div class="access-note">${icon("accessibility")} ${st.accessible === 1 ? "Embarque accesible según GTFS" : st.accessible === 2 ? "Embarque no accesible según GTFS" : "Accesibilidad sin especificar"}</div><div class="list-heading"><span>PRÓXIMAS LLEGADAS</span><span id="arrival-label">HORARIO</span></div><div id="arrivals"><p class="muted">Consultando el horario…</p></div><small class="detail-note">Predicción por horario publicado. El movimiento del mapa es una interpolación; no representa posiciones GPS. Las horas intermedias sin dato se estiman entre las salidas publicadas.</small>`,
+    `<div class="eyebrow">${esc(modeLabel(st.mode).toUpperCase())} · ${esc(st.feed.toUpperCase())} · ${esc(st.code)}</div><div class="station-heading"><div class="station-operators">${stationOperators(rs).map(identitySymbol).join("")}</div><h2>${esc(st.name)}</h2></div><div class="detail-badges">${rs.map(badge).join("")}</div><div class="detail-actions"><button id="save-stop">${icon(favorites.includes(st.id) ? "bookmark-check" : "bookmark")} ${favorites.includes(st.id) ? "Guardada" : "Guardar"}</button><button id="route-from">${icon("route")} Salir de aquí</button></div><div class="access-note">${icon("accessibility")} ${st.accessible === 1 ? "Embarque accesible según GTFS" : st.accessible === 2 ? "Embarque no accesible según GTFS" : "Accesibilidad sin especificar"}</div><div class="list-heading"><span>PRÓXIMAS LLEGADAS</span><span id="arrival-label">HORARIO</span></div><div id="arrivals"><p class="muted">Consultando el horario…</p></div><small class="detail-note">Predicción por horario publicado. El movimiento del mapa es una interpolación; no representa posiciones GPS. Las horas intermedias sin dato se estiman entre las salidas publicadas.</small>`,
   );
   attachStopTools(i);
   showStationAccess(i);
@@ -869,7 +911,7 @@ function renderStationBoard() {
     ? groups
         .map(
           (g) =>
-            `<section class="departure-display" data-operator="${esc(g.r.feed)}"><div class="departure-direction">${operatorSymbol(g.r)}${badge(g.r)}<span><small>Dirección</small><b>${esc(g.head)}</b></span></div><div class="departure-times">${g.values.map((v, j) => `<div class="${j ? "following" : ""}"><time>${countdown(v.remaining)}</time><small>${esc(v.label)}</small></div>`).join("")}</div></section>`,
+            `<section class="departure-display" data-operator="${esc(g.r.feed)}"><div class="departure-direction">${badge(g.r)}<span><small>Dirección</small><b>${esc(g.head)}</b></span></div><div class="departure-times">${g.values.map((v, j) => `<div class="${j ? "following" : ""}"><time>${countdown(v.remaining)}</time><small>${esc(v.label)}</small></div>`).join("")}</div></section>`,
         )
         .join("")
     : '<p class="muted">No hay salidas publicadas para esta fecha y hora. Comprueba el calendario en Fuentes.</p>';
@@ -906,23 +948,13 @@ async function refreshStationBoard() {
     boardBusy = false;
   }
 }
+function identitySymbol(identity) {
+  return identity.asset
+    ? `<span class="operator-identity"><img class="operator-symbol operator-logo ${identity.className || ""}" src="./brands/${identity.asset}" alt="${esc(identity.name)}"><span class="operator-name" hidden>${esc(identity.name)}</span></span>`
+    : `<span class="operator-name">${esc(identity.name)}</span>`;
+}
 function operatorSymbol(r) {
-  if (r.feed === "tmb" && r.mode === "metro")
-    return '<img class="operator-symbol" src="./brands/metro-barcelona.svg" alt="Metro de Barcelona">';
-  if (r.feed?.startsWith("tram-"))
-    return '<img class="operator-symbol operator-logo" src="./brands/tram.png" alt="TRAM">';
-  if (r.feed === "fgc")
-    return '<img class="operator-symbol operator-logo" src="./brands/fgc.png" alt="FGC">';
-  const logo = r.feed?.startsWith("euskotren-")
-    ? ["euskotren.svg", "Euskotren"]
-    : {
-        "metro-madrid": ["metro-madrid.svg", "Metro de Madrid"],
-        "metro-sevilla": ["metro-sevilla.png", "Metro de Sevilla"],
-        tussam: ["tussam.png", "TUSSAM"],
-      }[r.feed];
-  if (logo)
-    return `<img class="operator-symbol operator-logo ${r.feed === "metro-sevilla" ? "logo-dark" : ""}" src="./brands/${logo[0]}" alt="${logo[1]}">`;
-  return `<span class="operator-name">${esc(r.operator || r.feed || "")}</span>`;
+  return identitySymbol(operatorIdentity(r));
 }
 function showRoute(i) {
   rememberDetail();
@@ -1432,11 +1464,13 @@ function drawMovement() {
       ),
   );
   map.set("vehicles", lastFeatures);
-  const filtered = (linearView ? rawMovementFeatures : lastFeatures).filter(
-    (f) =>
-      (mode === "all" || f.properties.mode === mode) &&
-      (selectedRoute == null || f.properties.route === selectedRoute),
-  );
+  const filtered = linearView
+    ? schematicVehicles()
+    : lastFeatures.filter(
+        (f) =>
+          (mode === "all" || f.properties.mode === mode) &&
+          (selectedRoute == null || f.properties.route === selectedRoute),
+      );
   $("#moving-count").textContent =
     num(
       filtered
@@ -1449,12 +1483,7 @@ function drawMovement() {
               : otherMovement,
         ).length,
     ) + " estimados";
-  if (linearView)
-    schematic.update(
-      rawMovementFeatures.filter((f) =>
-        networkFilters.layers.motion.has(f.properties.route),
-      ),
-    );
+  if (linearView) schematic.update(filtered, simDate);
 }
 function attachStopTools(i) {
   const st = n.stops[i];
@@ -1741,6 +1770,8 @@ async function loadCity(id) {
     if (responses.some((r) => !r.ok))
       throw new Error("No se encontraron los datos de esta red.");
     const data = await Promise.all(responses.map((r) => r.json()));
+    schematic?.destroy();
+    schematic = null;
     map?.map.remove();
     map = null;
     movement = null;
@@ -1751,7 +1782,11 @@ async function loadCity(id) {
     detailContext = stationBoard = vehicleDetail = null;
     networkFilters = new NetworkFilters(n);
     railMovement = busMovement = otherMovement = true;
-    const mapTheme = applyTheme(themeId, next.id);
+    themeId = resolveTheme(themeId, next.id);
+    try {
+      localStorage.setItem("enruta-theme", themeId);
+    } catch {}
+    const mapTheme = applyTheme(themeId);
     applyRouteColors(n);
     city = next;
     stories = cityStories[id] || [];

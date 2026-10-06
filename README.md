@@ -32,9 +32,9 @@ Dieciséis vistas: siete ciudades, ocho áreas adicionales de consorcios andaluc
 
 - Mapa a pantalla completa, menú lateral contraído y paneles que se despliegan a la derecha. En móvil, hamburguesa. Sin cabecera ni tarjetas promocionales. Paneles y botones con esquinas rectas.
 - Filtros jerárquicos independientes de recorridos, paradas y vehículos: todos, tipo/operador y línea. Botón «Solo» para aislar una línea; estados parciales y reinicio. Historias y movimiento de autobuses apagados al iniciar.
-- Vista lineal con líneas ordenadas, sentidos paralelos, ramales, paradas y vehículos estimados seleccionables. Desplazamiento horizontal sincronizado entre sentidos.
-- Fichas de estación con líneas y destinos, dos llegadas por sentido y cuenta atrás en segundos. Fichas de vehículos con próxima parada, destino e identificador del viaje. Cerrar la ficha recupera la cámara, selección y desplazamiento previos.
-- Temas Mañana, Tarde, Noche y Ciudad, guardados localmente. Ciudad adapta la paleta a la identidad del operador; no es una interfaz oficial. Símbolos descargados de operadores y colores de línea GTFS: [procedencia](docs/operator-identities.json).
+- Vista lineal con líneas ordenadas, sentidos paralelos, ramales, paradas y vehículos estimados seleccionables. Una barra horizontal por línea, arrastre con ratón y desplazamiento táctil. Comparte filtros con el mapa y muestra transbordos bajo las paradas. Los diagramas se cargan al entrar en pantalla.
+- Fichas de estación con líneas y destinos, logotipos agrupados una vez en el encabezado, dos llegadas por sentido y cuenta atrás en segundos. Fichas de vehículos con próxima parada, destino e identificador del viaje. Cerrar la ficha recupera la cámara, selección y desplazamiento previos.
+- Temas Mañana, Tarde, Noche y 16 estilos de ciudad/red, guardados localmente y seleccionables con cualquier mapa. Colores comprobados en webs de operadores: [referencias](docs/appearance-research.md). Símbolos descargados de operadores y colores de línea GTFS: [procedencia](docs/operator-identities.json).
 - Rueda/pellizco para zoom; giro con botón derecho o dos dedos. Doble clic derecho restablece norte y vista plana. Vista general y 3D en el lateral.
 - Selección de red por geolocalización si no hay ciudad explícita en la URL. Requiere permiso del navegador; coordenadas procesadas localmente. Si no hay una red urbana cercana, se abre Renfe. «Paradas cerca de mí» está en Explorar.
 - Acerca de: favicon original, nombre configurable, versión de package.json, autor, portfolio y repositorio.
@@ -125,3 +125,7 @@ El [Punto de Acceso Nacional](https://nap.transportes.gob.es/) reúne GTFS, GTFS
 - Cartografía © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright), OpenMapTiles y OpenFreeMap. MapLibre, iconos Lucide, fuentes DM Sans y Manrope.
 
 La cartografía, fuentes y APIs requieren conexión. Proyecto independiente de los operadores.
+
+## Revisión de fuentes nacionales
+
+EMT, CRTM, Sevilla y Euskadi ya se utilizan. La revisión de los portales propuestos, NAP, posibilidades de tiempo real y requisitos de acceso está en [docs/data-portals-review.md](docs/data-portals-review.md).

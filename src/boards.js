@@ -21,6 +21,60 @@ export function stationPlatforms(network, index) {
       : [],
   );
 }
+// Build once per network. Named, co-located rail platforms and published GTFS
+// transfers are connections; nearby bus stops alone do not imply a transfer.
+export function stationConnections(network) {
+  const served = network.stops.map(() => new Set()),
+    parents = new Map(),
+    names = new Map();
+  network.routes.forEach((r, i) => r.stops.forEach((st) => served[st]?.add(i)));
+  network.stops.forEach((st, i) => {
+    if (st.kind !== 0) return;
+    if (st.parent) {
+      if (!parents.has(st.parent)) parents.set(st.parent, []);
+      parents.get(st.parent).push(i);
+    }
+    if (transportGroup(st) === "rail") {
+      const key = stationName(st.name);
+      if (!names.has(key)) names.set(key, []);
+      names.get(key).push(i);
+    }
+  });
+  const peers = network.stops.map(
+    (st, i) =>
+      new Set([
+        i,
+        ...(parents.get(st.parent || st.id) || []),
+        ...(transportGroup(st) === "rail"
+          ? (names.get(stationName(st.name)) || []).filter(
+              (j) => distance(st, network.stops[j]) < 350,
+            )
+          : []),
+      ]),
+  );
+  const connections = peers.map(
+    (indices) => new Set([...indices].flatMap((i) => [...served[i]])),
+  );
+  for (const [a, b, type] of network.transfers || []) {
+    if (![0, 1, 2].includes(type) || !peers[a] || !peers[b]) continue;
+    for (const i of peers[a])
+      for (const j of peers[b])
+        for (const route of served[j]) connections[i].add(route);
+  }
+  return connections;
+}
+export function calendarNotice(feed, date) {
+  const key = date?.replaceAll("-", "");
+  if (
+    !key ||
+    !feed?.start ||
+    !feed?.end ||
+    (feed.start <= key && key <= feed.end)
+  )
+    return "";
+  const format = (d) => `${d.slice(6, 8)}/${d.slice(4, 6)}/${d.slice(0, 4)}`;
+  return `Calendario publicado: ${format(feed.start)}–${format(feed.end)}. No cubre la fecha seleccionada; no se estiman vehículos.`;
+}
 export function departureGroups(departures, schedule) {
   const groups = new Map(),
     seen = new Set();

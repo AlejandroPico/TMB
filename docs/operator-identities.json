@@ -1,6 +1,6 @@
 {
   "checked": "2026-10-06",
-  "note": "Marcas de sus respectivos titulares, utilizadas para identificar operadores. Interfaz independiente; las paletas de Ciudad se inspiran en ellos y no son sistemas de diseño oficiales.",
+  "note": "Marcas de sus respectivos titulares, utilizadas para identificar operadores. Paletas comprobadas en sus webs; referencias y colores en src/city-themes.js. Interfaz independiente.",
   "assets": [
     {
       "file": "public/brands/metro-barcelona.svg",
@@ -18,9 +18,10 @@
       "source": "https://www.tram.cat/assets/images/tram_logo.png"
     },
     {
-      "file": "public/brands/metro-madrid.svg",
+      "file": "public/brands/metro-madrid.gif",
       "owner": "Metro de Madrid",
-      "source": "https://www.metromadrid.es/sites/default/files/logos/MetroMadridLogo_9_0.svg"
+      "source": "https://www.crtm.es/media/1013/metro_s.gif",
+      "note": "Símbolo publicado por CRTM. La web de Metro devuelve HTML de bloqueo incluso con estado HTTP 200; se valida el contenido de los recursos."
     },
     {
       "file": "public/brands/euskotren.svg",
