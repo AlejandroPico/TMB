@@ -318,6 +318,18 @@ export class CityMap {
     });
     this.source("journey");
     this.map.addLayer({
+      id: "selected-vehicle",
+      type: "circle",
+      source: "selection",
+      filter: ["has", "id"],
+      paint: {
+        "circle-radius": 6,
+        "circle-color": ["coalesce", ["get", "color"], "#039be5"],
+        "circle-stroke-color": "#ffffff",
+        "circle-stroke-width": 2,
+      },
+    });
+    this.map.addLayer({
       id: "journey",
       type: "line",
       source: "journey",

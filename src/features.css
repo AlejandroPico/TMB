@@ -525,6 +525,124 @@ select,
   color: var(--ui-muted);
   font-size: 31px;
 }
+.detail-route-link,
+.arrival-link,
+.detail-link,
+.line-station {
+  color: inherit;
+  text-decoration: none;
+}
+.detail-route-link {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+.detail-route-link:hover .line-badge {
+  filter: brightness(1.12);
+}
+.detail-link {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.arrival-link {
+  display: block;
+}
+.arrival-link:hover .arrival-service,
+.detail-link:hover {
+  color: var(--ui-accent);
+}
+.departure-times .arrival-service {
+  font-weight: 650;
+  color: var(--ui-text);
+  overflow-wrap: anywhere;
+}
+.departure-times .arrival-state {
+  font-size: 9px;
+  line-height: 1.4;
+}
+.detail {
+  --detail-padding: 24px;
+}
+dialog {
+  --detail-padding: 28px;
+}
+.detail-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 44px;
+  margin: calc(-1 * var(--detail-padding)) calc(-1 * var(--detail-padding)) 14px;
+  padding: 0 8px 0 16px;
+  background: var(--ui-surface);
+}
+.detail-toolbar button,
+.dialog-head button,
+.drawer-head button,
+#clear-journey {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  color: var(--ui-text);
+}
+.detail-toolbar button:hover,
+.dialog-head button:hover,
+.drawer-head button:hover,
+#clear-journey:hover {
+  background: transparent;
+  color: var(--ui-accent);
+}
+.detail-toolbar .close-detail {
+  position: static;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border: 0;
+  background: transparent;
+}
+.detail-toolbar .close-detail svg {
+  width: 20px;
+  height: 20px;
+}
+#copy-detail-link {
+  margin-left: auto;
+  font-size: 10px;
+  padding: 12px 0;
+}
+#detail-back {
+  font-size: 11px;
+  padding: 12px 0;
+}
+.dialog-head {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  margin: calc(-1 * var(--detail-padding)) calc(-1 * var(--detail-padding)) 16px;
+  padding: 10px 16px;
+  background: var(--ui-surface);
+}
+.service-state {
+  font-size: 11px;
+  color: var(--ui-muted);
+}
+@media (max-width: 640px) {
+  .detail {
+    --detail-padding: 20px;
+  }
+  dialog {
+    --detail-padding: 22px;
+  }
+}
+.vehicle-heading .vehicle-number {
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.detail-actions .detail-link {
+  font-size: 12px;
+  padding: 10px 0;
+}
 .departure-display[data-operator="emt"] time {
   color: #007cb8;
 }

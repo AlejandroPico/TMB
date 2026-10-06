@@ -36,6 +36,13 @@ import {
 } from "lucide";
 import { NetworkFilters, typeNames } from "./filters.js";
 import { stationPlatforms, departureGroups, countdown } from "./boards.js";
+import {
+  detailURL,
+  readDetailURL,
+  serviceReference,
+  serviceStatus,
+  resolveServiceLink,
+} from "./detail-links.js";
 import { Schematic } from "./schematic.js";
 import { operatorIdentity, stationOperators } from "./operators.js";
 import {
@@ -90,6 +97,9 @@ let networkFilters,
   vehicleDetail = null,
   stationBoard = null,
   boardBusy = false;
+let currentDetail = null,
+  detailTrail = [],
+  detailReturning = false;
 const $ = (s) => document.querySelector(s),
   esc = (s) =>
     String(s ?? "").replace(
@@ -592,7 +602,11 @@ function refreshSchematic() {
   schematic.render(
     n,
     s,
-    routesVisible ? networkFilters.visible("routes", mode, selectedRoute) : [],
+    selectedRoute != null
+      ? [selectedRoute]
+      : routesVisible
+        ? networkFilters.visible("routes", mode)
+        : [],
     {
       date: simDate,
     },
@@ -639,12 +653,17 @@ function rememberDetail() {
     detailContext = {
       view: map.view(),
       linear: schematic?.view(),
+      linearView,
       mode,
       route: selectedRoute,
     };
 }
 function closeDetail(restore = true) {
   detailToken++;
+  currentDetail = null;
+  detailTrail = [];
+  if (city)
+    history.replaceState(null, "", detailURL(location.href, { city: city.id }));
   stationBoard = null;
   vehicleDetail = null;
   selectedStop = null;
@@ -652,6 +671,8 @@ function closeDetail(restore = true) {
   map?.set("selection", []);
   map?.set("reach", []);
   const previousLinear = detailContext?.linear;
+  if (detailContext && linearView !== detailContext.linearView)
+    $("#linear-toggle").click();
   if (detailContext) {
     mode = detailContext.mode;
     selectedRoute = detailContext.route;
@@ -854,15 +875,23 @@ function setTab(next, force = false) {
 function applyFilters() {
   map?.filters({
     mode,
-    routeIds: networkFilters?.visible("routes", mode, selectedRoute),
-    stopIds: networkFilters ? visibleStops() : [],
+    routeIds:
+      selectedRoute == null
+        ? networkFilters?.visible("routes", mode)
+        : [selectedRoute],
+    stopIds:
+      selectedRoute == null
+        ? networkFilters
+          ? visibleStops()
+          : []
+        : n.routes[selectedRoute].stops,
     motionIds: networkFilters?.visible("motion", mode, selectedRoute),
     route: selectedRoute,
     stops: stopsVisible,
     railStops: railStopsVisible,
     busStops: busStopsVisible,
     otherStops: otherStopsVisible,
-    routes: routesVisible,
+    routes: selectedRoute != null || routesVisible,
     railMovement,
     busMovement,
     otherMovement,
@@ -878,7 +907,8 @@ function showDetail(html) {
   $("#menu-toggle").setAttribute("aria-expanded", "false");
   $("#menu-toggle").setAttribute("aria-label", "Abrir menú");
   $("#detail").innerHTML =
-    `<button class="close-detail" aria-label="Cerrar detalle">${icon("x")}</button>${html}`;
+    `<div class="detail-toolbar">${detailTrail.length ? '<button id="detail-back" aria-label="Volver a la ficha anterior">← Volver</button>' : "<span></span>"}${currentDetail ? '<button id="copy-detail-link">Copiar enlace</button>' : ""}<button class="close-detail" aria-label="Cerrar detalle">${icon("x")}</button></div>${html}`;
+  $("#detail").scrollTop = 0;
   $("#detail").hidden = false;
   for (const image of $$("#detail .operator-identity img"))
     image.addEventListener("error", () => {
@@ -886,11 +916,92 @@ function showDetail(html) {
       image.nextElementSibling.hidden = false;
     });
   refreshIcons();
-  $(".close-detail").onclick = () => closeDetail();
+  $("#detail .close-detail").onclick = () => closeDetail();
+  if ($("#detail-back"))
+    $("#detail-back").onclick = () => {
+      const previous = detailTrail.pop();
+      detailReturning = true;
+      navigateDetail(previous);
+      detailReturning = false;
+    };
+  if ($("#copy-detail-link"))
+    $("#copy-detail-link").onclick = async () => {
+      try {
+        await navigator.clipboard.writeText(linkForDetail(currentDetail));
+        toast("Enlace de la ficha copiado.");
+      } catch {
+        toast("Puedes copiar el enlace desde la barra de direcciones.");
+      }
+    };
 }
+function linkForDetail(target) {
+  if (!target) return detailURL(location.href, { city: city.id });
+  const trip =
+    target.kind === "vehicle" ? trips.find((t) => t.id === target.ref) : null;
+  return detailURL(location.href, {
+    city: city.id,
+    ...target,
+    ref: trip ? serviceReference(s, trip).reference : target.ref,
+    date: simDate,
+    time: simTime,
+    start: trip?.start,
+  });
+}
+function enterDetail(target) {
+  if (
+    !detailReturning &&
+    currentDetail &&
+    JSON.stringify(currentDetail) !== JSON.stringify(target)
+  ) {
+    detailTrail.push(currentDetail);
+    if (detailTrail.length > 40) detailTrail.shift();
+  }
+  currentDetail = target;
+  history.replaceState(null, "", linkForDetail(target));
+}
+function detailLink(kind, ref, html, label, className = "detail-link") {
+  return `<a class="${className}" href="${esc(linkForDetail({ kind, ref }))}" data-detail-kind="${kind}" data-detail-ref="${esc(ref)}" aria-label="${esc(label)}">${html}</a>`;
+}
+function routeLink(r) {
+  return detailLink(
+    "route",
+    r.id,
+    badge(r),
+    "Ver recorrido completo de " + r.name,
+    "detail-route-link",
+  );
+}
+function navigateDetail(target) {
+  if (!target) return;
+  if (target.kind === "route")
+    showRoute(n.routes.findIndex((r) => r.id === target.ref));
+  if (target.kind === "stop")
+    showStop(n.stops.findIndex((st) => st.id === target.ref));
+  if (target.kind === "vehicle") showVehicle(target.ref);
+  if (target.kind === "gps") showGPS(target.ref);
+}
+$("#detail").addEventListener("click", (e) => {
+  const link = e.target.closest("a[data-detail-kind]");
+  if (
+    !link ||
+    e.button !== 0 ||
+    e.ctrlKey ||
+    e.metaKey ||
+    e.shiftKey ||
+    e.altKey
+  )
+    return;
+  e.preventDefault();
+  navigateDetail({
+    kind: link.dataset.detailKind,
+    ref: link.dataset.detailRef,
+  });
+});
 async function showStop(i) {
   if (i < 0 || !n.stops[i]) return;
   rememberDetail();
+  enterDetail({ kind: "stop", ref: n.stops[i].id });
+  stationBoard = null;
   vehicleDetail = null;
   selectedStop = i;
   const token = ++detailToken,
@@ -900,7 +1011,7 @@ async function showStop(i) {
   closePanel();
   map.focusStop(i);
   showDetail(
-    `<div class="eyebrow">${esc(modeLabel(st.mode).toUpperCase())} · ${esc(st.feed.toUpperCase())} · ${esc(st.code)}</div><div class="station-heading"><div class="station-operators">${stationOperators(rs).map(identitySymbol).join("")}</div><h2>${esc(st.name)}</h2></div><div class="detail-badges">${rs.map(badge).join("")}</div><div class="detail-actions"><button id="save-stop">${icon(favorites.includes(st.id) ? "bookmark-check" : "bookmark")} ${favorites.includes(st.id) ? "Guardada" : "Guardar"}</button><button id="route-from">${icon("route")} Salir de aquí</button></div><div class="access-note">${icon("accessibility")} ${st.accessible === 1 ? "Embarque accesible según GTFS" : st.accessible === 2 ? "Embarque no accesible según GTFS" : "Accesibilidad sin especificar"}</div><div class="list-heading"><span>PRÓXIMAS LLEGADAS</span><span id="arrival-label">HORARIO</span></div><div id="arrivals"><p class="muted">Consultando el horario…</p></div><small class="detail-note">Predicción por horario publicado. El movimiento del mapa es una interpolación; no representa posiciones GPS. Las horas intermedias sin dato se estiman entre las salidas publicadas.</small>`,
+    `<div class="eyebrow">${esc(modeLabel(st.mode).toUpperCase())} · ${esc(st.feed.toUpperCase())} · ${esc(st.code)}</div><div class="station-heading"><div class="station-operators">${stationOperators(rs).map(identitySymbol).join("")}</div><h2>${esc(st.name)}</h2></div><div class="detail-badges">${rs.map(routeLink).join("")}</div><div class="detail-actions"><button id="save-stop">${icon(favorites.includes(st.id) ? "bookmark-check" : "bookmark")} ${favorites.includes(st.id) ? "Guardada" : "Guardar"}</button><button id="route-from">${icon("route")} Salir de aquí</button></div><div class="access-note">${icon("accessibility")} ${st.accessible === 1 ? "Embarque accesible según GTFS" : st.accessible === 2 ? "Embarque no accesible según GTFS" : "Accesibilidad sin especificar"}</div><div class="list-heading"><span>PRÓXIMAS LLEGADAS</span><span id="arrival-label">HORARIO</span></div><div id="arrivals"><p class="muted">Consultando el horario…</p></div><small class="detail-note">Predicción por horario publicado. El movimiento del mapa es una interpolación; no representa posiciones GPS. Las horas intermedias sin dato se estiman entre las salidas publicadas.</small>`,
   );
   attachStopTools(i);
   showStationAccess(i);
@@ -1005,7 +1116,12 @@ function renderStationBoard() {
               .slice(0, 2)
               .map((a) => ({
                 remaining: (a.time - Date.now()) / 1000,
-                label: a.vehicle ? "Bus " + a.vehicle : "Previsión iBus",
+                label: "Previsión iBus",
+                service:
+                  a.vehicle != null
+                    ? "Bus " + a.vehicle
+                    : "Vehículo sin identificar",
+                status: "Sin posición publicada",
               })),
           };
         })
@@ -1025,17 +1141,54 @@ function renderStationBoard() {
                   ? "Intervalo GTFS"
                   : "Horario " +
                     clock(d.trip.start + s.patterns[d.trip.t[4]][1][d.k]),
+                vehicle: d.trip.id,
+                service: serviceReference(s, d.trip).label,
+                status: serviceStatus(
+                  s,
+                  d.trip,
+                  simTime,
+                  rawMovementFeatures.some(
+                    (f) => f.properties.id === d.trip.id,
+                  ),
+                ),
               })),
           }))
           .filter((g) => g.values.length);
-  $("#arrivals").innerHTML = groups.length
-    ? groups
-        .map(
-          (g) =>
-            `<section class="departure-display" data-operator="${esc(g.r.feed)}"><div class="departure-direction">${badge(g.r)}<span><small>Dirección</small><b>${esc(g.head)}</b></span></div><div class="departure-times">${g.values.map((v, j) => `<div class="${j ? "following" : ""}"><time>${countdown(v.remaining)}</time><small>${esc(v.label)}</small></div>`).join("")}</div></section>`,
-        )
-        .join("")
-    : '<p class="muted">No hay salidas publicadas para esta fecha y hora. Comprueba el calendario en Fuentes.</p>';
+  const boardKey = JSON.stringify(
+    groups.map((g) => ({
+      route: g.r.id || g.r.name,
+      head: g.head,
+      values: g.values.map(({ remaining, ...v }) => v),
+    })),
+  );
+  if (board.renderKey !== boardKey) {
+    const focused = $("#arrivals").contains(document.activeElement)
+      ? document.activeElement.getAttribute("href")
+      : null;
+    $("#arrivals").innerHTML = groups.length
+      ? groups
+          .map(
+            (g) =>
+              `<section class="departure-display" data-operator="${esc(g.r.feed)}"><div class="departure-direction">${g.r.id ? routeLink(g.r) : badge(g.r)}<span><small>Dirección</small><b>${esc(g.head)}</b></span></div><div class="departure-times">${g.values
+                .map((v, j) => {
+                  const content = `<time>${countdown(v.remaining)}</time><small>${esc(v.label)}</small><small class="arrival-service">${esc(v.service)}</small><small class="arrival-state">${esc(v.status)}</small>`;
+                  return `<div class="${j ? "following" : ""}">${v.vehicle ? detailLink("vehicle", v.vehicle, content, "Ver " + v.service + " hacia " + g.head, "arrival-link") : content}</div>`;
+                })
+                .join("")}</div></section>`,
+          )
+          .join("")
+      : '<p class="muted">No hay salidas publicadas para esta fecha y hora. Comprueba el calendario en Fuentes.</p>';
+    board.renderKey = boardKey;
+    if (focused)
+      [...$("#arrivals").querySelectorAll("a")]
+        .find((a) => a.getAttribute("href") === focused)
+        ?.focus({ preventScroll: true });
+  } else {
+    const values = groups.flatMap((g) => g.values);
+    $("#arrivals")
+      .querySelectorAll("time")
+      .forEach((el, i) => (el.textContent = countdown(values[i].remaining)));
+  }
   $(".detail-note").textContent =
     board.source === "live"
       ? "Cuenta atrás de la previsión publicada por TMB. Se actualiza cada 20 segundos."
@@ -1078,11 +1231,14 @@ function operatorSymbol(r) {
   return identitySymbol(operatorIdentity(r));
 }
 function showRoute(i) {
+  if (i < 0 || !n.routes[i]) return;
   rememberDetail();
+  enterDetail({ kind: "route", ref: n.routes[i].id });
   stationBoard = null;
   vehicleDetail = null;
   selectedStop = null;
   selectedRoute = i;
+  map.set("selection", []);
   const r = n.routes[i];
   mode = transportGroup(r);
   applyFilters();
@@ -1116,7 +1272,7 @@ function lineStations(d, r) {
     ? d.stops
         .map(
           (i, k) =>
-            `<button class="line-station" data-detail-stop="${i}" style="--line:${r.color}"><span class="station-node"></span><span>${esc(n.stops[i].name)}</span><small>${k + 1}</small></button>`,
+            `<a class="line-station" href="${esc(linkForDetail({ kind: "stop", ref: n.stops[i].id }))}" data-detail-kind="stop" data-detail-ref="${esc(n.stops[i].id)}" style="--line:${r.color}"><span class="station-node"></span><span>${esc(n.stops[i].name)}</span><small>${k + 1}</small></a>`,
         )
         .join("")
     : "";
@@ -1132,6 +1288,7 @@ function showStory(id) {
   vehicleDetail = null;
   const st = stories.find((x) => x.id === id);
   if (!st) return;
+  enterDetail(null);
   $(".sidebar").classList.remove("open");
   detailToken++;
   map.map.flyTo({
@@ -1157,6 +1314,7 @@ function showTour(i) {
   stationBoard = null;
   vehicleDetail = null;
   const t = tours[i];
+  enterDetail(null);
   mode = "rail";
   selectedRoute = null;
   applyFilters();
@@ -1186,30 +1344,89 @@ function showTour(i) {
   bindDetailStops();
 }
 function showVehicle(id) {
-  const f = rawMovementFeatures.find((x) => x.properties.id === id);
-  if (!f) return;
+  const trip = trips.find((t) => t.id === id);
+  if (!trip) {
+    toast("Este servicio no está disponible en el calendario seleccionado.");
+    return;
+  }
+  const f =
+    rawMovementFeatures.find((x) => x.properties.id === id) ||
+    movement.features([trip], simTime)[0];
   rememberDetail();
+  enterDetail({ kind: "vehicle", ref: id });
   stationBoard = null;
   selectedStop = null;
   vehicleDetail = id;
-  const r = n.routes[f.properties.route];
+  selectedRoute = trip.t[0];
+  const r = n.routes[selectedRoute];
+  mode = transportGroup(r);
+  if (linearView) $("#linear-toggle").click();
+  applyFilters();
+  if (f) focusVehicle(f);
+  else {
+    map.set("selection", []);
+    map.focusRoute(selectedRoute);
+  }
   detailToken++;
   showDetail(
-    `<div class="vehicle-heading">${operatorSymbol(r)}${badge(r)}<span class="vehicle-number">${esc(s.tripIds[+id.split("-")[0]] || id)}</span></div><p class="eyebrow">${esc(typeNames[r.mode] || "Vehículo")} · ${esc(r.operator)}</p><div id="vehicle-live-detail"></div><div class="detail-actions"><button id="vehicle-stop">Ver próxima parada</button><button id="vehicle-route">Ver línea</button></div><small class="detail-note">Posición y llegada estimadas por horario. El identificador corresponde al viaje GTFS, no al número de convoy. El operador no publica aquí ocupación, vía ni serie.</small>`,
+    `<div class="vehicle-heading">${operatorSymbol(r)}${routeLink(r)}<span class="vehicle-number">${esc(serviceReference(s, trip).label)}</span></div><p class="eyebrow">${esc(typeNames[r.mode] || "Vehículo")} · ${esc(r.operator)}</p><div id="vehicle-live-detail"></div><div class="detail-actions"><button id="vehicle-locate">Localizar en el mapa</button>${detailLink("route", r.id, "Ver línea", "Ver recorrido completo de " + r.name)}</div><small class="detail-note">Posición y llegada estimadas por horario. «Servicio» identifica el viaje publicado, no el número físico de autobús o convoy. No incluye retrasos ni confirma la llegada real.</small>`,
   );
-  $("#vehicle-stop").onclick = () => {
+  $("#vehicle-locate").onclick = () => {
     const current = rawMovementFeatures.find((x) => x.properties.id === id);
-    if (current) showStop(current.properties.next);
+    if (current) focusVehicle(current);
+    else
+      toast(
+        "No hay posición disponible para este servicio en la hora seleccionada.",
+      );
   };
-  $("#vehicle-route").onclick = () => showRoute(f.properties.route);
   updateVehicleDetail();
+}
+function focusVehicle(feature) {
+  map.set("selection", [feature]);
+  map.map.flyTo({
+    center: feature.geometry.coordinates,
+    zoom: 16,
+    pitch: 0,
+    duration: 1000,
+    padding: { left: 70, right: innerWidth > 720 ? 380 : 30 },
+  });
 }
 function updateVehicleDetail() {
   if (!vehicleDetail || !$("#vehicle-live-detail")) return;
-  const f = rawMovementFeatures.find((x) => x.properties.id === vehicleDetail);
-  $("#vehicle-live-detail").innerHTML = f
-    ? `<p class="eyebrow">Próxima parada</p><h2>${esc(n.stops[f.properties.next].name)}</h2><p class="eyebrow">Llegada estimada</p><time class="vehicle-countdown">${countdown(f.properties.arrival - simTime)}</time><dl class="vehicle-facts"><div><dt>Destino</dt><dd>${esc(f.properties.head)}</dd></div><div><dt>Última parada</dt><dd>${esc(n.stops[f.properties.current].name)}</dd></div><div><dt>Hora prevista</dt><dd>${clock(f.properties.arrival)}</dd></div><div><dt>Fuente</dt><dd>${f.properties.frequency ? "Intervalo GTFS" : "Horario GTFS"}</dd></div></dl>`
-    : '<p class="muted">Este viaje ya ha terminado en el horario seleccionado.</p>';
+  const trip = trips.find((t) => t.id === vehicleDetail);
+  if (!trip) {
+    $("#vehicle-live-detail").innerHTML =
+      '<p class="muted">Este servicio no está disponible en el calendario seleccionado.</p>';
+    map.set("selection", []);
+    return;
+  }
+  const f =
+    rawMovementFeatures.find((x) => x.properties.id === vehicleDetail) ||
+    movement.features([trip], simTime)[0];
+  const p = s.patterns[trip.t[4]],
+    status = serviceStatus(s, trip, simTime, !!f);
+  const k = p[1].findIndex((t) => trip.start + t >= simTime);
+  const next = f?.properties.next ?? p[0][k < 0 ? p[0].length - 1 : k];
+  const arrival =
+    f?.properties.arrival ?? trip.start + p[1][k < 0 ? p[0].length - 1 : k];
+  const stopLink = (index) =>
+    detailLink(
+      "stop",
+      n.stops[index].id,
+      esc(n.stops[index].name),
+      "Ver parada " + n.stops[index].name,
+    );
+  const html = `<p class="service-state">${esc(status)}</p><p class="eyebrow">${status === "Salida pendiente" ? "Salida desde" : status === "Servicio finalizado" ? "Última parada del servicio" : "Próxima parada por horario"}</p><h2>${stopLink(next)}</h2><p class="eyebrow">Llegada estimada</p><time class="vehicle-countdown">${status === "Servicio finalizado" ? "—" : countdown(arrival - simTime)}</time><dl class="vehicle-facts"><div><dt>Destino</dt><dd>${esc(s.heads[trip.t[3]])}</dd></div>${f ? `<div><dt>Última parada</dt><dd>${stopLink(f.properties.current)}</dd></div>` : ""}<div><dt>Hora prevista</dt><dd>${clock(arrival)}</dd></div><div><dt>Fuente</dt><dd>${trip.frequency ? "Intervalo GTFS" : "Horario GTFS"}</dd></div></dl>`;
+  // Keep focused links in place while the second counter advances.
+  const key = [status, next, f?.properties.current, arrival].join(":");
+  if ($("#vehicle-live-detail").dataset.key !== key) {
+    $("#vehicle-live-detail").innerHTML = html;
+    $("#vehicle-live-detail").dataset.key = key;
+  } else
+    $("#vehicle-live-detail .vehicle-countdown").textContent =
+      status === "Servicio finalizado" ? "—" : countdown(arrival - simTime);
+  $("#vehicle-locate").disabled = !f;
+  map.set("selection", f ? [f] : []);
 }
 async function plan(e) {
   e.preventDefault();
@@ -1264,7 +1481,7 @@ async function plan(e) {
 }
 function showData() {
   const dialog = $("#data-dialog");
-  dialog.innerHTML = `<button id="close-data" class="close-detail" aria-label="Cerrar datos">${icon("x")}</button><div class="eyebrow">DATOS CON PROCEDENCIA</div><h2>Fuentes y cobertura</h2><p>${esc(APP_NAME)} reúne redes publicadas por sus operadores. La cobertura crece ciudad a ciudad; cada calendario tiene su propia vigencia.</p><div class="coverage-grid">${cities.map((c) => `<button data-city="${c.id}" class="coverage-city ${city.id === c.id ? "selected" : ""}"><b>${esc(c.name)}</b><span>${num(c.routes)} líneas · ${num(c.stops)} embarques</span><small>${esc(c.coverage)}</small></button>`).join("")}</div><h3>${esc(city.name)} · archivos publicados</h3>${n.meta.feeds.map((f) => `<div class="data-source"><span class="data-status ${feedCurrent(f) ? "ready" : "waiting"}">${feedCurrent(f) ? "CALENDARIO VIGENTE" : "FUERA DEL CALENDARIO"}</span><h3>${esc(f.publisher)}</h3><p>${num(f.routes)} líneas · ${num(f.trips)} viajes en el archivo.</p><small>Calendario ${formatDate(f.start)} — ${formatDate(f.end)}<br>Normalizado ${new Date(f.fetchedAt).toLocaleString("es-ES", { timeZone: "Europe/Madrid" })}${f.skippedTrips ? `<br>${num(f.skippedTrips)} viajes omitidos por tiempos incompletos o inválidos.` : ""}${f.approximateShapes ? "<br>Hay recorridos sin geometría verificable: sus líneas y vehículos se ocultan en el mapa." : ""}</small><a href="${esc(f.source)}" target="_blank" rel="noopener">Archivo utilizado ↗</a> · <a href="${esc(f.website)}" target="_blank" rel="noopener">Operador ↗</a> · <a href="${esc(f.license)}" target="_blank" rel="noopener">Licencia ↗</a></div>`).join("")}<div class="data-source"><span class="data-status ready">API PÚBLICA · BARCELONA</span><h3>FGC · Posiciones y ocupación</h3><p>Puntos azules: coordenadas publicadas por FGC. Se consultan cada 30 segundos al explorar la hora actual. La ocupación, cuando existe, es la media de los coches con información. Se ocultan las publicaciones con más de tres minutos de antigüedad.</p><a href="${FGC_SOURCE}" target="_blank" rel="noopener">FGC · CC BY 4.0 ↗</a></div><div class="data-source"><span class="data-status ${serverConfigured ? "ready" : "waiting"}">${serverConfigured ? "SERVIDOR CONECTADO" : "REQUIERE SERVIDOR"}</span><h3>TMB · Transit, iBus y Planner</h3><p>Las claves de GitHub actualizan el archivo de horarios. Para consultar iBus, detalles Transit y el planificador oficial desde esta web, conecta el servidor incluido con esas claves. El resto de ciudades utiliza sus propios horarios.</p></div><div class="data-source"><h3>Trazados y cartografía</h3><p>OpenStreetMap vía OpenFreeMap. Historias con fuentes enlazadas. Los vehículos por horario son interpolaciones sobre geometrías publicadas. Renfe sin shapes: corredores reconstruidos sobre vías del IGN pasando por las estaciones GTFS, con preferencia por ancho estándar en AVE; no son itinerarios confirmados por el operador. Las geometrías desconectadas se omiten. TUSSAM: recorridos municipales. Metro de Sevilla: relación cartográfica de OpenStreetMap. En «Viajar», los transbordos son aproximados y no se incorporan incidencias.</p><a href="https://api-features.idee.es/collections/railwaylink?f=html" target="_blank" rel="noopener">© IGN · vías ferroviarias ↗</a> · <a href="https://www.ign.es/resources/licencia/Condiciones_licenciaUso_IGN.pdf" target="_blank" rel="noopener">Licencia IGN ↗</a> · <a href="https://www.arcgis.com/home/item.html?id=c5e6ecf63aa944c8a09eb1e65e72d8f4" target="_blank" rel="noopener">Ayuntamiento de Sevilla · TUSSAM ↗</a> · <a href="https://www.openstreetmap.org/relation/255088" target="_blank" rel="noopener">Metro de Sevilla · OSM/ODbL ↗</a> · <a href="https://www.transportes.gob.es" target="_blank" rel="noopener">Powered by MIMTRANS ↗</a> · <a href="https://mobilitydatabase.org" target="_blank" rel="noopener">Archivos de Mobility Database ↗</a></div><form id="connection-form"><label class="field-label">SERVIDOR TMB PARA DATOS EN DIRECTO<input type="url" id="api-url" placeholder="https://tu-servidor.example" value="${esc(apiBase)}"></label><p class="footnote">Opcional. Las claves permanecen en el servidor.</p><button class="primary" type="submit">Guardar conexión</button><span id="connection-state"></span></form><a class="text-link" href="https://nap.transportes.gob.es/" target="_blank" rel="noopener">Más redes españolas: Punto de Acceso Nacional ↗</a>`;
+  dialog.innerHTML = `<div class="detail-toolbar"><span></span><button id="close-data" class="close-detail" aria-label="Cerrar datos">${icon("x")}</button></div><div class="eyebrow">DATOS CON PROCEDENCIA</div><h2>Fuentes y cobertura</h2><p>${esc(APP_NAME)} reúne redes publicadas por sus operadores. La cobertura crece ciudad a ciudad; cada calendario tiene su propia vigencia.</p><div class="coverage-grid">${cities.map((c) => `<button data-city="${c.id}" class="coverage-city ${city.id === c.id ? "selected" : ""}"><b>${esc(c.name)}</b><span>${num(c.routes)} líneas · ${num(c.stops)} embarques</span><small>${esc(c.coverage)}</small></button>`).join("")}</div><h3>${esc(city.name)} · archivos publicados</h3>${n.meta.feeds.map((f) => `<div class="data-source"><span class="data-status ${feedCurrent(f) ? "ready" : "waiting"}">${feedCurrent(f) ? "CALENDARIO VIGENTE" : "FUERA DEL CALENDARIO"}</span><h3>${esc(f.publisher)}</h3><p>${num(f.routes)} líneas · ${num(f.trips)} viajes en el archivo.</p><small>Calendario ${formatDate(f.start)} — ${formatDate(f.end)}<br>Normalizado ${new Date(f.fetchedAt).toLocaleString("es-ES", { timeZone: "Europe/Madrid" })}${f.skippedTrips ? `<br>${num(f.skippedTrips)} viajes omitidos por tiempos incompletos o inválidos.` : ""}${f.approximateShapes ? "<br>Hay recorridos sin geometría verificable: sus líneas y vehículos se ocultan en el mapa." : ""}</small><a href="${esc(f.source)}" target="_blank" rel="noopener">Archivo utilizado ↗</a> · <a href="${esc(f.website)}" target="_blank" rel="noopener">Operador ↗</a> · <a href="${esc(f.license)}" target="_blank" rel="noopener">Licencia ↗</a></div>`).join("")}<div class="data-source"><span class="data-status ready">API PÚBLICA · BARCELONA</span><h3>FGC · Posiciones y ocupación</h3><p>Puntos azules: coordenadas publicadas por FGC. Se consultan cada 30 segundos al explorar la hora actual. La ocupación, cuando existe, es la media de los coches con información. Se ocultan las publicaciones con más de tres minutos de antigüedad.</p><a href="${FGC_SOURCE}" target="_blank" rel="noopener">FGC · CC BY 4.0 ↗</a></div><div class="data-source"><span class="data-status ${serverConfigured ? "ready" : "waiting"}">${serverConfigured ? "SERVIDOR CONECTADO" : "REQUIERE SERVIDOR"}</span><h3>TMB · Transit, iBus y Planner</h3><p>Las claves de GitHub actualizan el archivo de horarios. Para consultar iBus, detalles Transit y el planificador oficial desde esta web, conecta el servidor incluido con esas claves. El resto de ciudades utiliza sus propios horarios.</p></div><div class="data-source"><h3>Trazados y cartografía</h3><p>OpenStreetMap vía OpenFreeMap. Historias con fuentes enlazadas. Los vehículos por horario son interpolaciones sobre geometrías publicadas. Renfe sin shapes: corredores reconstruidos sobre vías del IGN pasando por las estaciones GTFS, con preferencia por ancho estándar en AVE; no son itinerarios confirmados por el operador. Las geometrías desconectadas se omiten. TUSSAM: recorridos municipales. Metro de Sevilla: relación cartográfica de OpenStreetMap. En «Viajar», los transbordos son aproximados y no se incorporan incidencias.</p><a href="https://api-features.idee.es/collections/railwaylink?f=html" target="_blank" rel="noopener">© IGN · vías ferroviarias ↗</a> · <a href="https://www.ign.es/resources/licencia/Condiciones_licenciaUso_IGN.pdf" target="_blank" rel="noopener">Licencia IGN ↗</a> · <a href="https://www.arcgis.com/home/item.html?id=c5e6ecf63aa944c8a09eb1e65e72d8f4" target="_blank" rel="noopener">Ayuntamiento de Sevilla · TUSSAM ↗</a> · <a href="https://www.openstreetmap.org/relation/255088" target="_blank" rel="noopener">Metro de Sevilla · OSM/ODbL ↗</a> · <a href="https://www.transportes.gob.es" target="_blank" rel="noopener">Powered by MIMTRANS ↗</a> · <a href="https://mobilitydatabase.org" target="_blank" rel="noopener">Archivos de Mobility Database ↗</a></div><form id="connection-form"><label class="field-label">SERVIDOR TMB PARA DATOS EN DIRECTO<input type="url" id="api-url" placeholder="https://tu-servidor.example" value="${esc(apiBase)}"></label><p class="footnote">Opcional. Las claves permanecen en el servidor.</p><button class="primary" type="submit">Guardar conexión</button><span id="connection-state"></span></form><a class="text-link" href="https://nap.transportes.gob.es/" target="_blank" rel="noopener">Más redes españolas: Punto de Acceso Nacional ↗</a>`;
   $$("[data-city]").forEach(
     (b) =>
       (b.onclick = () => {
@@ -1811,15 +2028,29 @@ function coverageNotice() {
   return `<p class="coverage-note">${esc(city.coverage)}${expired.length ? `<br><strong>${expired.map((f) => esc(f.publisher)).join(", ")}: archivo fuera del calendario actual. Consulta sus fechas en Fuentes.</strong>` : ""}</p>`;
 }
 function showGPS(id) {
+  const v = gps?.vehicles.find((v) => v.id === id);
+  if (!v || Date.now() - v.timestamp > 180000 || !syncClock) {
+    toast("La posición de este tren ya no está disponible.");
+    return;
+  }
   rememberDetail();
+  enterDetail({ kind: "gps", ref: id });
   stationBoard = null;
   vehicleDetail = null;
   selectedStop = null;
-  const v = gps?.vehicles.find((v) => v.id === id);
-  if (!v || Date.now() - v.timestamp > 180000 || !syncClock) return;
+  const r = n.routes.find((r) => r.feed === "fgc" && r.name === v.line);
+  selectedRoute = r ? n.routes.indexOf(r) : null;
+  mode = "rail";
+  if (linearView) $("#linear-toggle").click();
+  applyFilters();
+  focusVehicle({
+    type: "Feature",
+    geometry: { type: "Point", coordinates: [v.lon, v.lat] },
+    properties: { id: v.id },
+  });
   detailToken++;
   showDetail(
-    `<div class="eyebrow gps-text">POSICIÓN PUBLICADA · FGC</div><div class="detail-badges">${operatorSymbol({ feed: "fgc" })}${n.routes.find((r) => r.feed === "fgc" && r.name === v.line) ? badge(n.routes.find((r) => r.feed === "fgc" && r.name === v.line)) : ""}</div><h2>Línea ${esc(v.line)}</h2><p class="story-subtitle">${v.trainType ? "Serie " + esc(v.trainType) + " · " : ""}Destino ${esc(v.destination)}</p><div class="gps-card"><strong>${v.occupancy === null ? "Sin dato" : v.occupancy + "%"}</strong><span>Ocupación media de coches con dato</span></div><p class="story-body">${v.onTime === true ? "El operador indica circulación en hora." : v.onTime === false ? "El operador indica circulación fuera de hora." : "Puntualidad sin especificar."}${v.station ? " Código de estación: " + esc(v.station) + "." : ""}</p><small class="detail-note">Publicación del conjunto FGC: ${new Date(v.timestamp).toLocaleTimeString("es-ES", { timeZone: "Europe/Madrid" })}. Esta hora corresponde a la actualización del conjunto, no a una medición individual del tren. Los códigos de destino son los del operador.</small><details class="raw-vehicle-data"><summary>Todos los campos publicados</summary><dl>${Object.entries(
+    `<div class="eyebrow gps-text">POSICIÓN PUBLICADA · FGC</div><div class="detail-badges">${operatorSymbol({ feed: "fgc" })}${r ? routeLink(r) : ""}</div><h2>Servicio FGC ${esc(v.id)}</h2><p class="story-subtitle">${v.trainType ? "Serie " + esc(v.trainType) + " · " : ""}Destino ${esc(v.destination)}</p><div class="gps-card"><strong>${v.occupancy === null ? "Sin dato" : v.occupancy + "%"}</strong><span>Ocupación media de coches con dato</span></div><p class="story-body">${v.onTime === true ? "El operador indica circulación en hora." : v.onTime === false ? "El operador indica circulación fuera de hora." : "Puntualidad sin especificar."}${v.station ? " Código de estación: " + esc(v.station) + "." : ""}</p><small class="detail-note">Publicación del conjunto FGC: ${new Date(v.timestamp).toLocaleTimeString("es-ES", { timeZone: "Europe/Madrid" })}. Esta hora corresponde a la actualización del conjunto, no a una medición individual del tren. Los códigos de destino son los del operador.</small><details class="raw-vehicle-data"><summary>Todos los campos publicados</summary><dl>${Object.entries(
       v.details || {},
     )
       .map(
@@ -1925,6 +2156,8 @@ async function loadCity(id) {
     gps = null;
     gpsNext = 0;
     [n, s] = data;
+    currentDetail = null;
+    detailTrail = [];
     detailContext = stationBoard = vehicleDetail = null;
     networkFilters = new NetworkFilters(n);
     railMovement = busMovement = otherMovement = true;
@@ -1959,7 +2192,7 @@ async function loadCity(id) {
     } catch {}
     const url = new URL(location.href);
     url.searchParams.set("city", id);
-    history.replaceState(null, "", url);
+    history.replaceState(null, "", detailURL(url.href, { city: id }));
     renderPanel();
     updateClock();
     movement = new Movement(n, s);
@@ -2027,6 +2260,7 @@ async function loadCity(id) {
   }
 }
 async function init() {
+  const requestedDetail = readDetailURL(location.href);
   try {
     const response = await fetch("./data/cities.json");
     if (!response.ok) throw new Error("No se encontró el catálogo de redes.");
@@ -2048,6 +2282,7 @@ async function init() {
     await loadCity(
       cities.some((c) => c.id === requested) ? requested : DEFAULT_CITY,
     );
+    if (requestedDetail) await openDetailURL(requestedDetail);
     if (!explicitCity) {
       themeLocationAttempted = true;
       locate(true);
@@ -2058,6 +2293,35 @@ async function init() {
     $("#loading").innerHTML =
       `<h2>No pudimos cargar las redes.</h2><p>${esc(e.message)}</p><button id="retry" class="primary">Volver a intentar</button>`;
     $("#retry").onclick = () => location.reload();
+  }
+}
+async function openDetailURL(target) {
+  if (target.kind === "vehicle") {
+    syncClock = false;
+    simDate = target.date;
+    simTime = target.time;
+    $("#date").value = simDate;
+    trips = (await ask("day")).trips;
+    updateClock();
+    drawMovement();
+    const trip = resolveServiceLink(s, trips, target.ref, target.start);
+    if (trip) showVehicle(trip.id);
+    else
+      toast(
+        "El servicio de este enlace ya no está disponible en los horarios publicados.",
+      );
+  } else if (target.kind === "gps") {
+    try {
+      gps = await fetchFGC();
+      drawGPS();
+      showGPS(target.ref);
+    } catch {
+      toast("No se puede recuperar ahora la posición de este tren.");
+    }
+  } else {
+    const list = target.kind === "stop" ? n.stops : n.routes;
+    if (list.some((item) => item.id === target.ref)) navigateDetail(target);
+    else toast("La ficha de este enlace ya no existe en esta red.");
   }
 }
 setInterval(() => {
