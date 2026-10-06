@@ -34,6 +34,7 @@ export function fgcSnapshot(records, metadata, now = Date.now()) {
         lat,
         lon,
         destination: r.desti || "",
+        trainType: r.tipus_unitat || "",
         station: r.estacionat_a || "",
         onTime:
           r.en_hora === "True" ? true : r.en_hora === "False" ? false : null,

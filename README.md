@@ -35,7 +35,7 @@ Cinco vistas y 12 fuentes dentro de una misma aplicación. No cubre todavía tod
 
 ## GPS, horarios y límites
 
-En Barcelona, los **puntos azules** son coordenadas de la [API pública de FGC](https://dadesobertes.fgc.cat/explore/dataset/posicionament-dels-trens/). Al pulsarlos aparecen línea, unidad, códigos de destino, puntualidad publicada y ocupación cuando existe. La ocupación es la media de los coches con información, no una medición de todo el tren. Licencia CC BY 4.0.
+En Barcelona, los **puntos azules** son coordenadas de la [API pública de FGC](https://dadesobertes.fgc.cat/explore/dataset/posicionament-dels-trens/). Al pulsarlos aparecen línea, serie del tren, códigos de destino, puntualidad publicada y ocupación cuando existe. La ocupación es la media de los coches con información, no una medición de todo el tren. Licencia CC BY 4.0.
 
 Se consulta cada 30 segundos con el reloj en «Ahora», movimiento activado y página visible. Se ocultan publicaciones de más de tres minutos. La hora corresponde a la actualización del **conjunto** de FGC, no a la medición individual de cada tren. Al cambiar fecha, acelerar o pausar desaparece GPS. Con GPS vigente se omiten los vehículos estimados de FGC para evitar duplicaciones.
 
