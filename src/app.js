@@ -546,16 +546,19 @@ function filterTree() {
     const state = networkFilters.state(layer, ids);
     return `<label class="filter-check"><input type="checkbox" data-filter-layer="${layer}" data-filter-key="${esc(key)}" ${state.checked ? "checked" : ""} ${state.mixed ? 'data-mixed="true"' : ""}><span>${label}</span></label>`;
   };
-  return [
-    ["routes", "Recorridos"],
-    ["stops", "Paradas"],
-    ["motion", "Vehículos"],
-  ]
-    .map(
-      ([layer, label]) =>
-        `<details class="filter-tree"><summary>${label}<small>${networkFilters.ids(layer).length} líneas</small></summary>${check(layer, all, "Todos", "all")}${groups.map((g) => `<details class="filter-group"><summary>${typeNames[g.type]}<small>${esc(g.operator)}</small></summary>${check(layer, g.ids, "Todo este grupo", g.key)}${g.ids.map((i) => `<div class="filter-line">${check(layer, [i], badge(n.routes[i]) + `<span>${esc(n.routes[i].description)}</span>`, "line:" + i)}<button data-only-line="${i}" title="Mostrar solo ${esc(n.routes[i].name)}" aria-label="Mostrar solo ${esc(n.routes[i].name)}">Solo</button></div>`).join("")}</details>`).join("")}</details>`,
-    )
-    .join("");
+  return (
+    [
+      ["routes", "Recorridos"],
+      ["stops", "Paradas en el mapa"],
+      ["motion", "Vehículos"],
+    ]
+      .map(
+        ([layer, label]) =>
+          `<details class="filter-tree"><summary>${label}<small>${networkFilters.ids(layer).length} líneas</small></summary>${check(layer, all, "Todos", "all")}${groups.map((g) => `<details class="filter-group"><summary>${typeNames[g.type]}<small>${esc(g.operator)}</small></summary>${check(layer, g.ids, "Todo este grupo", g.key)}${g.ids.map((i) => `<div class="filter-line">${check(layer, [i], badge(n.routes[i]) + `<span>${esc(n.routes[i].description)}</span>`, "line:" + i)}<button data-only-line="${i}" title="Mostrar solo ${esc(n.routes[i].name)}" aria-label="Mostrar solo ${esc(n.routes[i].name)}">Solo</button></div>`).join("")}</details>`).join("")}</details>`,
+      )
+      .join("") +
+    '<p class="footnote">En la vista lineal, cada recorrido conserva todas sus paradas y transbordos. El filtro de paradas controla los puntos del mapa.</p>'
+  );
 }
 function refreshFilterChecks() {
   const groups = networkFilters.groups(),
@@ -591,7 +594,6 @@ function refreshSchematic() {
     s,
     routesVisible ? networkFilters.visible("routes", mode, selectedRoute) : [],
     {
-      stops: visibleStops(),
       date: simDate,
     },
   );

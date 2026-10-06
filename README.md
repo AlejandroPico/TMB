@@ -32,7 +32,7 @@ Dieciséis vistas: siete ciudades, ocho áreas adicionales de consorcios andaluc
 
 - Mapa a pantalla completa, menú lateral contraído y paneles que se despliegan a la derecha. En móvil, hamburguesa. Sin cabecera ni tarjetas promocionales. Paneles y botones con esquinas rectas.
 - Filtros jerárquicos independientes de recorridos, paradas y vehículos: todos, tipo/operador y línea. Botón «Solo» para aislar una línea; estados parciales y reinicio. Historias y movimiento de autobuses apagados al iniciar.
-- Vista lineal con líneas ordenadas, sentidos paralelos, ramales, paradas y vehículos estimados seleccionables. Una barra horizontal por línea, arrastre con ratón y desplazamiento táctil. Comparte filtros con el mapa y muestra transbordos bajo las paradas. Los diagramas se cargan al entrar en pantalla.
+- Vista lineal con líneas ordenadas, sentidos paralelos, ramales, paradas y vehículos estimados seleccionables. Una barra horizontal por línea, arrastre con ratón y desplazamiento táctil. Comparte los filtros de recorridos y vehículos con el mapa. Cada recorrido mantiene todas sus paradas y transbordos, incluso al añadir líneas después de usar «Solo». «Paradas en el mapa» controla únicamente los puntos del mapa. Los diagramas se cargan al entrar en pantalla.
 - Fichas de estación con líneas y destinos, logotipos agrupados una vez en el encabezado, dos llegadas por sentido y cuenta atrás en segundos. Fichas de vehículos con próxima parada, destino e identificador del viaje. Cerrar la ficha recupera la cámara, selección y desplazamiento previos.
 - Tema Automático por defecto, calculado con la fecha real, la ubicación y las horas de salida, mediodía y puesta del sol. Sin geolocalización utiliza la ciudad seleccionada. Mañana, Tarde y Noche mantienen la elección manual. Nueve temas urbanos siguen la ciudad al cargarla, permiten otra elección manual y agrupan los consorcios andaluces en Andalucía; Sevilla mantiene TUSSAM. [Paletas y funcionamiento](docs/appearance-research.md). Símbolos oficiales y colores de línea GTFS: [procedencia](docs/operator-identities.json).
 - Reloj, fecha y velocidad dentro del menú lateral; contadores de movimientos y estado FGC en Filtros. El mapa queda despejado. Los viajes calculados muestran un aviso con cierre: elimina el resalte y restaura la vista anterior. Los detalles del viaje y la selección de origen/destino se conservan al consultar el reloj. El punto azul de ubicación aparece al obtener permiso y se mantiene al cambiar de estilo o red.
@@ -40,7 +40,7 @@ Dieciséis vistas: siete ciudades, ocho áreas adicionales de consorcios andaluc
 - Selección de red por geolocalización si no hay ciudad explícita en la URL. Requiere permiso del navegador; coordenadas procesadas localmente. Si no hay una red urbana cercana, se abre Renfe. «Paradas cerca de mí» está en Explorar.
 - Acerca de: favicon original, nombre configurable, versión de package.json, autor, portfolio y repositorio.
 - Búsqueda, salidas por parada, accesibilidad publicada, accesos y favoritos locales.
-- Reloj compacto con pausa y control deslizante; fecha y velocidades 1×, 10× y 60× se despliegan al pulsar el reloj.
+- Panel lateral del reloj con pausa, control deslizante, fecha y velocidades 1×, 10× y 60×.
 - Planificación entre paradas y alcance en 15, 30 y 45 minutos. Horizonte de tres horas en ciudades y 24 horas en Renfe.
 - Historias documentadas de Barcelona, Madrid, Sevilla y Zaragoza; tres recorridos editoriales en Barcelona.
 - Selector de ciudad y catálogo de cobertura y fuentes.

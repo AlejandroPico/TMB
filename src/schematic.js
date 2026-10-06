@@ -69,12 +69,11 @@ export class Schematic {
       }
     }
   }
-  render(network, schedule, ids, { stops, date } = {}) {
+  render(network, schedule, ids, { date } = {}) {
     this.observer?.disconnect();
     if (this.n !== network) this.connections = stationConnections(network);
     this.n = network;
     this.s = schedule;
-    this.visibleStops = stops == null ? null : new Set(stops);
     this.date = date;
     this.patterns = new Map();
     this.rows = new Map();
@@ -149,7 +148,7 @@ export class Schematic {
     }
   }
   station(st, k, route) {
-    if (this.visibleStops && !this.visibleStops.has(st)) return "";
+    // Stations describe the line itself; map point visibility cannot truncate it.
     const name = escape(this.n.stops[st].name),
       connections = [...this.connections[st]]
         .filter((i) => i !== route)
