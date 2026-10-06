@@ -537,6 +537,8 @@ function networkList() {
     )
     .sort(
       (a, b) =>
+        Number(transportGroup(b) === "rail") -
+          Number(transportGroup(a) === "rail") ||
         Number(b.night) - Number(a.night) ||
         a.name.localeCompare(b.name, "es", { numeric: true }),
     );
