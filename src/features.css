@@ -359,6 +359,10 @@ select,
   background: var(--ui-surface);
   color: var(--ui-muted);
   padding: 4px 8px;
+  width: max-content;
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
   max-width: calc(100% - 24px);
 }
 .map-bottom > span,

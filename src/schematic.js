@@ -91,7 +91,7 @@ export class Schematic {
         el.open = !el.open;
       };
       const populate = () => {
-        if (el.open && !el.dataset.built) {
+        if (this.container.contains(el) && el.open && !el.dataset.built) {
           this.build(el, +el.dataset.schematicLine);
           el.dataset.built = "true";
         }
