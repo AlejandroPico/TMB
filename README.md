@@ -1,81 +1,91 @@
-# Barcelona Latido
+# EnRuta
 
-Un atlas inmersivo de la red de **Transports Metropolitans de Barcelona**. Recorre sus líneas, adelanta el reloj y descubre las historias que viven bajo sus calles.
+Transporte público de España: mapa en 3D, horarios, viajes e historias con fuentes. **[Abrir la aplicación](https://alejandropico.github.io/TMB/)**.
 
-**[Abrir la aplicación](https://alejandropico.github.io/TMB/)**
+## Nombre y favicon
 
-## La experiencia
+Edita `name` en **[app.config.json](app.config.json)**. Alimenta la marca, el título y los textos de la aplicación. También contiene la descripción y la ciudad inicial. El nombre no depende del nombre del repositorio.
 
-- Mapa de todas las líneas de bus, metro y funicular del GTFS, con trazados y paradas geográficas.
-- Edificios en 3D, donde OpenStreetMap dispone de datos, y control de inclinación.
-- Vehículos animados sobre sus recorridos **según horarios**, con fecha y velocidades de 1×, 10× y 60×. No son posiciones GPS.
-- Búsqueda de líneas y paradas; próximas salidas, accesibilidad publicada, accesos y favoritos conservados en el navegador.
-- Viajes entre paradas con calendario y transbordos. El cálculo se realiza en un trabajador separado para mantener la interfaz fluida.
-- Paradas alcanzables en 15, 30 o 45 minutos desde una estación. Se muestran puntos, no una isócrona peatonal.
-- Seis historias con fuentes del archivo de TMB y tres recorridos editoriales.
-- Panel «Datos» con procedencia, versión, calendario y conexión opcional a las APIs.
+También puedes cambiarlo en GitHub → Settings → Secrets and variables → Actions → **Variables** → New repository variable: nombre `APP_NAME`, valor el nuevo nombre. Ejecuta Actions para publicarlo. Esa variable tiene prioridad sobre el fichero. Es información pública, no un secreto.
 
-## Datos reales y límites
+**[favicon.svg](favicon.svg)** está en la raíz de `main`. Es el único original: la compilación lo utiliza como icono del navegador y lo publica además como `/TMB/favicon.svg`.
 
-La copia inicial utiliza el GTFS oficial de TMB del 2 de octubre de 2026, archivado públicamente por Mobility Database el 3 de octubre: 115 líneas, 2.809 puntos de embarque y 57.105 viajes importados. Un punto de embarque no equivale necesariamente a una estación única. Se importan accesos, caminos internos, frecuencias, excepciones de calendario y tiempos mínimos de transbordo.
+## Cobertura inicial
 
-Las posiciones se interpolan entre paradas siguiendo los trazados. Las horas intermedias vacías del GTFS se interpolan entre los puntos con hora; los servicios por frecuencia son estimaciones. Se contemplan viajes después de medianoche y servicios iniciados el día anterior.
+| Vista          | Operadores                                            |
+| -------------- | ----------------------------------------------------- |
+| Barcelona      | TMB y FGC, incluidas sus líneas regionales publicadas |
+| Madrid         | Metro, EMT y Metro Ligero                             |
+| Sevilla        | TUSSAM, Metro y Consorcio del Área de Sevilla         |
+| Zaragoza       | Avanza urbana y tranvía                               |
+| España · Renfe | AVE, Larga y Media Distancia, Cercanías y Rodalies    |
 
-La planificación local aplica los transbordos explícitos del GTFS y añade enlaces a pie entre paradas próximas. Estos enlaces son aproximados y no siguen calles. No incluye incidencias, ascensores fuera de servicio, tarifas ni operadores ausentes del GTFS de TMB. El filtro de accesibilidad exige `wheelchair_boarding=1`; no garantiza la accesibilidad de todo el trayecto.
+Cinco vistas y 12 fuentes dentro de una misma aplicación. No cubre todavía todos los operadores de España. Cercanías se explora en la vista nacional; no se planifican enlaces entre vistas. Las líneas GTFS pueden representar variantes de un servicio, no números comerciales únicos. Los datos se cargan al seleccionar cada vista. Puedes compartirla con `?city=madrid`, `sevilla`, `zaragoza`, `barcelona` o `espana`.
 
-## APIs del portal TMB
+**El calendario público consultado de Metro de Madrid termina el 27 de mayo de 2026, y el de Avanza Zaragoza el 5 de octubre de 2026.** Se conservan sus redes y horarios archivados con un aviso visible. No se extienden las fechas. El resto de operadores tiene calendarios independientes. «Datos» muestra procedencia, licencia, versión, vigencia y SHA-256 por operador.
 
-Se revisaron las especificaciones oficiales el 6 de octubre de 2026. [El catálogo](docs/api-catalog.json) recoge todos los recursos publicados en Transit, iBus y Planner.
+## Funciones
 
-| Servicio      | Uso                                                                                                           | Acceso                                       |
-| ------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
-| Static / GTFS | Red, recorridos, paradas, accesos, horarios y calendario                                                      | Archivo público; descarga oficial con claves |
-| Transit       | Más información en líneas, mobiliario y correspondencias de bus; servidor con todos los recursos del catálogo | Requiere credenciales                        |
-| iBus          | Próximos buses por parada, con timestamp y control de antigüedad                                              | Requiere credenciales                        |
-| Planner       | Planificador oficial cuando el servidor está configurado; alternativa local sin acceso                        | Requiere credenciales                        |
+- Mapas con trazados, paradas y edificios 3D donde hay cartografía disponible; filtros de buses o transporte sobre raíles.
+- Búsqueda, salidas por parada, accesibilidad publicada, accesos y favoritos locales.
+- Calendario y reloj con pausa y reproducción a 1×, 10× y 60×.
+- Planificación entre paradas y alcance en 15, 30 y 45 minutos. Horizonte de tres horas en ciudades y 24 horas en Renfe.
+- Historias documentadas de Barcelona, Madrid, Sevilla y Zaragoza; tres recorridos editoriales en Barcelona.
+- Selector de ciudad y catálogo de cobertura y fuentes.
 
-**Sin claves funcionan el mapa y las funciones basadas en GTFS. Las APIs autenticadas están integradas, pero no se han podido verificar con credenciales válidas.** No se usan claves ajenas ni se inventan respuestas. El portal consultado documenta tiempos de paso de bus, no posiciones GPS en directo de trenes.
+## GPS, horarios y límites
 
-## Ejecutar
+En Barcelona, los **puntos azules** son coordenadas de la [API pública de FGC](https://dadesobertes.fgc.cat/explore/dataset/posicionament-dels-trens/). Al pulsarlos aparecen línea, unidad, códigos de destino, puntualidad publicada y ocupación cuando existe. La ocupación es la media de los coches con información, no una medición de todo el tren. Licencia CC BY 4.0.
 
-Node.js 22+ y pnpm 10.17.1:
+Se consulta cada 30 segundos con el reloj en «Ahora», movimiento activado y página visible. Se ocultan publicaciones de más de tres minutos. La hora corresponde a la actualización del **conjunto** de FGC, no a la medición individual de cada tren. Al cambiar fecha, acelerar o pausar desaparece GPS. Con GPS vigente se omiten los vehículos estimados de FGC para evitar duplicaciones.
+
+Los demás puntos son **interpolaciones por horario, no GPS**. Los recorridos sin geometría son esquemas entre estaciones, señalados en la ficha de línea. Las horas intermedias vacías se estiman; los servicios por frecuencia también. Se contemplan viajes del día anterior después de medianoche.
+
+EMT publica itinerarios completos en `stop_times` y ventanas de frecuencia asociadas a esos mismos viajes. Su adaptador conserva las horas individuales y evita expandir repetidamente ventanas, que multiplicarían artificialmente los vehículos. La política específica figura en `tools/providers.json` y los metadatos.
+
+No se incluyen incidencias, cancelaciones ni ascensores fuera de servicio. Los enlaces peatonales entre paradas próximas son aproximados y no siguen calles. Se respetan los transbordos prohibidos y restricciones de embarque/desembarque. El filtro accesible exige `wheelchair_boarding=1`; no garantiza todo el itinerario. El alcance muestra puntos por horario, no una isócrona peatonal.
+
+## Claves TMB
+
+La descarga oficial GTFS con los secretos de GitHub se ha comprobado en Actions. **GitHub Pages es estático:** `TMB_APP_ID` y `TMB_APP_KEY` renuevan los horarios durante la compilación. Para Transit, iBus y Planner en directo hay que alojar el servidor incluido con las claves. El catálogo completo está en [docs/api-catalog.json](docs/api-catalog.json).
+
+1. Copia `.env.example` a `.env` en el servidor y rellena las claves.
+2. Ejecuta `pnpm build` y `pnpm start`. Abre `http://127.0.0.1:8787`.
+3. En desarrollo inicia también `pnpm dev`; Vite conecta con ese servidor.
+4. Para Pages, aloja el servidor en HTTPS, configura `HOST=0.0.0.0` y `ALLOWED_ORIGINS=https://alejandropico.github.io`, y añade su URL en «Datos → Servidor TMB para datos en directo».
+
+Las claves permanecen en el servidor. Se limitan consultas y recursos y se cachean respuestas. iBus solo se consulta en paradas TMB y con respuestas recientes. El planificador oficial se utiliza entre paradas TMB; el cálculo local es la alternativa. Estas APIs autenticadas en directo no se han podido verificar con las claves de GitHub, que no son legibles después de guardarlas.
+
+## Desarrollo y actualización
+
+Node.js 22+, pnpm 10.17.1; Python 3.12+ para renovar fuentes. Los datos están incluidos.
 
 ```sh
 pnpm install
 pnpm dev
-```
-
-Los datos vienen incluidos. Para preparar la distribución:
-
-```sh
 pnpm test
+python -m unittest discover -s tests -p 'test_*.py'
 pnpm build
 pnpm preview
 ```
 
-## Activar las APIs
+`python tools/import_networks.py` renueva todas las vistas; `--city madrid` solo una; `--local` normaliza ZIP de caché. Python usa la biblioteca estándar. Cachés y credenciales están excluidas de Git.
 
-1. Registra tu aplicación en [developer.tmb.cat](https://developer.tmb.cat/) y obtén `app_id` y `app_key`.
-2. Copia `.env.example` a `.env` y rellena `TMB_APP_ID` y `TMB_APP_KEY` en el servidor.
-3. Ejecuta `pnpm build` y `pnpm start`. Abre `http://127.0.0.1:8787`. En desarrollo, inicia también `pnpm dev`: Vite envía las consultas de API al servidor.
-4. Para GitHub Pages, aloja el servidor Node en un servicio HTTPS y escribe su URL en «Datos → Servidor para datos en directo». Configura `HOST=0.0.0.0`, el puerto del proveedor y `ALLOWED_ORIGINS=https://alejandropico.github.io`.
+Actions renueva, valida, compila y publica con cada subida a `main`, los lunes a las 04:23 UTC y manualmente. Si una ciudad falla conserva su copia publicada. No genera commits automáticos. Descargar hoy un archivo no garantiza que su calendario esté vigente: se muestran sus fechas reales.
 
-Las claves nunca entran en archivos públicos. El servidor restringe recursos, limita consultas, agrupa peticiones concurrentes y conserva respuestas brevemente. iBus solo se muestra con el reloj actual y una respuesta de menos de 90 segundos; no consulta continuamente toda la red.
+## Expandir la cobertura
 
-**GitHub Pages es estático:** los secretos de GitHub Actions sirven para renovar el GTFS; el servidor es necesario para iBus, Transit y Planner autenticados.
+[tools/providers.json](tools/providers.json) separa operadores y vistas. Añade una fuente GTFS con ID, URL, web, licencia y caché; después una vista con fuentes, centro, zoom y descripción de cobertura. El importador normaliza tipos estándar y extendidos y aísla los IDs por operador. Las APIs en directo se incorporan como adaptadores independientes, con procedencia y control de antigüedad.
 
-## Publicación y renovación
+El [Punto de Acceso Nacional](https://nap.transportes.gob.es/) reúne GTFS, GTFS-RT y NeTEx; sus descargas autenticadas requieren credenciales propias. Los operadores tienen distintos formatos y requisitos: no hay una única API universal. Las consultas de llegadas probadas de la API municipal de Zaragoza devolvieron errores del proveedor; no se muestran como datos en directo operativos.
 
-`.github/workflows/pages.yml` valida, compila y publica al subir a `main`. También renueva la web los lunes a las 04:23 UTC y mediante ejecución manual. Si falla la descarga, conserva los datos incluidos. La importación actualizada se publica en la web sin crear commits automáticos.
+## Atribuciones
 
-La renovación usa `TMB_APP_ID` y `TMB_APP_KEY` si existen como secretos del repositorio; si no, descubre el último archivo público de Mobility Database. Localmente: `python tools/import_gtfs.py` (Python 3.12+, biblioteca estándar).
+- [TMB](https://developer.tmb.cat/) y [condiciones](https://developer.tmb.cat/docs/terms-conditions).
+- [FGC](https://dadesobertes.fgc.cat/), [CRTM](https://datos.crtm.es/) y [EMT](https://datos.emtmadrid.es/).
+- [Consorcios de Andalucía](https://api.ctan.es/), [TUSSAM](https://www.tussam.es/) y [Metro de Sevilla](https://www.metro-sevilla.es/).
+- [Zaragoza](https://www.zaragoza.es/web/espacio-de-datos/servicio/catalogo/335), [Tranvía de Zaragoza](https://www.tranviasdezaragoza.es/) y [Renfe](https://data.renfe.com/).
+- Powered by [MIMTRANS](https://www.transportes.gob.es/). Archivos públicos conservados por [Mobility Database](https://mobilitydatabase.org/).
+- Cartografía © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright), OpenMapTiles y OpenFreeMap. MapLibre, iconos Lucide, fuentes DM Sans y Manrope.
 
-## Fuentes y atribuciones
-
-- [TMB: herramientas para desarrolladores](https://www.tmb.cat/es/tmb-app-y-otras-aplicaciones/herramientas-para-desarrolladores), [portal y condiciones](https://developer.tmb.cat/docs/terms-conditions).
-- [GTFS de TMB en Mobility Database](https://mobilitydatabase.org/feeds/gtfs/mdb-2359). Procedencia, fecha y hash se conservan en `public/data/network.json`.
-- [Cronología del metro](https://historia.tmb.cat/100-anys-metro/es/cronologia/), [trayecto histórico](https://historia.tmb.cat/100-anys-metro/es/trayecto/) y [elementos del centenario](https://www.tmb.cat/es/centenario-metro/elementos-conmemorativos). Textos editoriales con fuentes enlazadas.
-- Cartografía © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright), [OpenMapTiles](https://openmaptiles.org/) y [OpenFreeMap](https://openfreemap.org/). Atribución visible en el mapa.
-- Motor [MapLibre GL JS](https://maplibre.org/) e iconos [Lucide](https://lucide.dev/), con sus licencias. DM Sans y Manrope, a través de Google Fonts.
-
-La cartografía y las fuentes requieren conexión. No es un producto oficial de TMB.
+La cartografía, fuentes y APIs requieren conexión. Proyecto independiente de los operadores.

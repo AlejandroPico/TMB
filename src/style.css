@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&display=swap");
 :root {
+  color-scheme: dark;
   font-family: "DM Sans", sans-serif;
   color: #e5e9df;
   background: #101817;
@@ -9,6 +10,148 @@
   --border: #2b3630;
   --surface: #16201d;
   --serif: Georgia, "Times New Roman", serif;
+}
+.city-picker {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+.city-picker select {
+  max-width: 220px;
+  background: #1d2b24;
+  color: #e5ebd9;
+  border: 1px solid #42543e;
+  border-radius: 30px;
+  padding: 10px 16px;
+  font-size: 12px;
+  letter-spacing: 0;
+}
+.coverage-note {
+  font-size: 10px;
+  line-height: 1.7;
+  color: #a6b39f;
+  padding: 18px 0;
+  border-top: 1px solid var(--border);
+}
+.calendar-warning {
+  display: flex;
+  gap: 8px;
+  border: 1px solid #6b5038;
+  border-radius: 7px;
+  background: #32291e;
+  color: #e6c39a;
+  font-size: 10px;
+  line-height: 1.6;
+  padding: 12px;
+  margin: 12px 0;
+}
+.coverage-note strong {
+  display: block;
+  color: #e7bf98;
+  font-weight: 500;
+  margin-top: 8px;
+}
+.coverage-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 24px 0 30px;
+}
+.coverage-city {
+  text-align: left;
+  padding: 16px;
+  background: #1c2b22;
+  border: 1px solid #354b31;
+  border-radius: 8px;
+}
+.coverage-city.selected {
+  border-color: var(--lime);
+}
+.coverage-city b,
+.coverage-city span,
+.coverage-city small {
+  display: block;
+}
+.coverage-city b {
+  font-weight: 500;
+  color: var(--lime);
+  font-size: 15px;
+}
+.coverage-city span {
+  font-size: 10px;
+  margin: 8px 0;
+  color: #c0cdb6;
+}
+.coverage-city small {
+  font-size: 10px;
+  line-height: 1.6;
+  color: #9aaa91;
+}
+.gps-status {
+  position: absolute;
+  left: 36px;
+  top: 310px;
+  border: 1px solid #376775;
+  border-radius: 20px;
+  padding: 9px 13px;
+  background: #14292dee;
+  color: #88dce8;
+  font-size: 10px;
+  z-index: 2;
+}
+.gps-text {
+  color: #88dce8;
+}
+.gps-card {
+  background: #173039;
+  border: 1px solid #376775;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+}
+.gps-card strong {
+  display: block;
+  font-size: 40px;
+  color: #88dce8;
+}
+.gps-card span {
+  font-size: 10px;
+  color: #b2d0d4;
+}
+.legend-dot.gps {
+  background: #72dbeb;
+}
+@media (max-width: 650px) {
+  .city-picker > span {
+    display: none;
+  }
+  .city-picker select {
+    width: 140px;
+    max-width: 140px;
+    padding: 9px;
+    font-size: 11px;
+  }
+  .header {
+    gap: 8px;
+  }
+  .source-state > span {
+    display: none;
+  }
+  .source-state {
+    padding: 9px;
+  }
+  .coverage-grid {
+    grid-template-columns: 1fr;
+  }
+  .gps-status {
+    left: 18px;
+    top: 225px;
+    max-width: calc(100% - 80px);
+    font-size: 9px;
+  }
 }
 * {
   box-sizing: border-box;

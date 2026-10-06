@@ -1,0 +1,341 @@
+{
+  "schema": 2,
+  "cities": [
+    {
+      "id": "barcelona",
+      "name": "Barcelona",
+      "region": "Cataluña",
+      "center": [
+        2.165,
+        41.391
+      ],
+      "zoom": 12.5,
+      "feeds": [
+        {
+          "id": "tmb",
+          "publisher": "TMB",
+          "source": "https://files.mobilitydatabase.org/mdb-2359/mdb-2359-202610030154/mdb-2359-202610030154.zip",
+          "website": "https://developer.tmb.cat/",
+          "license": "https://developer.tmb.cat/docs/terms-conditions",
+          "fetchedAt": "2026-10-06T06:31:28.678363+00:00",
+          "version": "082602102026002",
+          "start": "20261002",
+          "end": "20270529",
+          "sha256": "ed1bf1c96828821c6ec57c4276b1a2fa7d914cb950f6b33ea727ad7f144d837a",
+          "routes": 115,
+          "stops": 2772,
+          "trips": 57105,
+          "skippedTrips": 0,
+          "approximateShapes": 0,
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand"
+        },
+        {
+          "id": "fgc",
+          "publisher": "FGC",
+          "source": "https://www.fgc.cat/google/google_transit.zip",
+          "website": "https://dadesobertes.fgc.cat/",
+          "license": "https://creativecommons.org/licenses/by/4.0/",
+          "fetchedAt": "2026-10-06T06:31:30.271850+00:00",
+          "version": "2026-10-02T13:25:51+02:00_not tagged",
+          "start": "20240101",
+          "end": "20261231",
+          "sha256": "ba0ff647728a8f0645a4a344a9b7f78aad13dff7daf5168ade244fcba1ca0de6",
+          "routes": 22,
+          "stops": 197,
+          "trips": 13518,
+          "skippedTrips": 0,
+          "approximateShapes": 0,
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand"
+        }
+      ],
+      "source": "https://developer.tmb.cat/",
+      "coverage": "TMB y FGC. No incluye todos los operadores del área metropolitana.",
+      "journey": [
+        "Catalunya",
+        "Sagrada Família"
+      ],
+      "routes": 137,
+      "stops": 2969,
+      "trips": 70623,
+      "network": "./data/barcelona/network.json",
+      "schedule": "./data/barcelona/schedule.json"
+    },
+    {
+      "id": "madrid",
+      "name": "Madrid",
+      "region": "Comunidad de Madrid",
+      "center": [
+        -3.7038,
+        40.4168
+      ],
+      "zoom": 12.2,
+      "feeds": [
+        {
+          "id": "metro-madrid",
+          "publisher": "Metro de Madrid · CRTM",
+          "source": "https://www.arcgis.com/sharing/rest/content/items/5c7f2951962540d69ffe8f640d94c246/data",
+          "website": "https://datos.crtm.es/",
+          "license": "https://www.crtm.es/licencia-de-uso",
+          "fetchedAt": "2026-10-06T06:21:30.908313+00:00",
+          "version": "20250527",
+          "start": "20250101",
+          "end": "20260527",
+          "sha256": "16e8e53ce16ab6d73efc2896be7aaeeb351a1f48f661ac7faa0a9e5b38204fb7",
+          "routes": 13,
+          "stops": 274,
+          "trips": 120,
+          "skippedTrips": 0,
+          "approximateShapes": 0,
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand"
+        },
+        {
+          "id": "emt",
+          "publisher": "EMT Madrid · CRTM",
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip",
+          "website": "https://datos.emtmadrid.es/",
+          "license": "https://www.crtm.es/licencia-de-uso",
+          "fetchedAt": "2026-10-06T06:22:04.845288+00:00",
+          "version": "61328df991ef",
+          "start": "20261005",
+          "end": "20261231",
+          "sha256": "61328df991efe96b625603441fd1d7db1041db3a5580b3095e8db8f3453110da",
+          "routes": 236,
+          "stops": 4931,
+          "trips": 86871,
+          "skippedTrips": 0,
+          "approximateShapes": 0,
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "scheduled"
+        },
+        {
+          "id": "ml-madrid",
+          "publisher": "Metro Ligero · CRTM",
+          "source": "https://www.arcgis.com/sharing/rest/content/items/aaed26cc0ff64b0c947ac0bc3e033196/data",
+          "website": "https://datos.crtm.es/",
+          "license": "https://www.crtm.es/licencia-de-uso",
+          "fetchedAt": "2026-10-06T06:22:06.092034+00:00",
+          "version": "20260722",
+          "start": "20260101",
+          "end": "20270722",
+          "sha256": "7e49cfc0980c8e61d96a258d1076ec410a26f66767586d1b1dea49b9caa39467",
+          "routes": 4,
+          "stops": 57,
+          "trips": 3001,
+          "skippedTrips": 0,
+          "approximateShapes": 0,
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand"
+        }
+      ],
+      "source": "https://datos.crtm.es/",
+      "coverage": "Metro, EMT y Metro Ligero. Cercanías se encuentra en la vista nacional de Renfe.",
+      "journey": [
+        "Sol",
+        "Nuevos Ministerios"
+      ],
+      "routes": 253,
+      "stops": 5262,
+      "trips": 89992,
+      "network": "./data/madrid/network.json",
+      "schedule": "./data/madrid/schedule.json"
+    },
+    {
+      "id": "sevilla",
+      "name": "Sevilla",
+      "region": "Andalucía",
+      "center": [
+        -5.9845,
+        37.3891
+      ],
+      "zoom": 12.2,
+      "feeds": [
+        {
+          "id": "tussam",
+          "publisher": "TUSSAM",
+          "source": "https://files.mobilitydatabase.org/mdb-2770/mdb-2770-202609300035/mdb-2770-202609300035.zip",
+          "website": "https://www.tussam.es/",
+          "license": "https://nap.transportes.gob.es/licencia-datos",
+          "fetchedAt": "2026-10-06T06:15:06.356498+00:00",
+          "version": "20260928",
+          "start": "20260928",
+          "end": "20270117",
+          "sha256": "27c3de58dcf65496ea5033544fb07060c3d47126e84129b6bfb9b5f0225da6f9",
+          "routes": 59,
+          "stops": 1055,
+          "trips": 27845,
+          "skippedTrips": 0,
+          "approximateShapes": 225,
+          "timezone": "Europe/Madrid"
+        },
+        {
+          "id": "metro-sevilla",
+          "publisher": "Metro de Sevilla",
+          "source": "https://files.mobilitydatabase.org/mdb-2781/mdb-2781-202604160110/mdb-2781-202604160110.zip",
+          "website": "https://www.metro-sevilla.es/",
+          "license": "https://nap.transportes.gob.es/licencia-datos",
+          "fetchedAt": "2026-10-06T06:15:06.444498+00:00",
+          "version": "2.13",
+          "start": "20250101",
+          "end": "20261231",
+          "sha256": "74535ba64fd6ab9fc4d7215f06428ba609bac8d4a0020e65ee92802e998d9a3e",
+          "routes": 1,
+          "stops": 21,
+          "trips": 104,
+          "skippedTrips": 0,
+          "approximateShapes": 4,
+          "timezone": "Europe/Madrid"
+        },
+        {
+          "id": "ctas",
+          "publisher": "Consorcio de Sevilla",
+          "source": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip",
+          "website": "https://api.ctan.es/",
+          "license": "https://api.ctan.es/avisolegal.html",
+          "fetchedAt": "2026-10-06T06:15:09.585583+00:00",
+          "version": "3d70c9fa54fa",
+          "start": "20200914",
+          "end": "20270711",
+          "sha256": "3d70c9fa54fad33dd6d5c82dd1a877ba4902d4d827866b293c8ef0c38caffeb6",
+          "routes": 123,
+          "stops": 1105,
+          "trips": 4621,
+          "skippedTrips": 0,
+          "approximateShapes": 0,
+          "timezone": "Europe/Madrid"
+        }
+      ],
+      "source": "https://api.ctan.es/",
+      "coverage": "TUSSAM, Metro y Consorcio del Área de Sevilla.",
+      "journey": [
+        "Puerta Jerez",
+        "San Bernardo"
+      ],
+      "routes": 183,
+      "stops": 2181,
+      "trips": 32570,
+      "network": "./data/sevilla/network.json",
+      "schedule": "./data/sevilla/schedule.json"
+    },
+    {
+      "id": "zaragoza",
+      "name": "Zaragoza",
+      "region": "Aragón",
+      "center": [
+        -0.8891,
+        41.6488
+      ],
+      "zoom": 12.3,
+      "feeds": [
+        {
+          "id": "avanza-zaragoza",
+          "publisher": "Avanza Zaragoza",
+          "source": "https://files.mobilitydatabase.org/mdb-2773/mdb-2773-202607010006/mdb-2773-202607010006.zip",
+          "website": "https://www.zaragoza.es/web/espacio-de-datos/servicio/catalogo/335",
+          "license": "https://nap.transportes.gob.es/licencia-datos",
+          "fetchedAt": "2026-10-06T06:15:17.885651+00:00",
+          "version": "20260623_AUZSA_Y_TRANVIA",
+          "start": "20260623",
+          "end": "20261005",
+          "sha256": "5c96992c97aac966bc9bc20babfbbbffb312f2a3cbcf9dd543982d2674cf3a82",
+          "routes": 52,
+          "stops": 934,
+          "trips": 29320,
+          "skippedTrips": 0,
+          "approximateShapes": 0,
+          "timezone": "Europe/Madrid"
+        },
+        {
+          "id": "tranvia-zaragoza",
+          "publisher": "Tranvía de Zaragoza",
+          "source": "https://files.mobilitydatabase.org/mdb-2801/mdb-2801-202607080131/mdb-2801-202607080131.zip",
+          "website": "https://www.tranviasdezaragoza.es/",
+          "license": "https://nap.transportes.gob.es/licencia-datos",
+          "fetchedAt": "2026-10-06T06:15:19.045574+00:00",
+          "version": "20260623_TRANVIA",
+          "start": "20260623",
+          "end": "20261231",
+          "sha256": "57a4b4df21987a69376a80288d7069143c8c92e145cd1f4da963c04c15892f4b",
+          "routes": 1,
+          "stops": 50,
+          "trips": 5107,
+          "skippedTrips": 0,
+          "approximateShapes": 0,
+          "timezone": "Europe/Madrid"
+        }
+      ],
+      "source": "https://www.zaragoza.es/web/espacio-de-datos/servicio/catalogo/335",
+      "coverage": "Avanza y tranvía. Comprueba la vigencia del calendario de cada operador.",
+      "journey": [
+        "Plaza de España",
+        "Universidad"
+      ],
+      "routes": 53,
+      "stops": 984,
+      "trips": 34427,
+      "network": "./data/zaragoza/network.json",
+      "schedule": "./data/zaragoza/schedule.json"
+    },
+    {
+      "id": "espana",
+      "name": "España · Renfe",
+      "region": "Red ferroviaria nacional",
+      "center": [
+        -3.6,
+        40.0
+      ],
+      "zoom": 5.5,
+      "feeds": [
+        {
+          "id": "renfe",
+          "publisher": "Renfe · AVE, Larga y Media Distancia",
+          "source": "https://ssl.renfe.com/gtransit/Fichero_AV_LD/google_transit.zip",
+          "website": "https://data.renfe.com/",
+          "license": "https://creativecommons.org/licenses/by/4.0/",
+          "fetchedAt": "2026-10-06T06:15:20.539725+00:00",
+          "version": "52a7c4fda036",
+          "start": "20261005",
+          "end": "20270124",
+          "sha256": "52a7c4fda036ddb84a0420706ad000d519d87765462fe43d6c4b70c3e9eeac81",
+          "routes": 648,
+          "stops": 1006,
+          "trips": 7496,
+          "skippedTrips": 0,
+          "approximateShapes": 984,
+          "timezone": "Europe/Madrid"
+        },
+        {
+          "id": "cercanias",
+          "publisher": "Renfe · Cercanías y Rodalies",
+          "source": "https://ssl.renfe.com/ftransit/Fichero_CER_FOMENTO/fomento_transit.zip",
+          "website": "https://data.renfe.com/",
+          "license": "https://creativecommons.org/licenses/by/4.0/",
+          "fetchedAt": "2026-10-06T06:15:38.151145+00:00",
+          "version": "adf3b8e58699",
+          "start": "20261005",
+          "end": "20261103",
+          "sha256": "adf3b8e586997720fcc9064f13c88af4f8ce7900a850e582eadddc990b795afa",
+          "routes": 828,
+          "stops": 924,
+          "trips": 106035,
+          "skippedTrips": 756,
+          "approximateShapes": 4,
+          "timezone": "Europe/Madrid"
+        }
+      ],
+      "source": "https://data.renfe.com/",
+      "coverage": "Renfe: AVE, Larga y Media Distancia, Cercanías y Rodalies. No incluye todos los operadores ferroviarios ni enlaces puerta a puerta entre vistas.",
+      "journey": [
+        "Madrid-Puerta De Atocha",
+        "Barcelona-Sants"
+      ],
+      "routes": 1476,
+      "stops": 1930,
+      "trips": 113531,
+      "network": "./data/espana/network.json",
+      "schedule": "./data/espana/schedule.json"
+    }
+  ]
+}

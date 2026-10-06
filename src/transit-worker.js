@@ -12,6 +12,7 @@ onmessage = async ({ data: m }) => {
       network = m.network;
       schedule = m.schedule;
       transfers = buildTransfers(network);
+      date = null;
     }
     if (m.date && m.date !== date) {
       date = m.date;

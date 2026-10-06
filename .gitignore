@@ -10,3 +10,6 @@ tools/mobility-page.html
 test-results/
 *.log
 tools/audit.json
+tools/cache/
+tools/__pycache__/
+__pycache__/

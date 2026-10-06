@@ -13,6 +13,24 @@ export const distance = (a, b) => {
     )
   );
 };
+export function transportMode(route) {
+  if (route.mode) return route.mode;
+  const t = route.type;
+  if (t === 3 || (t >= 700 && t < 800)) return "bus";
+  if (t === 1 || (t >= 400 && t < 500)) return "metro";
+  if (t === 2 || (t >= 100 && t < 200)) return "rail";
+  if (t === 0 || (t >= 900 && t < 1000)) return "tram";
+  if (t === 7 || (t >= 1400 && t < 1500)) return "funicular";
+  return "other";
+}
+export const transportGroup = (route) =>
+  ["metro", "rail", "tram", "funicular"].includes(transportMode(route))
+    ? "rail"
+    : transportMode(route);
+export const matchesTransport = (route, mode) =>
+  mode === "all" ||
+  transportMode(route) === mode ||
+  (mode === "rail" && transportGroup(route) === "rail");
 export const clock = (t) =>
   `${String(Math.floor((((t % 86400) + 86400) % 86400) / 3600)).padStart(2, "0")}:${String(Math.floor(t / 60) % 60).padStart(2, "0")}`;
 export function madridNow() {
@@ -61,7 +79,7 @@ export function dayTrips(schedule, date) {
               id: `${i}-${day}-${time}`,
               t,
               start: time - day * 86400,
-              frequency: true,
+              frequency: f[4] !== 1,
             });
       } else
         out.push({
@@ -79,6 +97,7 @@ export function buildDepartures(schedule, trips) {
   for (const trip of trips) {
     const p = schedule.patterns[trip.t[4]];
     p[0].forEach((s, k) => {
+      if (k === p[0].length - 1 || p[3]?.[k] === 1) return;
       if (!map.has(s)) map.set(s, []);
       map.get(s).push({ trip, k, time: trip.start + p[2][k] });
     });
@@ -142,8 +161,23 @@ export function buildTransfers(network) {
   const platforms = network.stops
     .map((s, i) => ({ s, i }))
     .filter((x) => x.s.kind === 0);
+  const cells = new Map();
+  const cell = (s) => [Math.floor(s.lat / 0.002), Math.floor(s.lon / 0.002)];
+  for (const point of platforms) {
+    const key = cell(point.s).join(",");
+    if (!cells.has(key)) cells.set(key, []);
+    cells.get(key).push(point);
+  }
   for (const { s, i } of platforms) {
-    const near = platforms.filter(
+    const [lat, lon] = cell(s),
+      candidates = new Map();
+    for (let a = -1; a <= 1; a++)
+      for (let b = -1; b <= 1; b++)
+        for (const point of cells.get(`${lat + a},${lon + b}`) || [])
+          candidates.set(point.i, point);
+    for (const j of groups.get(s.parent || s.id) || [])
+      candidates.set(j, { i: j, s: network.stops[j] });
+    const near = [...candidates.values()].filter(
       (x) =>
         x.i !== i &&
         ((s.parent && s.parent === x.s.parent) || distance(s, x.s) < 140),
@@ -229,14 +263,11 @@ export function planJourney(
       const d = list[pos],
         t = d.trip.t,
         r = network.routes[t[0]];
-      if (
-        (mode === "metro" && r.type === 3) ||
-        (mode === "bus" && r.type !== 3)
-      )
-        continue;
+      if (!matchesTransport(r, mode)) continue;
       const p = schedule.patterns[t[4]];
       for (let k = d.k + 1; k < p[0].length; k++) {
         const v = p[0][k];
+        if (p[4]?.[k] === 1) continue;
         if (accessible && network.stops[v].accessible !== 1) continue;
         const at = d.trip.start + p[1][k];
         if (at >= dist[v]) continue;

@@ -1,4 +1,4 @@
-name: Publicar Barcelona Latido
+name: Publicar aplicación de transporte
 on:
   push:
     branches: [main]
@@ -32,12 +32,14 @@ jobs:
         env:
           TMB_APP_ID: ${{ secrets.TMB_APP_ID }}
           TMB_APP_KEY: ${{ secrets.TMB_APP_KEY }}
-        run: python tools/import_gtfs.py
+        run: python tools/import_networks.py
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
+      - run: python -m unittest discover -s tests -p 'test_*.py'
       - run: pnpm build
         env:
           BASE_PATH: /TMB/
+          VITE_APP_NAME: ${{ vars.APP_NAME }}
       - uses: actions/configure-pages@v5
         with:
           enablement: true

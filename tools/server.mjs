@@ -4,6 +4,7 @@ import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const appName = JSON.parse(await readFile(path.join(root, 'app.config.json'), 'utf8')).name;
 if (existsSync(path.join(root, ".env")))
   process.loadEnvFile(path.join(root, ".env"));
 const transitPaths = JSON.parse(
@@ -210,7 +211,7 @@ server.listen(
   process.env.HOST || "127.0.0.1",
   () =>
     console.log(
-      "Barcelona Latido · http://" +
+      appName + " · http://" +
         (process.env.HOST || "127.0.0.1") +
         ":" +
         (process.env.PORT || 8787) +

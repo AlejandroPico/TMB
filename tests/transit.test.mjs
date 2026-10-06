@@ -12,10 +12,14 @@ import {
   clock,
 } from "../src/transit.js";
 const n = JSON.parse(
-    readFileSync(new URL("../public/data/network.json", import.meta.url)),
+    readFileSync(
+      new URL("../public/data/barcelona/network.json", import.meta.url),
+    ),
   ),
   s = JSON.parse(
-    readFileSync(new URL("../public/data/schedule.json", import.meta.url)),
+    readFileSync(
+      new URL("../public/data/barcelona/schedule.json", import.meta.url),
+    ),
   );
 test("service calendar honors additions, removals and weekdays", () => {
   const service = {
@@ -66,7 +70,9 @@ test("previous-day trips remain available after midnight and frequencies expand"
   assert.equal(dayTrips(f, "2026-10-05").length, 2);
 });
 test("Catalunya to Sagrada Família has a feasible scheduled journey", () => {
-  const date = n.meta.start.replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3");
+  const date = n.meta.feeds
+    .find((f) => f.id === "tmb")
+    .start.replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3");
   const trips = dayTrips(s, date);
   assert(trips.length > 1000);
   const deps = buildDepartures(s, trips),

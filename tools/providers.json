@@ -1,0 +1,163 @@
+{
+  "feeds": [
+    {
+      "id": "tmb",
+      "name": "TMB",
+      "cache": "tmb",
+      "website": "https://developer.tmb.cat/",
+      "license": "https://developer.tmb.cat/docs/terms-conditions",
+      "url": "https://api.tmb.cat/v1/static/datasets/gtfs.zip",
+      "mirror": "mdb-2359"
+    },
+    {
+      "id": "fgc",
+      "name": "FGC",
+      "cache": "fgc",
+      "website": "https://dadesobertes.fgc.cat/",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "url": "https://www.fgc.cat/google/google_transit.zip",
+      "railMode": "rail"
+    },
+    {
+      "id": "metro-madrid",
+      "name": "Metro de Madrid · CRTM",
+      "cache": "madrid-metro",
+      "website": "https://datos.crtm.es/",
+      "license": "https://www.crtm.es/licencia-de-uso",
+      "url": "https://www.arcgis.com/sharing/rest/content/items/5c7f2951962540d69ffe8f640d94c246/data"
+    },
+    {
+      "id": "emt",
+      "name": "EMT Madrid · CRTM",
+      "cache": "madrid-emt",
+      "website": "https://datos.emtmadrid.es/",
+      "license": "https://www.crtm.es/licencia-de-uso",
+      "url": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip",
+      "frequencyPolicy": "scheduled"
+    },
+    {
+      "id": "ml-madrid",
+      "name": "Metro Ligero · CRTM",
+      "cache": "madrid-tram",
+      "website": "https://datos.crtm.es/",
+      "license": "https://www.crtm.es/licencia-de-uso",
+      "url": "https://www.arcgis.com/sharing/rest/content/items/aaed26cc0ff64b0c947ac0bc3e033196/data"
+    },
+    {
+      "id": "tussam",
+      "name": "TUSSAM",
+      "cache": "mdb-2770",
+      "website": "https://www.tussam.es/",
+      "license": "https://nap.transportes.gob.es/licencia-datos",
+      "mirror": "mdb-2770"
+    },
+    {
+      "id": "metro-sevilla",
+      "name": "Metro de Sevilla",
+      "cache": "mdb-2781",
+      "website": "https://www.metro-sevilla.es/",
+      "license": "https://nap.transportes.gob.es/licencia-datos",
+      "url": "https://metro-sevilla.es/google-transit/google_transit.zip",
+      "mirror": "mdb-2781"
+    },
+    {
+      "id": "ctas",
+      "name": "Consorcio de Sevilla",
+      "cache": "andalucia",
+      "website": "https://api.ctan.es/",
+      "license": "https://api.ctan.es/avisolegal.html",
+      "url": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip",
+      "agency": "CTMAS"
+    },
+    {
+      "id": "avanza-zaragoza",
+      "name": "Avanza Zaragoza",
+      "cache": "mdb-2773",
+      "website": "https://www.zaragoza.es/web/espacio-de-datos/servicio/catalogo/335",
+      "license": "https://nap.transportes.gob.es/licencia-datos",
+      "mirror": "mdb-2773",
+      "excludeModes": ["tram"]
+    },
+    {
+      "id": "tranvia-zaragoza",
+      "name": "Tranvía de Zaragoza",
+      "cache": "mdb-2801",
+      "website": "https://www.tranviasdezaragoza.es/",
+      "license": "https://nap.transportes.gob.es/licencia-datos",
+      "mirror": "mdb-2801"
+    },
+    {
+      "id": "renfe",
+      "name": "Renfe · AVE, Larga y Media Distancia",
+      "cache": "renfe",
+      "website": "https://data.renfe.com/",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "url": "https://ssl.renfe.com/gtransit/Fichero_AV_LD/google_transit.zip"
+    },
+    {
+      "id": "cercanias",
+      "name": "Renfe · Cercanías y Rodalies",
+      "cache": "cercanias",
+      "website": "https://data.renfe.com/",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "url": "https://ssl.renfe.com/ftransit/Fichero_CER_FOMENTO/fomento_transit.zip"
+    }
+  ],
+  "cities": [
+    {
+      "id": "barcelona",
+      "name": "Barcelona",
+      "region": "Cataluña",
+      "center": [2.165, 41.391],
+      "zoom": 12.5,
+      "feeds": ["tmb", "fgc"],
+      "source": "https://developer.tmb.cat/",
+      "coverage": "TMB y FGC. No incluye todos los operadores del área metropolitana.",
+      "journey": ["Catalunya", "Sagrada Família"]
+    },
+    {
+      "id": "madrid",
+      "name": "Madrid",
+      "region": "Comunidad de Madrid",
+      "center": [-3.7038, 40.4168],
+      "zoom": 12.2,
+      "feeds": ["metro-madrid", "emt", "ml-madrid"],
+      "source": "https://datos.crtm.es/",
+      "coverage": "Metro, EMT y Metro Ligero. Cercanías se encuentra en la vista nacional de Renfe.",
+      "journey": ["Sol", "Nuevos Ministerios"]
+    },
+    {
+      "id": "sevilla",
+      "name": "Sevilla",
+      "region": "Andalucía",
+      "center": [-5.9845, 37.3891],
+      "zoom": 12.2,
+      "feeds": ["tussam", "metro-sevilla", "ctas"],
+      "source": "https://api.ctan.es/",
+      "coverage": "TUSSAM, Metro y Consorcio del Área de Sevilla.",
+      "journey": ["Puerta Jerez", "San Bernardo"]
+    },
+    {
+      "id": "zaragoza",
+      "name": "Zaragoza",
+      "region": "Aragón",
+      "center": [-0.8891, 41.6488],
+      "zoom": 12.3,
+      "feeds": ["avanza-zaragoza", "tranvia-zaragoza"],
+      "source": "https://www.zaragoza.es/web/espacio-de-datos/servicio/catalogo/335",
+      "coverage": "Avanza y tranvía. Comprueba la vigencia del calendario de cada operador.",
+      "journey": ["Plaza de España", "Universidad"]
+    },
+    {
+      "id": "espana",
+      "name": "España · Renfe",
+      "region": "Red ferroviaria nacional",
+      "center": [-3.6, 40.0],
+      "zoom": 5.5,
+      "feeds": ["renfe", "cercanias"],
+      "source": "https://data.renfe.com/",
+      "coverage": "Renfe: AVE, Larga y Media Distancia, Cercanías y Rodalies. No incluye todos los operadores ferroviarios ni enlaces puerta a puerta entre vistas.",
+      "journey": ["Madrid-Puerta De Atocha", "Barcelona-Sants"]
+    }
+  ]
+}

@@ -1,12 +1,12 @@
 import * as maplibregl from "maplibre-gl";
 import mapWorkerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { distance } from "./transit.js";
+import { distance, transportGroup } from "./transit.js";
 maplibregl.setWorkerUrl(mapWorkerUrl);
 export class CityMap {
   constructor(
     network,
-    { onStop, onRoute, onStory, onVehicle, onReady, onError },
+    { onStop, onRoute, onStory, onVehicle, onGPS, onReady, onError },
   ) {
     this.network = network;
     this.callbacks = { onStop, onRoute, onStory, onVehicle };
@@ -14,8 +14,8 @@ export class CityMap {
     this.map = new maplibregl.Map({
       container: "map",
       style: "https://tiles.openfreemap.org/styles/dark",
-      center: [2.165, 41.391],
-      zoom: 12.5,
+      center: network.meta.center || [2.165, 41.391],
+      zoom: network.meta.zoom || 12.5,
       pitch: 35,
       bearing: -18,
       attributionControl: false,
@@ -36,6 +36,7 @@ export class CityMap {
     this.map.on("click", (e) => {
       if (!this.ready) return;
       for (const [layer, cb, field] of [
+        ["gps", onGPS, "id"],
         ["stops", onStop, "index"],
         ["stories", onStory, "id"],
         ["vehicles", onVehicle, "id"],
@@ -50,7 +51,7 @@ export class CityMap {
         }
       }
     });
-    for (const layer of ["stops", "routes", "stories", "vehicles"]) {
+    for (const layer of ["stops", "routes", "stories", "vehicles", "gps"]) {
       this.map.on(
         "mouseenter",
         layer,
@@ -79,7 +80,7 @@ export class CityMap {
           index: i,
           name: r.name,
           color: r.color,
-          mode: r.type === 3 ? "bus" : "metro",
+          mode: transportGroup(r),
         },
       })),
     );
@@ -126,7 +127,7 @@ export class CityMap {
                 properties: {
                   index: i,
                   name: s.name,
-                  mode: s.id.startsWith("1.") ? "metro" : "bus",
+                  mode: transportGroup({ mode: s.mode }),
                   accessible: s.accessible,
                 },
               },
@@ -153,7 +154,7 @@ export class CityMap {
         "circle-color": [
           "match",
           ["get", "mode"],
-          "metro",
+          "rail",
           "#eef2df",
           "#8eaca2",
         ],
@@ -200,6 +201,28 @@ export class CityMap {
         "circle-color": ["get", "color"],
         "circle-stroke-color": "#fffce7",
         "circle-stroke-width": 1.2,
+      },
+    });
+    this.source("gps");
+    this.map.addLayer({
+      id: "gps-glow",
+      type: "circle",
+      source: "gps",
+      paint: {
+        "circle-radius": 13,
+        "circle-color": "#72dbeb",
+        "circle-opacity": 0.17,
+      },
+    });
+    this.map.addLayer({
+      id: "gps",
+      type: "circle",
+      source: "gps",
+      paint: {
+        "circle-radius": 5.5,
+        "circle-color": "#72dbeb",
+        "circle-stroke-color": "#f0ffff",
+        "circle-stroke-width": 1.5,
       },
     });
     this.source("stories");
@@ -301,7 +324,7 @@ export class CityMap {
       "visibility",
       stories ? "visible" : "none",
     );
-    for (const id of ["vehicles", "vehicle-glow"]) {
+    for (const id of ["vehicles", "vehicle-glow", "gps", "gps-glow"]) {
       this.map.setLayoutProperty(
         id,
         "visibility",
@@ -343,8 +366,8 @@ export class CityMap {
   }
   home() {
     this.map.flyTo({
-      center: [2.165, 41.391],
-      zoom: 12.5,
+      center: this.network.meta.center || [2.165, 41.391],
+      zoom: this.network.meta.zoom || 12.5,
       pitch: 35,
       bearing: -18,
       duration: 1200,
@@ -517,7 +540,7 @@ export class Movement {
           id: trip.id,
           route: t[0],
           color: r.color,
-          mode: r.type === 3 ? "bus" : "metro",
+          mode: transportGroup(r),
           next: p[0][next],
           head: this.s.heads[t[3]],
         },
