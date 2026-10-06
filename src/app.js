@@ -75,6 +75,8 @@ import { APP_NAME, APP_DESCRIPTION, DEFAULT_CITY } from "./config.js";
 import { fetchFGC, FGC_SOURCE } from "./realtime.js";
 import {
   fetchRenfe,
+  fetchRenfeLongDistance,
+  RENFE_LD_SOURCE,
   gpsProgress,
   renfeMatches,
   RENFE_POSITION_SOURCE,
@@ -295,7 +297,7 @@ $("#app").innerHTML = `
   <input id="time-slider" type="range" min="0" max="86399" step="60" value="${simTime}" aria-label="Hora del servicio">
   <div id="clock-options"><label>Fecha <input id="date" type="date" value="${simDate}" aria-label="Fecha del horario"></label><label>Velocidad <button id="speed" aria-label="Cambiar velocidad de reproducción">1×</button></label><small>Hora peninsular · movimiento estimado por horario</small></div>
  </section>
- <section id="network-status" aria-label="Movimiento y fuentes" hidden><h3>Movimiento y fuentes</h3><p id="moving-count">Cargando horario…</p><button id="gps-status" class="gps-status" hidden>FGC GPS</button><p class="footnote">Los estimados se calculan por horario. FGC publica posiciones en Barcelona; Renfe Cercanías requiere la conexión en Fuentes.</p></section>
+ <section id="network-status" aria-label="Movimiento y fuentes" hidden><h3>Movimiento y fuentes</h3><p id="moving-count">Cargando horario…</p><button id="gps-status" class="gps-status" hidden>FGC GPS</button><p class="footnote">Los estimados se calculan por horario. FGC publica posiciones en Barcelona; las posiciones de Renfe requieren la conexión en Fuentes.</p></section>
 </aside>
 <main class="map-area"><div id="map" aria-label="Mapa interactivo del transporte público"></div><section id="schematic" class="schematic" aria-label="Diagrama lineal del transporte" hidden></section><div id="detail" class="detail" hidden></div>
  <section id="journey-banner" class="journey-banner" aria-label="Ruta resaltada" hidden><div><small>Ruta resaltada</small><b id="journey-title"></b><span id="journey-caption"></span></div><button id="journey-details">Ver viaje</button><button id="clear-journey" aria-label="Quitar ruta resaltada" title="Quitar ruta resaltada">${icon("x")}</button></section>
@@ -1398,7 +1400,7 @@ function showVehicle(id) {
   }
   detailToken++;
   showDetail(
-    `<div class="vehicle-heading">${operatorSymbol(r)}${routeLink(r)}<span class="vehicle-number">${esc(serviceReference(s, trip).label)}</span></div><p class="eyebrow">${esc(typeNames[r.mode] || "Vehículo")} · ${esc(r.operator)}</p><div id="vehicle-live-detail"></div><div class="detail-actions"><button id="vehicle-follow" aria-pressed="true">Seguimiento activo</button><button id="vehicle-locate">Localizar en el mapa</button>${detailLink("route", r.id, "Ver línea", "Ver recorrido completo de " + r.name)}</div><small class="detail-note">Posición y llegada estimadas por horario. «Servicio» identifica el viaje del horario, no el número físico del vehículo. Cuando hay GPS de Renfe vigente, la ficha indica el tren publicado y la hora de medición. Las llegadas por horario no incluyen retrasos.</small>`,
+    `<div class="vehicle-heading">${operatorSymbol(r)}${routeLink(r)}<span class="vehicle-number">${esc(serviceReference(s, trip).label)}</span></div><p class="eyebrow">${esc(typeNames[r.mode] || "Vehículo")} · ${esc(r.operator)}</p><div id="vehicle-live-detail"></div><div class="detail-actions"><button id="vehicle-follow" aria-pressed="true">Seguimiento activo</button><button id="vehicle-locate">Localizar en el mapa</button>${detailLink("route", r.id, "Ver línea", "Ver recorrido completo de " + r.name)}</div><small class="detail-note">Los tiempos por horario son estimaciones. «Servicio» identifica el viaje del horario, no el número físico del vehículo. Cuando hay posición Renfe vigente, la ficha indica el tren publicado y la hora de medición. Las llegadas por horario no incluyen retrasos.</small>`,
   );
   if (f) focusVehicle(f);
   bindVehicleFollow();
@@ -1466,7 +1468,7 @@ function updateVehicleDetail() {
     movement.features([trip], simTime)[0];
   const p = s.patterns[trip.t[4]],
     status = f?.properties.actual
-      ? "En camino · posición GPS publicada"
+      ? "En camino · posición publicada por Renfe"
       : serviceStatus(s, trip, simTime, !!f);
   const k = p[1].findIndex((t) => trip.start + t >= simTime);
   const next = f?.properties.next ?? p[0][k < 0 ? p[0].length - 1 : k];
@@ -1479,7 +1481,20 @@ function updateVehicleDetail() {
       esc(n.stops[index].name),
       "Ver parada " + n.stops[index].name,
     );
-  const html = `<p class="service-state">${esc(status)}</p>${f?.properties.actual ? `<p class="detail-note">Tren ${esc(f.properties.number)} · GPS ${new Date(f.properties.measured).toLocaleTimeString("es-ES", { timeZone: "Europe/Madrid" })}. Llegada por horario, sin corrección de retrasos.</p>` : ""}<p class="eyebrow">${status === "Salida pendiente" ? "Salida desde" : status === "Servicio finalizado" ? "Última parada del servicio" : "Próxima parada por horario"}</p><h2>${stopLink(next)}</h2><p class="eyebrow">Llegada estimada</p><time class="vehicle-countdown">${status === "Servicio finalizado" ? "—" : countdown(arrival - simTime)}</time><dl class="vehicle-facts"><div><dt>Destino</dt><dd>${esc(s.heads[trip.t[3]])}</dd></div>${f ? `<div><dt>Última parada</dt><dd>${stopLink(f.properties.current)}</dd></div>` : ""}<div><dt>Hora prevista</dt><dd>${clock(arrival)}</dd></div><div><dt>Fuente</dt><dd>${trip.frequency ? "Intervalo GTFS" : "Horario GTFS"}</dd></div></dl>`;
+  const html = `<p class="service-state">${esc(status)}</p>${f?.properties.actual ? `<p class="detail-note">Tren ${esc(f.properties.number)} · Posición ${new Date(f.properties.measured).toLocaleTimeString("es-ES", { timeZone: "Europe/Madrid" })}. Llegada por horario, sin corrección de retrasos.</p>` : ""}<p class="eyebrow">${status === "Salida pendiente" ? "Salida desde" : status === "Servicio finalizado" ? "Última parada del servicio" : "Próxima parada por horario"}</p><h2>${stopLink(next)}</h2><p class="eyebrow">Llegada estimada</p><time class="vehicle-countdown">${status === "Servicio finalizado" ? "—" : countdown(arrival - simTime)}</time><dl class="vehicle-facts"><div><dt>Destino</dt><dd>${esc(s.heads[trip.t[3]])}</dd></div>${f ? `<div><dt>Parada anterior del recorrido</dt><dd>${stopLink(f.properties.current)}</dd></div>` : ""}<div><dt>Hora prevista</dt><dd>${clock(arrival)}</dd></div><div><dt>Fuente de los tiempos</dt><dd>${trip.frequency ? "Intervalo GTFS" : "Horario GTFS"}</dd></div></dl>${
+    f?.properties.actual
+      ? `<details class="raw-vehicle-data"><summary>Datos publicados del tren</summary><dl>${Object.entries(
+          f.properties.publishedDetails || {},
+        )
+          .map(
+            ([key, value]) =>
+              `<div><dt>${esc(key)}</dt><dd>${esc(typeof value === "object" ? JSON.stringify(value) : value)}</dd></div>`,
+          )
+          .join(
+            "",
+          )}</dl><a href="${f.properties.positionSource === "long-distance" ? RENFE_LD_SOURCE : RENFE_POSITION_SOURCE}" target="_blank" rel="noopener">Fuente Renfe ↗</a></details>`
+      : ""
+  }`;
   // Keep focused links in place while the second counter advances.
   const key = [
     status,
@@ -1557,7 +1572,7 @@ async function plan(e) {
 }
 function showData() {
   const dialog = $("#data-dialog");
-  dialog.innerHTML = `<div class="detail-toolbar"><span></span><button id="close-data" class="close-detail" aria-label="Cerrar datos">${icon("x")}</button></div><div class="eyebrow">DATOS CON PROCEDENCIA</div><h2>Fuentes y cobertura</h2><p>${esc(APP_NAME)} reúne redes publicadas por sus operadores. La cobertura crece ciudad a ciudad; cada calendario tiene su propia vigencia.</p><div class="coverage-grid">${cities.map((c) => `<button data-city="${c.id}" class="coverage-city ${city.id === c.id ? "selected" : ""}"><b>${esc(c.name)}</b><span>${num(c.routes)} líneas · ${num(c.stops)} embarques</span><small>${esc(c.coverage)}</small></button>`).join("")}</div><h3>${esc(city.name)} · archivos publicados</h3>${n.meta.feeds.map((f) => `<div class="data-source"><span class="data-status ${feedCurrent(f) ? "ready" : "waiting"}">${feedCurrent(f) ? "CALENDARIO VIGENTE" : "FUERA DEL CALENDARIO"}</span><h3>${esc(f.publisher)}</h3><p>${num(f.routes)} líneas · ${num(f.trips)} viajes en el archivo.</p><small>Calendario ${formatDate(f.start)} — ${formatDate(f.end)}<br>Normalizado ${new Date(f.fetchedAt).toLocaleString("es-ES", { timeZone: "Europe/Madrid" })}${f.skippedTrips ? `<br>${num(f.skippedTrips)} viajes omitidos por tiempos incompletos o inválidos.` : ""}${f.approximateShapes ? "<br>Hay variantes sin trazado disponible o descartadas por incoherencias. Se conservan sus paradas y horarios; no se dibujan ni se animan sus estimaciones en el mapa." : ""}</small><a href="${esc(f.source)}" target="_blank" rel="noopener">Archivo utilizado ↗</a> · <a href="${esc(f.website)}" target="_blank" rel="noopener">Operador ↗</a> · <a href="${esc(f.license)}" target="_blank" rel="noopener">Licencia ↗</a></div>`).join("")}<div class="data-source"><span class="data-status ready">API PÚBLICA · BARCELONA</span><h3>FGC · Posiciones y ocupación</h3><p>Puntos azules: coordenadas publicadas por FGC. Se consultan cada 30 segundos al explorar la hora actual. La ocupación, cuando existe, es la media de los coches con información. Se ocultan las publicaciones con más de tres minutos de antigüedad.</p><a href="${FGC_SOURCE}" target="_blank" rel="noopener">FGC · CC BY 4.0 ↗</a></div><div class="data-source"><span class="data-status ${serverConfigured ? "ready" : "waiting"}">${serverConfigured ? "SERVIDOR CONECTADO" : "REQUIERE SERVIDOR"}</span><h3>TMB · Transit, iBus y Planner</h3><p>Las claves de GitHub actualizan el archivo de horarios. Para consultar iBus, detalles Transit y el planificador oficial desde esta web, conecta el servidor incluido con esas claves. El resto de ciudades utiliza sus propios horarios.</p></div><div class="data-source"><span class="data-status ${renfeAvailable ? "ready" : "waiting"}">${renfeAvailable ? "SERVIDOR DISPONIBLE" : "REQUIERE CONEXIÓN"}</span><h3>Renfe · GPS de Cercanías</h3><p>Renfe publica posiciones cada 20 segundos, vinculadas al viaje GTFS por su identificador exacto. Su API no permite consultas desde otros sitios: GitHub Pages necesita el servidor incluido, sin claves Renfe. Solo se muestran mediciones de menos de 90 segundos; las llegadas continúan siendo horarios, sin inferir retrasos a partir de GPS.</p><a href="${RENFE_POSITION_SOURCE}" target="_blank" rel="noopener">Renfe Data · CC BY 4.0 ↗</a></div><div class="data-source"><h3>Trazados y cartografía</h3><p>OpenStreetMap vía OpenFreeMap. Historias con fuentes enlazadas. Los vehículos por horario son interpolaciones sobre geometrías publicadas. Renfe sin shapes: corredores reconstruidos sobre vías del IGN pasando por las estaciones GTFS, con preferencia por ancho estándar en AVE; no son itinerarios confirmados por el operador. Las geometrías desconectadas se omiten. TUSSAM: recorridos municipales. Metro de Sevilla: relación cartográfica de OpenStreetMap. En «Viajar», los transbordos son aproximados y no se incorporan incidencias.</p><a href="https://api-features.idee.es/collections/railwaylink?f=html" target="_blank" rel="noopener">© IGN · vías ferroviarias ↗</a> · <a href="https://www.ign.es/resources/licencia/Condiciones_licenciaUso_IGN.pdf" target="_blank" rel="noopener">Licencia IGN ↗</a> · <a href="https://www.arcgis.com/home/item.html?id=c5e6ecf63aa944c8a09eb1e65e72d8f4" target="_blank" rel="noopener">Ayuntamiento de Sevilla · TUSSAM ↗</a> · <a href="https://www.openstreetmap.org/relation/255088" target="_blank" rel="noopener">Metro de Sevilla · OSM/ODbL ↗</a> · <a href="https://www.transportes.gob.es" target="_blank" rel="noopener">Powered by MIMTRANS ↗</a> · <a href="https://mobilitydatabase.org" target="_blank" rel="noopener">Archivos de Mobility Database ↗</a></div><form id="connection-form"><label class="field-label">SERVIDOR PARA DATOS EN DIRECTO<input type="url" id="api-url" placeholder="https://tu-servidor.example" value="${esc(apiBase)}"></label><p class="footnote">Opcional. Las claves permanecen en el servidor.</p><button class="primary" type="submit">Guardar conexión</button><span id="connection-state"></span></form><a class="text-link" href="https://nap.transportes.gob.es/" target="_blank" rel="noopener">Más redes españolas: Punto de Acceso Nacional ↗</a>`;
+  dialog.innerHTML = `<div class="detail-toolbar"><span></span><button id="close-data" class="close-detail" aria-label="Cerrar datos">${icon("x")}</button></div><div class="eyebrow">DATOS CON PROCEDENCIA</div><h2>Fuentes y cobertura</h2><p>${esc(APP_NAME)} reúne redes publicadas por sus operadores. La cobertura crece ciudad a ciudad; cada calendario tiene su propia vigencia.</p><div class="coverage-grid">${cities.map((c) => `<button data-city="${c.id}" class="coverage-city ${city.id === c.id ? "selected" : ""}"><b>${esc(c.name)}</b><span>${num(c.routes)} líneas · ${num(c.stops)} embarques</span><small>${esc(c.coverage)}</small></button>`).join("")}</div><h3>${esc(city.name)} · archivos publicados</h3>${n.meta.feeds.map((f) => `<div class="data-source"><span class="data-status ${feedCurrent(f) ? "ready" : "waiting"}">${feedCurrent(f) ? "CALENDARIO VIGENTE" : "FUERA DEL CALENDARIO"}</span><h3>${esc(f.publisher)}</h3><p>${num(f.routes)} líneas · ${num(f.trips)} viajes en el archivo.</p><small>Calendario ${formatDate(f.start)} — ${formatDate(f.end)}<br>Normalizado ${new Date(f.fetchedAt).toLocaleString("es-ES", { timeZone: "Europe/Madrid" })}${f.skippedTrips ? `<br>${num(f.skippedTrips)} viajes omitidos por tiempos incompletos o inválidos.` : ""}${f.approximateShapes ? "<br>Hay variantes sin trazado disponible o descartadas por incoherencias. Se conservan sus paradas y horarios; no se dibujan ni se animan sus estimaciones en el mapa." : ""}</small><a href="${esc(f.source)}" target="_blank" rel="noopener">Archivo utilizado ↗</a> · <a href="${esc(f.website)}" target="_blank" rel="noopener">Operador ↗</a> · <a href="${esc(f.license)}" target="_blank" rel="noopener">Licencia ↗</a></div>`).join("")}<div class="data-source"><span class="data-status ready">API PÚBLICA · BARCELONA</span><h3>FGC · Posiciones y ocupación</h3><p>Puntos azules: coordenadas publicadas por FGC. Se consultan cada 30 segundos al explorar la hora actual. La ocupación, cuando existe, es la media de los coches con información. Se ocultan las publicaciones con más de tres minutos de antigüedad.</p><a href="${FGC_SOURCE}" target="_blank" rel="noopener">FGC · CC BY 4.0 ↗</a></div><div class="data-source"><span class="data-status ${serverConfigured ? "ready" : "waiting"}">${serverConfigured ? "SERVIDOR CONECTADO" : "REQUIERE SERVIDOR"}</span><h3>TMB · Transit, iBus y Planner</h3><p>Las claves de GitHub actualizan el archivo de horarios. Para consultar iBus, detalles Transit y el planificador oficial desde esta web, conecta el servidor incluido con esas claves. El resto de ciudades utiliza sus propios horarios.</p></div><div class="data-source"><span class="data-status ${renfeAvailable ? "ready" : "waiting"}">${renfeAvailable ? "SERVIDOR DISPONIBLE" : "REQUIERE CONEXIÓN"}</span><h3>Renfe · Posiciones publicadas</h3><p>Cercanías se vincula por el identificador exacto del viaje. AVE y otros servicios de larga distancia se vinculan por el número comercial publicado en el GTFS y sus terminales, con una única coincidencia de calendario. Ambas fuentes se consultan cada 20 segundos. Su API no permite consultas desde otros sitios: GitHub Pages necesita el servidor incluido, sin claves Renfe. Solo se muestran mediciones de menos de 90 segundos; las llegadas continúan siendo horarios, sin inferir retrasos a partir de GPS.</p><a href="${RENFE_POSITION_SOURCE}" target="_blank" rel="noopener">Cercanías · Renfe Data · CC BY 4.0 ↗</a> · <a href="${RENFE_LD_SOURCE}" target="_blank" rel="noopener">Visor oficial de larga distancia ↗</a></div><div class="data-source"><h3>Trazados y cartografía</h3><p>OpenStreetMap vía OpenFreeMap. Historias con fuentes enlazadas. Los vehículos por horario son interpolaciones sobre geometrías publicadas. Renfe sin shapes: corredores reconstruidos sobre vías del IGN pasando por las estaciones GTFS, con preferencia por ancho estándar en AVE; no son itinerarios confirmados por el operador. Las geometrías desconectadas se omiten. TUSSAM: recorridos municipales. Metro de Sevilla: relación cartográfica de OpenStreetMap. En «Viajar», los transbordos son aproximados y no se incorporan incidencias.</p><a href="https://api-features.idee.es/collections/railwaylink?f=html" target="_blank" rel="noopener">© IGN · vías ferroviarias ↗</a> · <a href="https://www.ign.es/resources/licencia/Condiciones_licenciaUso_IGN.pdf" target="_blank" rel="noopener">Licencia IGN ↗</a> · <a href="https://www.arcgis.com/home/item.html?id=c5e6ecf63aa944c8a09eb1e65e72d8f4" target="_blank" rel="noopener">Ayuntamiento de Sevilla · TUSSAM ↗</a> · <a href="https://www.openstreetmap.org/relation/255088" target="_blank" rel="noopener">Metro de Sevilla · OSM/ODbL ↗</a> · <a href="https://www.transportes.gob.es" target="_blank" rel="noopener">Powered by MIMTRANS ↗</a> · <a href="https://mobilitydatabase.org" target="_blank" rel="noopener">Archivos de Mobility Database ↗</a></div><form id="connection-form"><label class="field-label">SERVIDOR PARA DATOS EN DIRECTO<input type="url" id="api-url" placeholder="https://tu-servidor.example" value="${esc(apiBase)}"></label><p class="footnote">Opcional. Las claves permanecen en el servidor.</p><button class="primary" type="submit">Guardar conexión</button><span id="connection-state"></span></form><a class="text-link" href="https://nap.transportes.gob.es/" target="_blank" rel="noopener">Más redes españolas: Punto de Acceso Nacional ↗</a>`;
   $$("[data-city]").forEach(
     (b) =>
       (b.onclick = () => {
@@ -1925,6 +1940,8 @@ function renfeFeature(v, trip) {
       actual: true,
       number: v.number,
       measured: v.timestamp,
+      publishedDetails: v.details,
+      positionSource: v.source || "cercanias",
     },
   };
 }
@@ -1945,8 +1962,20 @@ async function refreshRenfe() {
   renfeBusy = true;
   renfeNext = Date.now() + 20000;
   try {
-    const data = await fetchRenfe(apiBase, s);
-    if (epoch === cityEpoch) renfeGPS = data;
+    const results = await Promise.allSettled([
+      fetchRenfe(apiBase, s),
+      fetchRenfeLongDistance(apiBase, s, n, trips, simTime),
+    ]);
+    if (epoch !== cityEpoch) return;
+    const snapshots = results
+      .filter((r) => r.status === "fulfilled")
+      .map((r) => r.value);
+    renfeGPS = snapshots.length
+      ? {
+          timestamp: Math.max(...snapshots.map((r) => r.timestamp)),
+          vehicles: snapshots.flatMap((r) => r.vehicles),
+        }
+      : null;
   } catch {
     if (epoch === cityEpoch) renfeGPS = null;
   } finally {

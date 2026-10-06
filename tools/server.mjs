@@ -80,8 +80,12 @@ const server = http.createServer(async (req, res) => {
         json(429, { error: "Demasiadas consultas. Inténtalo en un minuto." });
         return;
       }
-      if (url.pathname === "/api/renfe/positions") {
-        const key = "renfe-positions",
+      if (
+        ["/api/renfe/positions", "/api/renfe/long-distance"].includes(
+          url.pathname,
+        )
+      ) {
+        const key = url.pathname,
           saved = cache.get(key);
         if (saved && now - saved.time < 15000) {
           json(200, saved.data);
@@ -92,7 +96,9 @@ const server = http.createServer(async (req, res) => {
             key,
             (async () => {
               const response = await fetch(
-                "https://gtfsrt.renfe.com/vehicle_positions.json",
+                url.pathname === "/api/renfe/positions"
+                  ? "https://gtfsrt.renfe.com/vehicle_positions.json"
+                  : "https://tiempo-real.largorecorrido.renfe.com/renfe-visor/flotaLD.json",
                 { signal: AbortSignal.timeout(10000) },
               );
               if (!response.ok) throw new Error("Renfe no disponible");

@@ -1,6 +1,7 @@
 import { projectStop } from "./geometry.js";
 export const RENFE_POSITION_SOURCE =
   "https://data.renfe.com/es/dataset/ubicacion-vehiculos";
+export const RENFE_LD_SOURCE = "https://tiempo-real.largorecorrido.renfe.com/";
 export function renfeMatches(
   snapshot,
   trips,
@@ -16,7 +17,9 @@ export function renfeMatches(
   }
   return (snapshot?.vehicles || []).flatMap((vehicle) => {
     if (now - vehicle.timestamp > 90000) return [];
-    const matches = candidates.get(vehicle.tripIndex) || [];
+    const matches = (candidates.get(vehicle.tripIndex) || []).filter(
+      (trip) => !vehicle.instanceId || trip.id === vehicle.instanceId,
+    );
     const active = matches.filter((trip) => {
       const p = schedule.patterns[trip.t[4]],
         local = time - trip.start;
@@ -108,4 +111,98 @@ export async function fetchRenfe(base, schedule) {
   });
   if (!response.ok) throw new Error("Renfe no está disponible");
   return renfeSnapshot(await response.json(), schedule);
+}
+export function renfeLongDistanceSnapshot(
+  data,
+  schedule,
+  network,
+  trips,
+  time,
+  now = Date.now(),
+) {
+  const commercial = (value) =>
+    /^\d+$/.test(String(value)) ? String(value).replace(/^0+(?=\d)/, "") : "";
+  const vehicles = (data.trenes || []).flatMap((record) => {
+    const timestamp = Number(record.time) * 1000,
+      lat = record.latitud,
+      lon = record.longitud;
+    if (
+      !Number.isFinite(timestamp) ||
+      now - timestamp > 90000 ||
+      timestamp > now + 30000 ||
+      !Number.isFinite(lat) ||
+      !Number.isFinite(lon) ||
+      lat < 27 ||
+      lat > 44 ||
+      lon < -19 ||
+      lon > 5
+    )
+      return [];
+    const number = commercial(record.codComercial);
+    if (!number) return [];
+    const matches = trips.filter((trip) => {
+      const index = Number(trip.id.split("-")[0]),
+        t = trip.t,
+        p = schedule.patterns[t[4]][0];
+      return (
+        network.routes[t[0]].feed === "renfe" &&
+        commercial(schedule.tripNames?.[index]) === number &&
+        network.stops[p[0]].sourceId === record.codOrigen &&
+        network.stops[p.at(-1)].sourceId === record.codDestino
+      );
+    });
+    const active = matches.filter((trip) => {
+      const p = schedule.patterns[trip.t[4]],
+        local = time - trip.start;
+      return local >= p[1][0] && local <= p[2].at(-1);
+    });
+    const trip =
+      active.length === 1
+        ? active[0]
+        : matches.length === 1
+          ? matches[0]
+          : null;
+    if (!trip) return [];
+    const index = Number(trip.id.split("-")[0]);
+    return [
+      {
+        id: "renfe:LD:" + number,
+        instanceId: trip.id,
+        tripIndex: index,
+        reference: schedule.tripIds[index],
+        number: String(record.codComercial),
+        lat,
+        lon,
+        timestamp,
+        stopId: "renfe:" + record.codEstSig,
+        source: "long-distance",
+        details: record,
+      },
+    ];
+  });
+  return {
+    timestamp: vehicles.length
+      ? Math.max(...vehicles.map((v) => v.timestamp))
+      : now,
+    vehicles,
+  };
+}
+export async function fetchRenfeLongDistance(
+  base,
+  schedule,
+  network,
+  trips,
+  time,
+) {
+  const response = await fetch(base + "/api/renfe/long-distance", {
+    signal: AbortSignal.timeout(12000),
+  });
+  if (!response.ok) throw new Error("Larga distancia no disponible");
+  return renfeLongDistanceSnapshot(
+    await response.json(),
+    schedule,
+    network,
+    trips,
+    time,
+  );
 }

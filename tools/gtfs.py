@@ -96,7 +96,7 @@ def parse_gtfs(raw, feed, source):
     for sid, values in points.items():
         shapeindex[sid] = len(shapes); shapes.append([p for _, p in sorted(values)])
         shapeinfo.append({'kind':'gtfs','source':source})
-    patterns = []; patternindex = {}; heads = []; headindex = {}; trips = []; tripids = []; tripindex = {}; directions = collections.defaultdict(list)
+    patterns = []; patternindex = {}; heads = []; headindex = {}; trips = []; tripids = []; tripnames = []; tripindex = {}; directions = collections.defaultdict(list)
     approximated = set(); skipped = 0
     for tid, trip in triprows.items():
         sequence = sorted(times.get(tid, []))
@@ -126,6 +126,7 @@ def parse_gtfs(raw, feed, source):
                 shapeinfo.append({'kind':'missing','source':source})
         ri, pi, sh = routeindex[trip['route_id']], patternindex[pkey], shapeindex[sid]
         tripindex[tid] = len(trips); tripids.append(prefix + tid)
+        tripnames.append(trip.get('trip_short_name', ''))
         trips.append([ri, serviceindex[trip['service_id']], sh, headindex[head], pi, start])
         directions[(ri, number(trip.get('direction_id')))].append((sh, pi))
         for st in sequence:
@@ -174,12 +175,12 @@ def parse_gtfs(raw, feed, source):
             'trips': len(trips), 'skippedTrips': skipped, 'approximateShapes': len(approximated), 'timezone': 'Europe/Madrid',
             'frequencyPolicy': feed.get('frequencyPolicy', 'expand')}
     return {'meta': meta, 'routes': routes, 'stops': stops, 'shapes': shapes, 'shapeInfo': shapeinfo, 'transfers': transfers, 'pathways': pathways}, \
-           {'services': services, 'patterns': patterns, 'heads': heads, 'trips': trips, 'tripIds': tripids, 'frequencies': frequencies}
+           {'services': services, 'patterns': patterns, 'heads': heads, 'trips': trips, 'tripIds': tripids, 'tripNames': tripnames, 'frequencies': frequencies}
 
 
 def merge_networks(parts, city):
     network = {key: [] for key in ['routes', 'stops', 'shapes', 'shapeInfo', 'transfers', 'pathways']}
-    schedule = {key: [] for key in ['services', 'patterns', 'heads', 'trips', 'tripIds', 'frequencies']}
+    schedule = {key: [] for key in ['services', 'patterns', 'heads', 'trips', 'tripIds', 'tripNames', 'frequencies']}
     feeds = []
     for n, s in parts:
         ro, so, sho = len(network['routes']), len(network['stops']), len(network['shapes'])
@@ -189,6 +190,7 @@ def merge_networks(parts, city):
         network['routes'].extend([{**r, 'stops': [i+so for i in r['stops']], 'directions': [{**d, 'shape': d['shape']+sho, 'stops': [i+so for i in d['stops']]} for d in r['directions']]} for r in n['routes']])
         for key in ['transfers', 'pathways']: network[key].extend([[a+so, b+so, *rest] for a, b, *rest in n[key]])
         schedule['services'].extend(s['services']); schedule['heads'].extend(s['heads']); schedule['tripIds'].extend(s['tripIds'])
+        schedule['tripNames'].extend(s.get('tripNames', [''] * len(s['trips'])))
         schedule['patterns'].extend([[[i+so for i in p[0]], *p[1:]] for p in s['patterns']])
         schedule['trips'].extend([[r+ro, service+se, shape+sho, head+ho, pattern+po, start] for r, service, shape, head, pattern, start in s['trips']])
         schedule['frequencies'].extend([[trip+to, *rest] for trip, *rest in s['frequencies']])

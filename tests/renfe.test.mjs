@@ -5,6 +5,7 @@ import {
   renfeSnapshot,
   gpsProgress,
   renfeMatches,
+  renfeLongDistanceSnapshot,
 } from "../src/renfe-realtime.js";
 import { Movement } from "../src/geometry.js";
 import {
@@ -206,5 +207,91 @@ test("GPS is matched once across today's and yesterday's occurrences and ambiguo
   assert.deepEqual(
     renfeMatches(snapshot, [today, yesterday], schedule, 400, now + 100000),
     [],
+  );
+});
+
+test("long-distance positions require a published commercial train number, matching terminals, one occurrence and a fresh measurement", () => {
+  const now = 1700000000000,
+    t = [0, 0, 0, 0, 0, 300],
+    trip = { id: "0-0", t, start: 300 },
+    previous = { id: "0-1", t, start: 300 - 86400 };
+  const s = {
+      tripNames: ["00190"],
+      tripIds: ["renfe:published"],
+      patterns: [
+        [
+          [0, 1],
+          [0, 600],
+          [0, 600],
+        ],
+      ],
+    },
+    n = {
+      routes: [{ feed: "renfe" }],
+      stops: [{ sourceId: "100" }, { sourceId: "200" }],
+    };
+  const record = {
+    codComercial: "190",
+    codOrigen: "100",
+    codDestino: "200",
+    latitud: 41,
+    longitud: 2,
+    time: now / 1000,
+    mat: "published-material",
+  };
+  const snapshot = renfeLongDistanceSnapshot(
+    { trenes: [record] },
+    s,
+    n,
+    [trip, previous],
+    400,
+    now,
+  );
+  assert.equal(snapshot.vehicles.length, 1);
+  assert.equal(snapshot.vehicles[0].instanceId, "0-0");
+  assert.equal(snapshot.vehicles[0].details.mat, "published-material");
+  assert.equal(
+    renfeLongDistanceSnapshot(
+      { trenes: [{ ...record, codDestino: "other" }] },
+      s,
+      n,
+      [trip],
+      400,
+      now,
+    ).vehicles.length,
+    0,
+  );
+  assert.equal(
+    renfeLongDistanceSnapshot(
+      { trenes: [record] },
+      s,
+      n,
+      [trip],
+      400,
+      now + 100000,
+    ).vehicles.length,
+    0,
+  );
+  assert.equal(
+    renfeLongDistanceSnapshot(
+      { trenes: [record] },
+      { ...s, tripNames: [] },
+      n,
+      [trip],
+      400,
+      now,
+    ).vehicles.length,
+    0,
+  );
+  assert.equal(
+    renfeLongDistanceSnapshot(
+      { trenes: [record] },
+      s,
+      n,
+      [trip, { ...trip, id: "0-ambiguous" }],
+      400,
+      now,
+    ).vehicles.length,
+    0,
   );
 });
