@@ -130,6 +130,7 @@ export class Movement {
     this.n = network;
     this.s = schedule;
     this.cache = new Map();
+    this.timings = new Map();
     this.shapes = network.shapes.map((coords) =>
       coords.length >= 2 ? measure(coords) : null,
     );
@@ -184,6 +185,30 @@ export class Movement {
       if (local < p[1][0] || local > p[2].at(-1)) continue;
       const path = this.path(trip);
       if (!path) continue;
+      const route = this.n.routes[t[0]];
+      if (["renfe", "cercanias"].includes(route.feed)) {
+        const key = t[0] + ":" + t[2] + ":" + t[4];
+        if (!this.timings.has(key)) {
+          const limit =
+            route.feed === "cercanias"
+              ? 200
+              : /AVE|AVLO|AVANT|ALVIA|EUROMED|INTERCITY/i.test(route.name)
+                ? 360
+                : 220;
+          this.timings.set(
+            key,
+            path.positions.every((at, i) => {
+              if (!i) return true;
+              const metres = at - path.positions[i - 1],
+                seconds = p[1][i] - p[2][i - 1];
+              return (
+                metres < 5 || (seconds > 0 && (metres * 3.6) / seconds <= limit)
+              );
+            }),
+          );
+        }
+        if (!this.timings.get(key)) continue;
+      }
       let k = 0;
       while (k < p[0].length - 1 && local > p[1][k + 1]) k++;
       const next = Math.min(k + 1, p[0].length - 1),

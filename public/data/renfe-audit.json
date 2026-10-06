@@ -1,0 +1,315 @@
+{
+  "routes": 430,
+  "trips": 113531,
+  "shapes": {
+    "missing": 464,
+    "rail-network": 472,
+    "gtfs": 189
+  },
+  "rejected": {
+    "repeated-track": 270,
+    "local-detour": 47,
+    "station-off-alignment": 4
+  },
+  "policy": "All trip variants retain their own pattern and shape. Inferred loops/detours are withheld. Estimates for patterns with impossible segment speeds are suppressed at runtime. GPS is never inferred from timetable progress.",
+  "inconsistentTimings": [
+    {
+      "route": "renfe:7180111511GL023",
+      "shape": 22,
+      "pattern": 42,
+      "from": "Tudela de Navarra",
+      "to": "Castejón de Ebro",
+      "kmh": 61055,
+      "seconds": 0
+    },
+    {
+      "route": "renfe:7180111511GL023",
+      "shape": 22,
+      "pattern": 43,
+      "from": "Tudela de Navarra",
+      "to": "Castejón de Ebro",
+      "kmh": 61055,
+      "seconds": 0
+    },
+    {
+      "route": "renfe:7180111511GL023",
+      "shape": 23,
+      "pattern": 46,
+      "from": "Altsasu",
+      "to": "Pamplona/Iruña",
+      "kmh": 3113,
+      "seconds": 60
+    },
+    {
+      "route": "renfe:7180111511GL023",
+      "shape": 23,
+      "pattern": 46,
+      "from": "Castejón de Ebro",
+      "to": "Tudela de Navarra",
+      "kmh": 1018,
+      "seconds": 60
+    },
+    {
+      "route": "renfe:7180111511GL023",
+      "shape": 23,
+      "pattern": 47,
+      "from": "Castejón de Ebro",
+      "to": "Tudela de Navarra",
+      "kmh": 1018,
+      "seconds": 60
+    },
+    {
+      "route": "renfe:1151178400GL023",
+      "shape": 24,
+      "pattern": 50,
+      "from": "Altsasu",
+      "to": "Pamplona/Iruña",
+      "kmh": 3114,
+      "seconds": 60
+    },
+    {
+      "route": "renfe:7180160000AV006",
+      "shape": 155,
+      "pattern": 267,
+      "from": "Zaragoza Delicias",
+      "to": "Camp de Tarragona",
+      "kmh": 360,
+      "seconds": 2520
+    },
+    {
+      "route": "renfe:7840078700VRR",
+      "shape": 556,
+      "pattern": 1002,
+      "from": "Manresa",
+      "to": "Sant Vicenç de Castellet",
+      "kmh": 238,
+      "seconds": 120
+    },
+    {
+      "route": "renfe:7840078700VRR",
+      "shape": 558,
+      "pattern": 1006,
+      "from": "Sant Vicenç de Castellet",
+      "to": "Manresa",
+      "kmh": 238,
+      "seconds": 120
+    },
+    {
+      "route": "renfe:7840078700VRR",
+      "shape": 558,
+      "pattern": 1013,
+      "from": "Terrassa Estació del Nord",
+      "to": "Sant Vicenç de Castellet",
+      "kmh": 1448,
+      "seconds": 60
+    },
+    {
+      "route": "renfe:7840078700VRR",
+      "shape": 558,
+      "pattern": 1013,
+      "from": "Sant Vicenç de Castellet",
+      "to": "Manresa",
+      "kmh": 475,
+      "seconds": 60
+    },
+    {
+      "route": "renfe:7840078700VRR",
+      "shape": 556,
+      "pattern": 1015,
+      "from": "Manresa",
+      "to": "Sant Vicenç de Castellet",
+      "kmh": 238,
+      "seconds": 120
+    },
+    {
+      "route": "renfe:7840078700VRR",
+      "shape": 556,
+      "pattern": 1020,
+      "from": "Manresa",
+      "to": "Sant Vicenç de Castellet",
+      "kmh": 475,
+      "seconds": 60
+    },
+    {
+      "route": "renfe:3720017000VRX",
+      "shape": 604,
+      "pattern": 1107,
+      "from": "Ciudad Real",
+      "to": "Almagro",
+      "kmh": 308,
+      "seconds": 840
+    },
+    {
+      "route": "renfe:6040037200VRX",
+      "shape": 605,
+      "pattern": 1108,
+      "from": "Almagro",
+      "to": "Ciudad Real",
+      "kmh": 331,
+      "seconds": 780
+    },
+    {
+      "route": "renfe:6040037200VRX",
+      "shape": 606,
+      "pattern": 1109,
+      "from": "Ciudad Real",
+      "to": "Almagro",
+      "kmh": 331,
+      "seconds": 780
+    },
+    {
+      "route": "renfe:1700082100VRE",
+      "shape": 633,
+      "pattern": 1164,
+      "from": "Madrid-Chamartín-Clara Campoamor",
+      "to": "Alcalá de Henares",
+      "kmh": 1877,
+      "seconds": 60
+    },
+    {
+      "route": "renfe:3720060911VRX",
+      "shape": 723,
+      "pattern": 1277,
+      "from": "Ciudad Real",
+      "to": "Almagro",
+      "kmh": 308,
+      "seconds": 840
+    },
+    {
+      "route": "renfe:3720060902VRX",
+      "shape": 724,
+      "pattern": 1278,
+      "from": "Ciudad Real",
+      "to": "Almagro",
+      "kmh": 308,
+      "seconds": 840
+    },
+    {
+      "route": "renfe:3720060911VRX",
+      "shape": 725,
+      "pattern": 1279,
+      "from": "Ciudad Real",
+      "to": "Almagro",
+      "kmh": 308,
+      "seconds": 840
+    },
+    {
+      "route": "renfe:3720060911VRX",
+      "shape": 726,
+      "pattern": 1280,
+      "from": "Almagro",
+      "to": "Ciudad Real",
+      "kmh": 269,
+      "seconds": 960
+    },
+    {
+      "route": "renfe:3720060911VRX",
+      "shape": 726,
+      "pattern": 1281,
+      "from": "Almagro",
+      "to": "Ciudad Real",
+      "kmh": 269,
+      "seconds": 960
+    },
+    {
+      "route": "renfe:3720060911VRX",
+      "shape": 727,
+      "pattern": 1282,
+      "from": "Almagro",
+      "to": "Ciudad Real",
+      "kmh": 269,
+      "seconds": 960
+    },
+    {
+      "route": "renfe:3720060902VRX",
+      "shape": 728,
+      "pattern": 1283,
+      "from": "Almagro",
+      "to": "Ciudad Real",
+      "kmh": 269,
+      "seconds": 960
+    },
+    {
+      "route": "renfe:3720017000VRX",
+      "shape": 738,
+      "pattern": 1303,
+      "from": "Almagro",
+      "to": "Ciudad Real",
+      "kmh": 253,
+      "seconds": 1020
+    },
+    {
+      "route": "renfe:3720060911VRX",
+      "shape": 740,
+      "pattern": 1305,
+      "from": "Ciudad Real",
+      "to": "Almagro",
+      "kmh": 253,
+      "seconds": 1020
+    },
+    {
+      "route": "renfe:3720060911VRX",
+      "shape": 740,
+      "pattern": 1306,
+      "from": "Ciudad Real",
+      "to": "Almagro",
+      "kmh": 253,
+      "seconds": 1020
+    },
+    {
+      "route": "renfe:3720060911VRX",
+      "shape": 741,
+      "pattern": 1307,
+      "from": "Ciudad Real",
+      "to": "Almagro",
+      "kmh": 253,
+      "seconds": 1020
+    },
+    {
+      "route": "renfe:3720060902VRX",
+      "shape": 742,
+      "pattern": 1308,
+      "from": "Ciudad Real",
+      "to": "Almagro",
+      "kmh": 253,
+      "seconds": 1020
+    },
+    {
+      "route": "renfe:3720060911VRX",
+      "shape": 743,
+      "pattern": 1309,
+      "from": "Almagro",
+      "to": "Ciudad Real",
+      "kmh": 227,
+      "seconds": 1140
+    },
+    {
+      "route": "renfe:3720060902VRX",
+      "shape": 744,
+      "pattern": 1310,
+      "from": "Almagro",
+      "to": "Ciudad Real",
+      "kmh": 227,
+      "seconds": 1140
+    },
+    {
+      "route": "renfe:3720060911VRX",
+      "shape": 745,
+      "pattern": 1311,
+      "from": "Almagro",
+      "to": "Ciudad Real",
+      "kmh": 227,
+      "seconds": 1140
+    },
+    {
+      "route": "renfe:6702004040VRR",
+      "shape": 766,
+      "pattern": 1341,
+      "from": "María de Huerva",
+      "to": "Zaragoza Delicias",
+      "kmh": 247,
+      "seconds": 360
+    }
+  ],
+  "checkedPatterns": 3413
+}

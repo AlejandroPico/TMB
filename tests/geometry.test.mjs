@@ -124,12 +124,21 @@ test("Barcelona–Madrid AVE uses the rail corridor, not a diagonal across Spain
   const route = n.routes.find(
     (r) =>
       r.name === "AVE" &&
-      r.description.startsWith("Barcelona-Sants - Madrid-Puerta"),
+      r.directions.some(
+        (d) =>
+          n.stops[d.stops[0]].name === "Barcelona-Sants" &&
+          n.stops[d.stops.at(-1)].name.startsWith("Madrid-Puerta"),
+      ),
   );
   assert(route);
-  const shape = n.shapes[route.directions[0].shape];
+  const direction = route.directions.find(
+    (d) =>
+      n.stops[d.stops[0]].name === "Barcelona-Sants" &&
+      n.stops[d.stops.at(-1)].name.startsWith("Madrid-Puerta"),
+  );
+  const shape = n.shapes[direction.shape];
   assert(shape.length > 500);
-  assert.equal(n.shapeInfo[route.directions[0].shape].kind, "rail-network");
+  assert.equal(n.shapeInfo[direction.shape].kind, "rail-network");
   const total = shape
     .slice(1)
     .reduce(

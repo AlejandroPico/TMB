@@ -237,7 +237,41 @@ class RailGraph:
         self.cache[key]=result
         return result
 
-def enrich(n,s,feed):
+def operator_corridor(points, references):
+    """Prefer a complete operator alignment; never join unrelated pieces."""
+    best=None
+    for coords,source in references:
+        xs=[c[0] for c in coords];ys=[c[1] for c in coords]
+        if any(not (min(xs)-.004<=p[0]<=max(xs)+.004 and min(ys)-.004<=p[1]<=max(ys)+.004) for p in [points[0],points[-1]]):continue
+        for line in [coords,list(reversed(coords))]:
+            # Fail cheaply at the ends before checking the whole stop sequence.
+            a=projection(points[0],line);b=projection(points[-1],line,a[1])
+            if a[0]>250 or b[0]>250 or b[1]<=a[1]:continue
+            match=line_match(points,line,250)
+            if match and (best is None or match[0]<best[0]):
+                best=(match[0],trim(line,match[1][0],match[1][-1]),source)
+    return best
+
+def rail_path_quality(coords,points,highspeed=False):
+    """Reject local detours and repeated infrastructure, not legitimate branches."""
+    last=0;positions=[]
+    for point in points:
+        match=projection(point,coords,last)
+        if not match or match[0]>550:return 'station-off-alignment'
+        positions.append(match[1]);last=match[1]
+    for i,(a,b) in enumerate(zip(points,points[1:])):
+        straight=metres(a,b);along=positions[i+1]-positions[i]
+        if straight<10000 and along>max(6000,straight*4):return 'local-detour'
+    # A path retracing kilometres of track is a snapping/topology fault. Real
+    # reversals require an operator shape rather than an inferred shortest path.
+    seen={};travel=0
+    for a,b in zip(coords,coords[1:]):
+        travel+=metres(a,b);key=tuple(round(v,4) for v in b)
+        if key in seen and travel-seen[key]>1500:return 'repeated-track'
+        seen[key]=travel
+    return None
+
+def enrich(n,s,feed,references=()):
     if not n.get('shapeInfo'):return
     missing=[i for i,v in enumerate(n['shapeInfo']) if v['kind']=='missing']
     if not missing:return
@@ -247,16 +281,26 @@ def enrich(n,s,feed):
     elif feed['id']=='metro-sevilla':
         count=metro_geometry(n)
     elif feed['id'] in ['renfe','cercanias']:
+        official=[(other['shapes'][sid],info['source']) for other in references if other['meta']['id'] in ['renfe','cercanias'] for sid,info in enumerate(other.get('shapeInfo',[])) if info['kind']=='gtfs' and len(other['shapes'][sid])>2]
         graph=RailGraph(rail_features(),[p for sid in missing for p in n['shapes'][sid]])
-        modes={t[2]:('AVE' in n['routes'][t[0]]['name'].upper() or 'AVLO' in n['routes'][t[0]]['name'].upper()) for t in s['trips']}
+        modes={t[2]:any(name in n['routes'][t[0]]['name'].upper() for name in ['AVE','AVLO','AVANT']) for t in s['trips']}
+        rejected=collections.Counter()
         for sid in missing:
+            points=n['shapes'][sid]
+            match=None if modes.get(sid,False) else operator_corridor(points,official)
+            if match:
+                n['shapes'][sid]=match[1];n['shapeInfo'][sid]={'kind':'gtfs','source':match[2],'method':'Complete operator corridor trimmed to the ordered GTFS stops; maximum station offset 250 m.','methodVersion':2};count+=1;continue
             coords=[];valid=True
-            for a,b in zip(n['shapes'][sid],n['shapes'][sid][1:]):
+            for a,b in zip(points,points[1:]):
                 piece=graph.path(a,b,modes.get(sid,False))
                 if not piece:valid=False;break
                 coords.extend(piece if not coords else piece[1:])
             if valid and len(coords)>2:
-                n['shapes'][sid]=simplify(coords);n['shapeInfo'][sid]={'kind':'rail-network','source':IGN,'license':LICENSE_IGN,'method':'Shortest connected infrastructure path through GTFS stops; gauge weighted for AVE/Avlo. Service corridor is inferred. Geometry simplified within 8 m.'};count+=1
+                reason=rail_path_quality(coords,points,modes.get(sid,False))
+                if reason:
+                    n['shapeInfo'][sid]['rejectedReason']=reason;rejected[reason]+=1;continue
+                n['shapes'][sid]=simplify(coords);n['shapeInfo'][sid]={'kind':'rail-network','source':IGN,'license':LICENSE_IGN,'methodVersion':2,'method':'Connected infrastructure through ordered GTFS stops, gauge weighted for AVE/Avlo/Avant. Checked for local detours and repeated track; inferred service corridor, simplified within 8 m.'};count+=1
+        n['meta']['rejectedGeometry']=dict(rejected)
     for r in n['routes']:
         for d in r['directions']:d['approximate']=n['shapeInfo'][d['shape']]['kind']=='missing'
     remaining=sum(x['kind']=='missing' for x in n['shapeInfo'])
@@ -278,6 +322,7 @@ def retain_published_geometry(network,schedule,old_network,old_schedule):
     for t in old_schedule['trips']:
         sid=t[2];info=old_network.get('shapeInfo',[])
         if sid<len(info) and info[sid]['kind'] in ['municipal','osm-route','rail-network'] and len(old_network['shapes'][sid])>=2:
+            if info[sid]['kind']=='rail-network' and info[sid].get('methodVersion')!=2:continue
             previous[key(old_network,old_schedule,t)]=(old_network['shapes'][sid],info[sid])
     restored=set()
     for t in schedule['trips']:

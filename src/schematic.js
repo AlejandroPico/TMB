@@ -3,6 +3,7 @@ import {
   schematicDirections,
   stationName,
   stationConnections,
+  transferGroups,
   calendarNotice,
 } from "./boards.js";
 import { transportGroup } from "./transit.js";
@@ -92,7 +93,7 @@ export class Schematic {
             numeric: true,
           }),
       );
-    this.container.innerHTML = `<div class="schematic-heading"><h1>Vista lineal</h1><span>${routes.length} ${routes.length === 1 ? "línea" : "líneas"} · posiciones estimadas por horario</span><small>Arrastra para recorrer la línea o desliza con el dedo. Las etiquetas bajo las paradas indican transbordos.</small></div><div class="schematic-lines">${
+    this.container.innerHTML = `<div class="schematic-heading"><h1>Vista lineal</h1><span>${routes.length} ${routes.length === 1 ? "línea" : "líneas"} · posiciones por horario o GPS disponible</span><small>Arrastra para recorrer la línea o desliza con el dedo. Las etiquetas bajo las paradas indican transbordos.</small></div><div class="schematic-lines">${
       routes
         .map((i) => {
           const r = network.routes[i];
@@ -150,17 +151,33 @@ export class Schematic {
   station(st, k, route) {
     // Stations describe the line itself; map point visibility cannot truncate it.
     const name = escape(this.n.stops[st].name),
-      connections = [...this.connections[st]]
-        .filter((i) => i !== route)
-        .sort(
-          (a, b) =>
-            (typeOrder[this.n.routes[a].mode] ?? 5) -
-              (typeOrder[this.n.routes[b].mode] ?? 5) ||
-            this.n.routes[a].name.localeCompare(this.n.routes[b].name, "es", {
+      connections = transferGroups(this.n, this.connections[st], route).sort(
+        (a, b) =>
+          (typeOrder[this.n.routes[a[0]].mode] ?? 5) -
+            (typeOrder[this.n.routes[b[0]].mode] ?? 5) ||
+          this.n.routes[a[0]].name.localeCompare(
+            this.n.routes[b[0]].name,
+            "es",
+            {
               numeric: true,
-            }),
-        );
-    return `<button class="schematic-station" data-schematic-stop="${st}" style="left:${70 + k * 112}px" title="${name}"><span></span><b>${name}</b></button>${connections.length ? `<div class="schematic-connections" style="left:${70 + k * 112}px" aria-label="Transbordos en ${name}">${connections.map((i) => `<button data-connection="${i}" aria-label="Transbordo a ${escape(this.n.routes[i].name)} · ${escape(this.n.routes[i].operator)}" title="${escape(this.n.routes[i].operator)} · ${escape(this.n.routes[i].description || this.n.routes[i].name)}">${this.callbacks.badge(this.n.routes[i])}</button>`).join("")}</div>` : ""}`;
+            },
+          ),
+      );
+    return `<button class="schematic-station" data-schematic-stop="${st}" style="left:${70 + k * 112}px" title="${name}"><span></span><b>${name}</b></button>${
+      connections.length
+        ? `<div class="schematic-connections" style="left:${70 + k * 112}px" aria-label="Transbordos en ${name}">${connections
+            .map((indices) => {
+              const i = indices[0],
+                r = this.n.routes[i];
+              const button = (index) =>
+                `<button data-connection="${index}" aria-label="Transbordo a ${escape(this.n.routes[index].name)} · ${escape(this.n.routes[index].description)}" title="${escape(this.n.routes[index].operator)} · ${escape(this.n.routes[index].description || this.n.routes[index].name)}">${indices.length > 1 ? escape(this.n.routes[index].description) : this.callbacks.badge(r)}</button>`;
+              return indices.length === 1
+                ? button(i)
+                : `<details class="schematic-transfer-group"><summary title="${escape(r.name)} · ${indices.length} recorridos">${this.callbacks.badge(r)}<small>${indices.length}</small></summary><div>${indices.map(button).join("")}</div></details>`;
+            })
+            .join("")}</div>`
+        : ""
+    }`;
   }
   reverse(rows, j) {
     const first = rows[0].stops.map((i) => stationName(this.n.stops[i].name)),
@@ -176,6 +193,7 @@ export class Schematic {
     const rows = schematicDirections(
       r.directions,
       [...(this.patterns.get(id) || [])].map((i) => this.s.patterns[i]),
+      r.feed === "cercanias",
     );
     this.rows.set(id, rows);
     const assignments = new Map();
@@ -318,7 +336,7 @@ export class Schematic {
         b.style.left = 70 + at * 112 + "px";
         b.querySelector("svg").style.transform =
           track.dataset.reverse === "true" ? "scaleX(-1)" : "";
-        b.title = `${this.n.routes[id].name} → ${f.properties.head} · ${this.n.stops[f.properties.next].name} · estimado`;
+        b.title = `${this.n.routes[id].name} → ${f.properties.head} · ${this.n.stops[f.properties.next].name} · ${f.properties.actual ? "GPS publicado" : "estimado"}`;
         b.setAttribute("aria-label", b.title);
       }
       for (const b of existing.values()) b.remove();

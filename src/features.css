@@ -1172,3 +1172,51 @@ dialog p,
   background: var(--ui-accent);
   color: var(--ui-on-accent, #17201d);
 }
+
+.schematic-transfer-group {
+  position: relative;
+}
+.schematic-transfer-group summary {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+  list-style: none;
+}
+.schematic-transfer-group summary small {
+  font-size: 9px;
+}
+.schematic-transfer-group[open] {
+  z-index: 20;
+}
+.schematic-transfer-group > div {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 230px;
+  max-height: 180px;
+  overflow: auto;
+  padding: 8px;
+  background: var(--ui-bg);
+  border: 1px solid var(--ui-border);
+  box-shadow: 0 4px 16px #0003;
+}
+.schematic-transfer-group > div button {
+  display: block;
+  width: 100%;
+  height: auto;
+  padding: 6px;
+  text-align: left;
+  white-space: normal;
+}
+@media (max-width: 700px) {
+  .detail:has(#vehicle-follow) {
+    top: auto;
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    width: auto;
+    max-width: none;
+    max-height: 50dvh;
+  }
+}

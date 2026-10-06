@@ -4,7 +4,9 @@ import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const appName = JSON.parse(await readFile(path.join(root, 'app.config.json'), 'utf8')).name;
+const appName = JSON.parse(
+  await readFile(path.join(root, "app.config.json"), "utf8"),
+).name;
 if (existsSync(path.join(root, ".env")))
   process.loadEnvFile(path.join(root, ".env"));
 const transitPaths = JSON.parse(
@@ -17,7 +19,8 @@ const cache = new Map(),
   inflight = new Map(),
   limits = new Map();
 const origins = (
-  process.env.ALLOWED_ORIGINS || "http://127.0.0.1:5173,http://localhost:5173"
+  process.env.ALLOWED_ORIGINS ||
+  "http://127.0.0.1:5173,http://localhost:5173,http://127.0.0.1:8787,http://localhost:8787"
 ).split(",");
 const configured = () => !!(process.env.TMB_APP_ID && process.env.TMB_APP_KEY);
 const mime = {
@@ -59,7 +62,7 @@ const server = http.createServer(async (req, res) => {
     if (url.pathname === "/api/status") {
       json(200, {
         configured: configured(),
-        services: ["transit", "ibus", "planner", "static"],
+        services: ["transit", "ibus", "planner", "static", "renfe"],
         time: new Date().toISOString(),
       });
       return;
@@ -75,6 +78,34 @@ const server = http.createServer(async (req, res) => {
       limits.set(address, bucket);
       if (++bucket.count > 60) {
         json(429, { error: "Demasiadas consultas. Inténtalo en un minuto." });
+        return;
+      }
+      if (url.pathname === "/api/renfe/positions") {
+        const key = "renfe-positions",
+          saved = cache.get(key);
+        if (saved && now - saved.time < 15000) {
+          json(200, saved.data);
+          return;
+        }
+        if (!inflight.has(key))
+          inflight.set(
+            key,
+            (async () => {
+              const response = await fetch(
+                "https://gtfsrt.renfe.com/vehicle_positions.json",
+                { signal: AbortSignal.timeout(10000) },
+              );
+              if (!response.ok) throw new Error("Renfe no disponible");
+              const data = await response.json();
+              cache.set(key, { time: Date.now(), data });
+              return data;
+            })(),
+          );
+        try {
+          json(200, await inflight.get(key));
+        } finally {
+          inflight.delete(key);
+        }
         return;
       }
       if (!configured()) {
@@ -211,7 +242,8 @@ server.listen(
   process.env.HOST || "127.0.0.1",
   () =>
     console.log(
-      appName + " · http://" +
+      appName +
+        " · http://" +
         (process.env.HOST || "127.0.0.1") +
         ":" +
         (process.env.PORT || 8787) +

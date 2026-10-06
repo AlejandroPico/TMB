@@ -9,6 +9,7 @@ import urllib.request
 import zipfile
 from gtfs import parse_gtfs, merge_networks
 from geometry import enrich, clear_missing, retain_published_geometry
+from rail_services import normalize_renfe
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 CONFIG = json.loads((ROOT/'tools/providers.json').read_text(encoding='utf-8'))
@@ -99,12 +100,14 @@ def main():
                             if feed['cache']=='andalucia':shared_archive=(raw,source)
                         cached[fid]=parse_gtfs(raw,feed,source)
                         n,s=cached[fid]
-                        try: enrich(n,s,feed)
-                        except Exception as error:
-                            n.pop('_trips',None)
-                            print(fid+': geometry enrichment unavailable ('+type(error).__name__+'); no schematic fallback',flush=True)
-                        clear_missing(n)
+                        if fid in ['renfe', 'cercanias']: normalize_renfe(n,s)
                     parts.append(cached[fid])
+                for fid, (n,s) in zip(city['feeds'], parts):
+                    try: enrich(n,s,feedmap[fid],[part[0] for part in parts])
+                    except Exception as error:
+                        n.pop('_trips',None)
+                        print(fid+': geometry enrichment unavailable ('+type(error).__name__+'); no schematic fallback',flush=True)
+                    clear_missing(n)
                 meta=write_city(city,parts)
             except Exception as error:
                 print(city['id']+': import unavailable ('+type(error).__name__+'); retaining published files',flush=True)

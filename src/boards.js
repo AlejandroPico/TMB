@@ -63,6 +63,17 @@ export function stationConnections(network) {
   }
   return connections;
 }
+export function transferGroups(network, connections, own) {
+  const identity = (i) => network.routes[i].transferKey || network.routes[i].id;
+  const groups = new Map();
+  for (const index of connections) {
+    const key = identity(index);
+    if (index === own || key === identity(own)) continue;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(index);
+  }
+  return [...groups.values()];
+}
 export function calendarNotice(feed, date) {
   const key = date?.replaceAll("-", "");
   if (
@@ -120,7 +131,38 @@ export function schematicPosition(direction, pattern, segment, fraction) {
     ? null
     : a + (b - a) * Math.max(0, Math.min(1, fraction));
 }
-export function schematicDirections(directions, patterns) {
+export function joinStopSequences(a, b) {
+  const common = a.filter((st) => b.includes(st));
+  if (
+    common.length < 2 ||
+    new Set(a).size !== a.length ||
+    new Set(b).size !== b.length
+  )
+    return null;
+  if (!schematicStopPositions({ stops: b }, [common])) return null;
+  const result = [];
+  let ai = 0,
+    bi = 0;
+  for (const anchor of [...common, null]) {
+    const aj = anchor === null ? a.length : a.indexOf(anchor),
+      bj = anchor === null ? b.length : b.indexOf(anchor);
+    const left = a.slice(ai, aj),
+      right = b.slice(bi, bj);
+    // Two different branches between the same anchors cannot be flattened.
+    const section = schematicStopPositions({ stops: left }, [right])
+      ? left
+      : schematicStopPositions({ stops: right }, [left])
+        ? right
+        : null;
+    if (!section) return null;
+    result.push(...section);
+    if (anchor !== null) result.push(anchor);
+    ai = aj + 1;
+    bi = bj + 1;
+  }
+  return new Set(result).size === result.length ? result : null;
+}
+export function schematicDirections(directions, patterns, combine = false) {
   const rows = directions.map((d) => ({ ...d, stops: [...d.stops] }));
   for (const pattern of [...patterns].sort(
     (a, b) => b[0].length - a[0].length,
@@ -129,6 +171,22 @@ export function schematicDirections(directions, patterns) {
     if (stops.length < 2) continue;
     const covered = rows.some((row) => schematicStopPositions(row, pattern));
     if (!covered) rows.push({ stops: [...stops] });
+  }
+  if (combine) {
+    let changed = true;
+    while (changed) {
+      changed = false;
+      outer: for (let i = 0; i < rows.length; i++)
+        for (let j = i + 1; j < rows.length; j++) {
+          const stops = joinStopSequences(rows[i].stops, rows[j].stops);
+          if (stops) {
+            rows[i] = { ...rows[i], stops };
+            rows.splice(j, 1);
+            changed = true;
+            break outer;
+          }
+        }
+    }
   }
   return rows;
 }

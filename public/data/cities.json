@@ -888,24 +888,31 @@
           "source": "https://ssl.renfe.com/gtransit/Fichero_AV_LD/google_transit.zip",
           "website": "https://data.renfe.com/",
           "license": "https://creativecommons.org/licenses/by/4.0/",
-          "fetchedAt": "2026-10-06T08:05:31.238228+00:00",
+          "fetchedAt": "2026-10-06T18:18:41.552797+00:00",
           "version": "52a7c4fda036",
           "start": "20261005",
           "end": "20270124",
           "sha256": "52a7c4fda036ddb84a0420706ad000d519d87765462fe43d6c4b70c3e9eeac81",
-          "routes": 648,
+          "routes": 358,
           "stops": 1006,
           "trips": 7496,
           "skippedTrips": 0,
-          "approximateShapes": 145,
+          "approximateShapes": 464,
           "timezone": "Europe/Madrid",
           "frequencyPolicy": "expand",
-          "missingShapes": 145,
-          "reconstructedShapes": 839,
+          "originalRoutes": 648,
+          "rejectedGeometry": {
+            "repeated-track": 270,
+            "local-detour": 47,
+            "station-off-alignment": 4
+          },
+          "originalMissingShapes": 984,
+          "missingShapes": 464,
+          "reconstructedShapes": 520,
           "geometrySources": [
             "https://api-features.idee.es/collections/railwaylink"
           ],
-          "originalMissingShapes": 984
+          "retainedShapes": 0
         },
         {
           "id": "cercanias",
@@ -913,24 +920,25 @@
           "source": "https://ssl.renfe.com/ftransit/Fichero_CER_FOMENTO/fomento_transit.zip",
           "website": "https://data.renfe.com/",
           "license": "https://creativecommons.org/licenses/by/4.0/",
-          "fetchedAt": "2026-10-06T08:08:06.087646+00:00",
+          "fetchedAt": "2026-10-06T18:19:01.870955+00:00",
           "version": "adf3b8e58699",
           "start": "20261005",
           "end": "20261103",
           "sha256": "adf3b8e586997720fcc9064f13c88af4f8ce7900a850e582eadddc990b795afa",
-          "routes": 828,
+          "routes": 72,
           "stops": 924,
           "trips": 106035,
           "skippedTrips": 756,
           "approximateShapes": 0,
           "timezone": "Europe/Madrid",
           "frequencyPolicy": "expand",
+          "originalRoutes": 828,
+          "rejectedGeometry": {},
+          "originalMissingShapes": 4,
           "missingShapes": 0,
           "reconstructedShapes": 4,
-          "geometrySources": [
-            "https://api-features.idee.es/collections/railwaylink"
-          ],
-          "originalMissingShapes": 4
+          "geometrySources": [],
+          "retainedShapes": 0
         }
       ],
       "source": "https://data.renfe.com/",
@@ -939,7 +947,7 @@
         "Madrid-Puerta De Atocha",
         "Barcelona-Sants"
       ],
-      "routes": 1476,
+      "routes": 430,
       "stops": 1930,
       "trips": 113531,
       "network": "./data/espana/network.json",

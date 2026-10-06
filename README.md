@@ -53,7 +53,7 @@ En Barcelona, los **puntos azules** son coordenadas de la [API pública de FGC](
 
 Se consulta cada 30 segundos con el reloj en «Ahora», movimiento activado y página visible. Se ocultan publicaciones de más de tres minutos. La hora corresponde a la actualización del **conjunto** de FGC, no a la medición individual de cada tren. Al cambiar fecha, acelerar o pausar desaparece GPS. Con GPS vigente se omiten los vehículos estimados de FGC para evitar duplicaciones.
 
-La vista lineal usa siempre posiciones estimadas, también para FGC, y lo indica en su cabecera. El mapa conserva las posiciones publicadas de FGC cuando están vigentes.
+La vista lineal utiliza estimaciones para FGC. En España también puede representar GPS de Cercanías cuando el servidor está conectado y la medición se puede proyectar al trazado del viaje. Se indica la procedencia en cada vehículo.
 
 Los contadores de metro, tren y tranvía proceden del horario GTFS: **actualizar un contador cada segundo no convierte la previsión en una llegada real**. La API TMB consultada no publica predicciones de metro. El adaptador iBus usa previsiones oficiales y antigüedad máxima de 90 segundos cuando se conecta el servidor. Campos como vía, serie o ocupación solo se muestran cuando el operador los facilita.
 
@@ -132,3 +132,13 @@ La cartografía, fuentes y APIs requieren conexión. Proyecto independiente de l
 ## Revisión de fuentes nacionales
 
 EMT, CRTM, Sevilla y Euskadi ya se utilizan. La revisión de los portales propuestos, NAP, posibilidades de tiempo real y requisitos de acceso está en [docs/data-portals-review.md](docs/data-portals-review.md).
+
+## Revisión Renfe y seguimiento · 1.5
+
+Al seleccionar un vehículo, la cámara sigue su posición conservando el zoom y la orientación. El botón «Seguimiento activo» pausa o reactiva la cámara; cerrar la ficha restaura la vista anterior.
+
+Cercanías se agrupa por núcleo y línea comercial, conservando las variantes y los IDs originales como alias. R3 se representa en dos sentidos mediante la unión de tramos compatibles, sin convertirlos en un nuevo servicio. Cada viaje mantiene sus estaciones y trazado. Los transbordos no repiten la propia línea; los productos de larga distancia agrupan sus corredores en un desplegable.
+
+Se priorizan trazados completos del operador. La reconstrucción del IGN descarta bucles y desvíos incoherentes; la animación suprime intervalos con velocidades incompatibles con el horario. Se conservan las paradas y tiempos aunque una variante no pueda dibujarse. El informe `public/data/renfe-audit.json` revisa todos los patrones y documenta las incoherencias detectadas. [Método, fuentes y límites](docs/renfe-review.md).
+
+El servidor incluye GPS oficial de Cercanías cada 20 segundos, sin claves Renfe ni TMB. `pnpm build` y `pnpm start` permiten probarlo localmente en el puerto 8787; para GitHub Pages hay que alojarlo y conectarlo en Fuentes. La API oficial bloquea consultas directas desde Pages. Se unen únicamente IDs GTFS exactos y se ocultan mediciones de más de 90 segundos. Las llegadas siguen siendo horarios, no tiempos corregidos por retrasos. AVE y larga distancia permanecen estimados: el visor oficial adicional aún no tiene una correspondencia integrada con nuestros viajes.

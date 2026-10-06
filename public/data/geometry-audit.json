@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-06T11:48:40.579461+00:00",
+  "generatedAt": "2026-10-06T18:27:13.058437+00:00",
   "policy": "No stop-to-stop fallback. Missing shapes are empty and are neither drawn nor animated. Rail-network alignments are inferred infrastructure paths, not operator-confirmed service itineraries.",
   "cities": [
     {
@@ -78,15 +78,15 @@
     {
       "id": "espana",
       "shapes": 1125,
-      "unavailableShapes": 145,
+      "unavailableShapes": 464,
       "scheduledTripsByGeometry": {
         "renfe": {
-          "rail-network": 6502,
-          "missing": 994
+          "missing": 2797,
+          "rail-network": 4079,
+          "gtfs": 620
         },
         "cercanias": {
-          "gtfs": 105231,
-          "rail-network": 804
+          "gtfs": 106035
         }
       }
     },
