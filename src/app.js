@@ -76,6 +76,7 @@ import { fetchFGC, FGC_SOURCE } from "./realtime.js";
 import {
   fetchRenfe,
   gpsProgress,
+  renfeMatches,
   RENFE_POSITION_SOURCE,
 } from "./renfe-realtime.js";
 let renfeGPS = null,
@@ -1895,13 +1896,6 @@ let rawMovementFeatures = [],
   lastFeatures = [],
   last = performance.now(),
   lastDraw = 0;
-function realRenfeVehicle(trip) {
-  if (!syncClock || !gpsVisible || !renfeGPS) return null;
-  const index = Number(trip.id.split("-")[0]);
-  return renfeGPS.vehicles.find(
-    (v) => v.tripIndex === index && Date.now() - v.timestamp <= 90000,
-  );
-}
 function renfeFeature(v, trip) {
   const t = trip.t,
     p = s.patterns[t[4]],
@@ -1961,10 +1955,12 @@ async function refreshRenfe() {
 }
 function drawMovement() {
   if (!movement || !map?.ready || loadingCity) return;
-  const measured = trips.flatMap((trip) => {
-    const v = realRenfeVehicle(trip);
-    return v ? [renfeFeature(v, trip)] : [];
-  });
+  const measured =
+    syncClock && gpsVisible
+      ? renfeMatches(renfeGPS, trips, s, simTime).map(({ vehicle, trip }) =>
+          renfeFeature(vehicle, trip),
+        )
+      : [];
   const realIds = new Set(measured.map((f) => f.properties.id));
   rawMovementFeatures = [
     ...movement

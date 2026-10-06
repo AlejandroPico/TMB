@@ -1,7 +1,11 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { renfeSnapshot, gpsProgress } from "../src/renfe-realtime.js";
+import {
+  renfeSnapshot,
+  gpsProgress,
+  renfeMatches,
+} from "../src/renfe-realtime.js";
 import { Movement } from "../src/geometry.js";
 import {
   stationConnections,
@@ -166,4 +170,41 @@ test("commercial connection badges group corridors while retaining each navigabl
     ],
   };
   assert.deepEqual(transferGroups(n, [0, 1, 2, 3, 4], 0), [[2, 3], [4]]);
+});
+
+test("GPS is matched once across today's and yesterday's occurrences and ambiguous dates are withheld", () => {
+  const now = 1700000000000,
+    schedule = {
+      patterns: [
+        [
+          [0, 1],
+          [0, 600],
+          [0, 600],
+        ],
+      ],
+    },
+    t = [0, 0, 0, 0, 0, 300];
+  const today = { id: "0-0", t, start: 300 },
+    yesterday = { id: "0-1", t, start: 300 - 86400 };
+  const snapshot = { vehicles: [{ tripIndex: 0, timestamp: now }] };
+  assert.deepEqual(
+    renfeMatches(snapshot, [today, yesterday], schedule, 400, now).map(
+      (x) => x.trip.id,
+    ),
+    ["0-0"],
+  );
+  assert.deepEqual(
+    renfeMatches(snapshot, [today, yesterday], schedule, 400 - 86400, now).map(
+      (x) => x.trip.id,
+    ),
+    ["0-1"],
+  );
+  assert.deepEqual(
+    renfeMatches(snapshot, [today, yesterday], schedule, 200, now),
+    [],
+  );
+  assert.deepEqual(
+    renfeMatches(snapshot, [today, yesterday], schedule, 400, now + 100000),
+    [],
+  );
 });

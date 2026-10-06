@@ -1,6 +1,38 @@
 import { projectStop } from "./geometry.js";
 export const RENFE_POSITION_SOURCE =
   "https://data.renfe.com/es/dataset/ubicacion-vehiculos";
+export function renfeMatches(
+  snapshot,
+  trips,
+  schedule,
+  time,
+  now = Date.now(),
+) {
+  const candidates = new Map();
+  for (const trip of trips) {
+    const index = Number(trip.id.split("-")[0]);
+    if (!candidates.has(index)) candidates.set(index, []);
+    candidates.get(index).push(trip);
+  }
+  return (snapshot?.vehicles || []).flatMap((vehicle) => {
+    if (now - vehicle.timestamp > 90000) return [];
+    const matches = candidates.get(vehicle.tripIndex) || [];
+    const active = matches.filter((trip) => {
+      const p = schedule.patterns[trip.t[4]],
+        local = time - trip.start;
+      return local >= p[1][0] && local <= p[2].at(-1);
+    });
+    // dayTrips includes yesterday as well as today. Never draw the same GPS
+    // measurement twice or attach it to an ambiguous overnight occurrence.
+    const trip =
+      active.length === 1
+        ? active[0]
+        : matches.length === 1
+          ? matches[0]
+          : null;
+    return trip ? [{ vehicle, trip }] : [];
+  });
+}
 export function gpsProgress(movement, trip, vehicle) {
   const path = movement.path(trip);
   if (!path) return null;
