@@ -614,3 +614,82 @@ select,
 [hidden] .schematic-line > summary::after {
   content: none;
 }
+.coverage-city,
+.story-card,
+.tour,
+.plan-notice {
+  background: var(--ui-surface);
+  color: var(--ui-text);
+  border-color: var(--ui-border);
+}
+.route-row b,
+.route-size,
+.stop-row b,
+.line-station,
+.story-card h3,
+.story-meta b,
+.tour b,
+.journey-leg b,
+.api-info b,
+.api-info summary,
+.loading h2,
+#connection-state {
+  color: var(--ui-text);
+}
+.coverage-city span,
+.coverage-city small,
+.sidebar p,
+.detail p,
+dialog p,
+.data-source small,
+.story-meta > span,
+.tour small,
+.line-station small,
+.stop-row small,
+.station-access small,
+.journey-leg small,
+.journey-summary > span small,
+.api-info > div,
+.api-info p,
+.loading p,
+.field-label,
+.journey-options,
+.swap-row,
+.empty {
+  color: var(--ui-muted);
+}
+.field-label select,
+.field-label input,
+.journey-options select {
+  background: var(--ui-bg);
+  color: var(--ui-text);
+  border-color: var(--ui-border);
+}
+.route-row:hover,
+.route-row.selected,
+.stop-row:hover,
+.line-station:hover,
+.tour:hover,
+.data-status.ready {
+  background: color-mix(in srgb, var(--ui-accent) 15%, var(--ui-surface));
+  color: var(--ui-text);
+}
+.data-status,
+.data-source,
+.api-info,
+.station-access {
+  border-color: var(--ui-border);
+}
+.calendar-warning,
+.data-status.waiting {
+  background: color-mix(in srgb, #b96b23 12%, var(--ui-surface));
+  color: var(--ui-text);
+}
+.coverage-note strong {
+  color: var(--ui-text);
+}
+.primary,
+.primary:hover {
+  background: var(--ui-accent);
+  color: var(--ui-on-accent, #17201d);
+}

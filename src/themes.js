@@ -65,6 +65,10 @@ export function applyTheme(id, city) {
   document.documentElement.dataset.theme = id;
   document.documentElement.style.colorScheme =
     id === "night" ? "dark" : "light";
+  document.documentElement.style.setProperty(
+    "--ui-on-accent",
+    id === "night" ? "#17201d" : "#fff",
+  );
   for (const [name, value] of Object.entries({
     ...theme,
     accent: id === "operator" ? cityAccents[city] || "#005e72" : theme.accent,
