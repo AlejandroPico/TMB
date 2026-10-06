@@ -23,9 +23,16 @@ export class VehicleFollow {
     if (!this.enabled || id !== this.id || !coordinates?.every(Number.isFinite))
       return false;
     const paddingKey = JSON.stringify(padding);
+    const center = map.getCenter?.();
+    const cameraCentered =
+      !center ||
+      coordinates.every(
+        (v, i) => Math.abs(v - (i ? center.lat : center.lng)) < 0.0000001,
+      );
     if (
       this.last?.every((v, i) => v === coordinates[i]) &&
-      this.padding === paddingKey
+      this.padding === paddingKey &&
+      cameraCentered
     )
       return false;
     this.last = [...coordinates];

@@ -1,4 +1,5 @@
 import { distance, transportGroup } from "./transit.js";
+import { motionSpeedLimit, stationTiming, motionState } from "./dwell.js";
 
 export function applyRouteColors(network) {
   const palette = [
@@ -131,6 +132,7 @@ export class Movement {
     this.s = schedule;
     this.cache = new Map();
     this.timings = new Map();
+    this.stationTimings = new Map();
     this.shapes = network.shapes.map((coords) =>
       coords.length >= 2 ? measure(coords) : null,
     );
@@ -189,12 +191,7 @@ export class Movement {
       if (["renfe", "cercanias"].includes(route.feed)) {
         const key = t[0] + ":" + t[2] + ":" + t[4];
         if (!this.timings.has(key)) {
-          const limit =
-            route.feed === "cercanias"
-              ? 200
-              : /AVE|AVLO|AVANT|ALVIA|EUROMED|INTERCITY/i.test(route.name)
-                ? 360
-                : 220;
+          const limit = motionSpeedLimit(route);
           this.timings.set(
             key,
             path.positions.every((at, i) => {
@@ -209,13 +206,14 @@ export class Movement {
         }
         if (!this.timings.get(key)) continue;
       }
-      let k = 0;
-      while (k < p[0].length - 1 && local > p[1][k + 1]) k++;
-      const next = Math.min(k + 1, p[0].length - 1),
-        a = p[2][k],
-        b = p[1][next];
-      const mix =
-        local <= a ? 0 : Math.min(1, (local - a) / Math.max(1, b - a));
+      const timingKey = t[0] + ":" + t[2] + ":" + t[4];
+      if (!this.stationTimings.has(timingKey))
+        this.stationTimings.set(
+          timingKey,
+          stationTiming(p, path.positions, route),
+        );
+      const state = motionState(p, this.stationTimings.get(timingKey), local);
+      const { segment: k, next, fraction: mix } = state;
       const at =
           path.positions[k] + (path.positions[next] - path.positions[k]) * mix,
         r = this.n.routes[t[0]];
@@ -235,6 +233,9 @@ export class Movement {
           arrival: trip.start + p[1][next],
           current: p[0][k],
           frequency: trip.frequency,
+          stopped: state.stopped,
+          dwellSource: state.dwellSource,
+          departure: trip.start + state.departure,
         },
       });
     }

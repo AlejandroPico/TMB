@@ -135,10 +135,16 @@ EMT, CRTM, Sevilla y Euskadi ya se utilizan. La revisión de los portales propue
 
 ## Revisión Renfe y seguimiento · 1.5
 
-Al seleccionar un vehículo, la cámara sigue su posición conservando el zoom y la orientación. El botón «Seguimiento activo» pausa o reactiva la cámara; cerrar la ficha restaura la vista anterior.
+Al seleccionar un vehículo, la cámara sigue su posición conservando el zoom y la orientación. «Seguimiento activo · pausar» libera la cámara y «Centrar y seguir» la centra y reactiva el seguimiento; cerrar la ficha restaura la vista anterior.
 
 Cercanías se agrupa por núcleo y línea comercial, conservando las variantes y los IDs originales como alias. R3 se representa en dos sentidos mediante la unión de tramos compatibles, sin convertirlos en un nuevo servicio. Cada viaje mantiene sus estaciones y trazado. Los transbordos no repiten la propia línea; los productos de larga distancia agrupan sus corredores en un desplegable.
 
 Se priorizan trazados completos del operador. La reconstrucción del IGN descarta bucles y desvíos incoherentes; la animación suprime intervalos con velocidades incompatibles con el horario. Se conservan las paradas y tiempos aunque una variante no pueda dibujarse. El informe `public/data/renfe-audit.json` revisa todos los patrones y documenta las incoherencias detectadas. [Método, fuentes y límites](docs/renfe-review.md).
 
 El servidor consulta posiciones oficiales de Cercanías y del visor de larga distancia cada 20 segundos, sin claves Renfe ni TMB. `pnpm build` y `pnpm start` permiten probarlo localmente en el puerto 8787; para GitHub Pages hay que alojarlo y conectarlo en Fuentes. La API oficial bloquea consultas directas desde Pages. Se unen únicamente IDs GTFS exactos y se ocultan mediciones de más de 90 segundos. Las llegadas siguen siendo horarios, no tiempos corregidos por retrasos. AVE y otros servicios de larga distancia se vinculan exclusivamente por su número comercial GTFS publicado (`trip_short_name`), terminales y una única instancia de calendario. Las coincidencias ausentes o ambiguas se omiten; el resto de movimientos permanece estimado.
+
+## Paradas y exploración · 1.6
+
+Los vehículos estimados respetan las esperas publicadas entre llegada y salida. Cuando ambas horas coinciden, la animación introduce una pausa visual en las paradas intermedias: hasta 18 s en bus, 25 s en metro, 20 s en tranvía y 40 s en tren. Se limita al 25 % del intervalo siguiente y al margen disponible sin superar la velocidad admitida. No se añaden esperas en puntos sin subida ni bajada, ni se prolonga el servicio en los terminales. Los horarios, las llegadas y el planificador conservan los datos originales. La ficha distingue «espera del horario» y «pausa simulada», muestra la parada actual y cuenta hasta la salida. Mapa y vista lineal usan el mismo movimiento. Las posiciones publicadas por los operadores se mantienen intactas y no reciben pausas inventadas. [Campos de horarios y servicio de pasajeros de GTFS](https://gtfs.org/documentation/schedule/reference/#stop_timestxt).
+
+En la ficha de una línea, pasar el puntero por una estación (o enfocarla con el teclado) muestra un punto azul y su nombre en el mapa. Al salir, cambiar de sentido o cerrar la ficha se elimina ese resaltado sin mover la cámara ni cambiar la selección.

@@ -24,3 +24,26 @@ test("camera follows only the selected moving vehicle without resetting zoom or 
   assert.equal(follow.update(map, "a", [4, 41]), false);
   assert.equal(follow.update(map, "b", [NaN, 41]), false);
 });
+test("a stationary vehicle is recentered after panning and when following resumes", () => {
+  let center = { lng: 2, lat: 41 };
+  const calls = [],
+    map = {
+      getCenter: () => center,
+      easeTo: (view) => {
+        calls.push(view);
+        center = { lng: view.center[0], lat: view.center[1] };
+      },
+    };
+  const follow = new VehicleFollow();
+  follow.start("stationary");
+  follow.update(map, "stationary", [2, 41]);
+  assert.equal(follow.update(map, "stationary", [2, 41]), false);
+  center = { lng: 3, lat: 42 };
+  assert.equal(follow.update(map, "stationary", [2, 41]), true);
+  follow.toggle();
+  center = { lng: 3, lat: 42 };
+  assert.equal(follow.update(map, "stationary", [2, 41]), false);
+  follow.toggle();
+  assert.equal(follow.update(map, "stationary", [2, 41]), true);
+  assert.equal(calls.length, 3);
+});

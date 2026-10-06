@@ -680,6 +680,7 @@ function rememberDetail() {
 }
 function closeDetail(restore = true) {
   vehicleFollow.stop();
+  map?.highlightStop(null);
   detailToken++;
   currentDetail = null;
   detailTrail = [];
@@ -970,6 +971,7 @@ function linkForDetail(target) {
 }
 function enterDetail(target) {
   vehicleFollow.stop();
+  map?.highlightStop(null);
   if (
     !detailReturning &&
     currentDetail &&
@@ -1293,6 +1295,7 @@ function showRoute(i) {
           displayDirections[+b.dataset.direction],
           r,
         );
+        map.highlightStop(null);
         bindDetailStops();
         refreshIcons();
       }),
@@ -1303,12 +1306,24 @@ function lineStations(d, r) {
     ? d.stops
         .map(
           (i, k) =>
-            `<a class="line-station" href="${esc(linkForDetail({ kind: "stop", ref: n.stops[i].id }))}" data-detail-kind="stop" data-detail-ref="${esc(n.stops[i].id)}" style="--line:${r.color}"><span class="station-node"></span><span>${esc(n.stops[i].name)}</span><small>${k + 1}</small></a>`,
+            `<a class="line-station" href="${esc(linkForDetail({ kind: "stop", ref: n.stops[i].id }))}" data-preview-stop="${i}" data-detail-kind="stop" data-detail-ref="${esc(n.stops[i].id)}" style="--line:${r.color}"><span class="station-node"></span><span>${esc(n.stops[i].name)}</span><small>${k + 1}</small></a>`,
         )
         .join("")
     : "";
 }
 function bindDetailStops() {
+  $$("#line-stations [data-preview-stop]").forEach((row) => {
+    const highlight = () => map.highlightStop(+row.dataset.previewStop);
+    const clear = () => map.highlightStop(null);
+    row.onpointerenter = (event) => {
+      if (event.pointerType !== "touch") highlight();
+    };
+    row.onpointerleave = (event) => {
+      if (event.pointerType !== "touch") clear();
+    };
+    row.onfocus = highlight;
+    row.onblur = clear;
+  });
   $$("[data-detail-stop]").forEach(
     (b) => (b.onclick = () => showStop(+b.dataset.detailStop)),
   );
@@ -1400,18 +1415,10 @@ function showVehicle(id) {
   }
   detailToken++;
   showDetail(
-    `<div class="vehicle-heading">${operatorSymbol(r)}${routeLink(r)}<span class="vehicle-number">${esc(serviceReference(s, trip).label)}</span></div><p class="eyebrow">${esc(typeNames[r.mode] || "Vehículo")} · ${esc(r.operator)}</p><div id="vehicle-live-detail"></div><div class="detail-actions"><button id="vehicle-follow" aria-pressed="true">Seguimiento activo</button><button id="vehicle-locate">Localizar en el mapa</button>${detailLink("route", r.id, "Ver línea", "Ver recorrido completo de " + r.name)}</div><small class="detail-note">Los tiempos por horario son estimaciones. «Servicio» identifica el viaje del horario, no el número físico del vehículo. Cuando hay posición Renfe vigente, la ficha indica el tren publicado y la hora de medición. Las llegadas por horario no incluyen retrasos.</small>`,
+    `<div class="vehicle-heading">${operatorSymbol(r)}${routeLink(r)}<span class="vehicle-number">${esc(serviceReference(s, trip).label)}</span></div><p class="eyebrow">${esc(typeNames[r.mode] || "Vehículo")} · ${esc(r.operator)}</p><div class="detail-actions"><button id="vehicle-follow" aria-pressed="true" title="Pausar el seguimiento de la cámara">Seguimiento activo · pausar</button>${detailLink("route", r.id, "Ver línea", "Ver recorrido completo de " + r.name)}</div><div id="vehicle-live-detail"></div><small class="detail-note">Los tiempos por horario son estimaciones sin corrección de retrasos. «Servicio» identifica el viaje del horario, no el número físico del vehículo.</small>`,
   );
   if (f) focusVehicle(f);
   bindVehicleFollow();
-  $("#vehicle-locate").onclick = () => {
-    const current = rawMovementFeatures.find((x) => x.properties.id === id);
-    if (current) focusVehicle(current);
-    else
-      toast(
-        "No hay posición disponible para este servicio en la hora seleccionada.",
-      );
-  };
   updateVehicleDetail();
 }
 function focusVehicle(feature) {
@@ -1450,8 +1457,14 @@ function bindVehicleFollow() {
   button.onclick = () => {
     const enabled = vehicleFollow.toggle();
     button.setAttribute("aria-pressed", String(enabled));
-    button.textContent = enabled ? "Seguimiento activo" : "Seguir vehículo";
+    button.textContent = enabled
+      ? "Seguimiento activo · pausar"
+      : "Centrar y seguir";
+    button.title = enabled
+      ? "Pausar el seguimiento de la cámara"
+      : "Centrar el vehículo y mantenerlo centrado";
     updateVehicleDetail();
+    if (currentDetail?.kind === "gps") drawGPS();
   };
 }
 function updateVehicleDetail() {
@@ -1467,9 +1480,14 @@ function updateVehicleDetail() {
     rawMovementFeatures.find((x) => x.properties.id === vehicleDetail) ||
     movement.features([trip], simTime)[0];
   const p = s.patterns[trip.t[4]],
-    status = f?.properties.actual
-      ? "En camino · posición publicada por Renfe"
-      : serviceStatus(s, trip, simTime, !!f);
+    stopped = !f?.properties.actual && f?.properties.stopped,
+    status = stopped
+      ? f.properties.dwellSource === "simulated"
+        ? "En parada · pausa simulada"
+        : "En parada · espera del horario"
+      : f?.properties.actual
+        ? "En camino · posición publicada por Renfe"
+        : serviceStatus(s, trip, simTime, !!f);
   const k = p[1].findIndex((t) => trip.start + t >= simTime);
   const next = f?.properties.next ?? p[0][k < 0 ? p[0].length - 1 : k];
   const arrival =
@@ -1481,7 +1499,8 @@ function updateVehicleDetail() {
       esc(n.stops[index].name),
       "Ver parada " + n.stops[index].name,
     );
-  const html = `<p class="service-state">${esc(status)}</p>${f?.properties.actual ? `<p class="detail-note">Tren ${esc(f.properties.number)} · Posición ${new Date(f.properties.measured).toLocaleTimeString("es-ES", { timeZone: "Europe/Madrid" })}. Llegada por horario, sin corrección de retrasos.</p>` : ""}<p class="eyebrow">${status === "Salida pendiente" ? "Salida desde" : status === "Servicio finalizado" ? "Última parada del servicio" : "Próxima parada por horario"}</p><h2>${stopLink(next)}</h2><p class="eyebrow">Llegada estimada</p><time class="vehicle-countdown">${status === "Servicio finalizado" ? "—" : countdown(arrival - simTime)}</time><dl class="vehicle-facts"><div><dt>Destino</dt><dd>${esc(s.heads[trip.t[3]])}</dd></div>${f ? `<div><dt>Parada anterior del recorrido</dt><dd>${stopLink(f.properties.current)}</dd></div>` : ""}<div><dt>Hora prevista</dt><dd>${clock(arrival)}</dd></div><div><dt>Fuente de los tiempos</dt><dd>${trip.frequency ? "Intervalo GTFS" : "Horario GTFS"}</dd></div></dl>${
+  const targetTime = stopped ? f.properties.departure : arrival;
+  const html = `<p class="service-state">${esc(status)}</p>${f?.properties.actual ? `<p class="detail-note">Tren ${esc(f.properties.number)} · Posición ${new Date(f.properties.measured).toLocaleTimeString("es-ES", { timeZone: "Europe/Madrid" })}. Llegada por horario, sin corrección de retrasos.</p>` : ""}<p class="eyebrow">${stopped ? "En la parada" : status === "Salida pendiente" ? "Salida desde" : status === "Servicio finalizado" ? "Última parada del servicio" : "Próxima parada por horario"}</p><h2>${stopLink(stopped ? f.properties.current : next)}</h2><p class="eyebrow">${stopped ? "Salida estimada" : "Llegada estimada"}</p><time class="vehicle-countdown">${status === "Servicio finalizado" ? "—" : countdown(targetTime - simTime)}</time><dl class="vehicle-facts"><div><dt>Destino</dt><dd>${esc(s.heads[trip.t[3]])}</dd></div>${f ? `<div><dt>${stopped ? "Próxima parada" : "Parada anterior del recorrido"}</dt><dd>${stopLink(stopped ? next : f.properties.current)}</dd></div>` : ""}<div><dt>Hora prevista</dt><dd>${clock(targetTime)}</dd></div><div><dt>Fuente de los tiempos</dt><dd>${trip.frequency ? "Intervalo GTFS" : "Horario GTFS"}</dd></div></dl>${
     f?.properties.actual
       ? `<details class="raw-vehicle-data"><summary>Datos publicados del tren</summary><dl>${Object.entries(
           f.properties.publishedDetails || {},
@@ -1495,21 +1514,26 @@ function updateVehicleDetail() {
           )}</dl><a href="${f.properties.positionSource === "long-distance" ? RENFE_LD_SOURCE : RENFE_POSITION_SOURCE}" target="_blank" rel="noopener">Fuente Renfe ↗</a></details>`
       : ""
   }`;
+  const pauseNote =
+    stopped && f.properties.dwellSource === "simulated"
+      ? '<p class="detail-note">Espera visual estimada para subir y bajar pasajeros. No es una parada observada por GPS; los horarios publicados no se modifican.</p>'
+      : "";
   // Keep focused links in place while the second counter advances.
   const key = [
     status,
     next,
     f?.properties.current,
     arrival,
+    targetTime,
     f?.properties.measured,
   ].join(":");
   if ($("#vehicle-live-detail").dataset.key !== key) {
-    $("#vehicle-live-detail").innerHTML = html;
+    $("#vehicle-live-detail").innerHTML = html + pauseNote;
     $("#vehicle-live-detail").dataset.key = key;
   } else
     $("#vehicle-live-detail .vehicle-countdown").textContent =
-      status === "Servicio finalizado" ? "—" : countdown(arrival - simTime);
-  $("#vehicle-locate").disabled = !f;
+      status === "Servicio finalizado" ? "—" : countdown(targetTime - simTime);
+  $("#vehicle-follow").disabled = !f;
   map.set("selection", f ? [f] : []);
   if (f)
     vehicleFollow.update(
@@ -2251,9 +2275,9 @@ function showGPS(id) {
         "",
       )}</dl></details><a class="text-link" href="${FGC_SOURCE}" target="_blank" rel="noopener">Fuente FGC · CC BY 4.0 ↗</a>`,
   );
-  $("#detail").insertAdjacentHTML(
-    "beforeend",
-    `<button id="vehicle-follow" aria-pressed="true">Seguimiento activo</button>`,
+  $("#detail .detail-badges").insertAdjacentHTML(
+    "afterend",
+    `<div class="detail-actions"><button id="vehicle-follow" aria-pressed="true" title="Pausar el seguimiento de la cámara">Seguimiento activo · pausar</button></div>`,
   );
   bindVehicleFollow();
 }

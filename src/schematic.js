@@ -136,6 +136,8 @@ export class Schematic {
     el.dataset.built = "true";
     el.querySelector(".schematic-scroll").scrollLeft =
       +el.dataset.scrollLeft || 0;
+    // Opening a collapsed line must show its vehicles even with the clock paused.
+    if (this.lastFeatures) this.update(this.lastFeatures);
   }
   updateCalendar(date) {
     if (!date) return;
@@ -336,7 +338,8 @@ export class Schematic {
         b.style.left = 70 + at * 112 + "px";
         b.querySelector("svg").style.transform =
           track.dataset.reverse === "true" ? "scaleX(-1)" : "";
-        b.title = `${this.n.routes[id].name} → ${f.properties.head} · ${this.n.stops[f.properties.next].name} · ${f.properties.actual ? "GPS publicado" : "estimado"}`;
+        b.classList.toggle("in-station", !!f.properties.stopped);
+        b.title = `${this.n.routes[id].name} → ${f.properties.head} · ${this.n.stops[f.properties.stopped ? f.properties.current : f.properties.next].name} · ${f.properties.actual ? "GPS publicado" : f.properties.stopped ? (f.properties.dwellSource === "simulated" ? "en parada · pausa simulada" : "en parada · horario") : "estimado"}`;
         b.setAttribute("aria-label", b.title);
       }
       for (const b of existing.values()) b.remove();

@@ -304,6 +304,34 @@ export class CityMap {
       },
     });
     this.source("selection");
+    this.source("stop-preview");
+    this.map.addLayer({
+      id: "stop-preview",
+      type: "circle",
+      source: "stop-preview",
+      paint: {
+        "circle-radius": 12,
+        "circle-color": "#0284c7",
+        "circle-stroke-color": "#ffffff",
+        "circle-stroke-width": 3,
+      },
+    });
+    this.map.addLayer({
+      id: "stop-preview-name",
+      type: "symbol",
+      source: "stop-preview",
+      layout: {
+        "text-field": ["get", "name"],
+        "text-size": 14,
+        "text-offset": [0, 1.8],
+        "text-allow-overlap": true,
+      },
+      paint: {
+        "text-color": "#ffffff",
+        "text-halo-color": "#075985",
+        "text-halo-width": 2,
+      },
+    });
     this.map.addLayer({
       id: "selection",
       type: "circle",
@@ -382,6 +410,27 @@ export class CityMap {
       this.map
         .getSource(name)
         ?.setData({ type: "FeatureCollection", features });
+  }
+  highlightStop(index) {
+    const stop = index == null ? null : this.network.stops[index];
+    this.set(
+      "stop-preview",
+      stop
+        ? [
+            {
+              type: "Feature",
+              geometry: { type: "Point", coordinates: [stop.lon, stop.lat] },
+              properties: { name: stop.name },
+            },
+          ]
+        : [],
+    );
+    // Accessible feedback without changing the camera or selected detail.
+    if (stop)
+      this.map
+        .getCanvas()
+        .setAttribute("aria-description", "Estación resaltada: " + stop.name);
+    else this.map.getCanvas().removeAttribute("aria-description");
   }
   filters({
     mode,
