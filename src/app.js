@@ -38,7 +38,13 @@ import { NetworkFilters, typeNames } from "./filters.js";
 import { stationPlatforms, departureGroups, countdown } from "./boards.js";
 import { Schematic } from "./schematic.js";
 import { operatorIdentity, stationOperators } from "./operators.js";
-import { themes, applyTheme, resolveTheme } from "./themes.js";
+import {
+  themes,
+  applyTheme,
+  resolveTheme,
+  themeOnCityLoad,
+  displayedTheme,
+} from "./themes.js";
 import { CityMap } from "./map.js";
 import { Movement, applyRouteColors } from "./geometry.js";
 import project from "../package.json";
@@ -68,11 +74,14 @@ let gps = null,
 import "./style.css";
 import "./layout.css";
 import "./features.css";
-let themeId = "night";
+let themeId = "auto";
 try {
-  themeId = localStorage.getItem("enruta-theme") || "night";
+  themeId = localStorage.getItem("enruta-theme") || "auto";
 } catch {}
-if (!themes[themeId] && themeId !== "operator") themeId = "night";
+themeId = resolveTheme(themeId);
+let themeLocation = null,
+  themeLocationPending = false,
+  themeLocationAttempted = false;
 applyTheme(themeId);
 let networkFilters,
   schematic,
@@ -94,6 +103,48 @@ const $ = (s) => document.querySelector(s),
           "'": "&#39;",
         })[c],
     );
+function appearancePosition() {
+  const center = city?.center || [2.165, 41.391];
+  return themeLocation || { lon: center[0], lat: center[1] };
+}
+function automaticThemeLabel() {
+  const phase = themes[displayedTheme("auto", appearancePosition())].name;
+  return `Ahora: ${phase} · ${themeLocation ? "tu ubicación" : themeLocationPending ? "consultando ubicación" : "referencia: " + (city?.name || "Barcelona")}`;
+}
+function updateAppearance() {
+  const style = applyTheme(themeId, city?.id, appearancePosition());
+  map?.theme(style);
+  const state = $("#auto-theme-state");
+  if (state) state.textContent = automaticThemeLabel();
+}
+function useThemeLocation(coords) {
+  // Location is used locally for sunlight calculations and kept only in memory.
+  themeLocation = { lat: coords.latitude, lon: coords.longitude };
+  map?.userPosition(themeLocation);
+  if (themeId === "auto") updateAppearance();
+}
+function requestThemeLocation(refresh = false) {
+  if (
+    themeLocationPending ||
+    (themeLocation && !refresh) ||
+    !navigator.geolocation
+  )
+    return;
+  themeLocationAttempted = true;
+  themeLocationPending = true;
+  updateAppearance();
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      themeLocationPending = false;
+      useThemeLocation(pos.coords);
+    },
+    () => {
+      themeLocationPending = false;
+      if (themeId === "auto") updateAppearance();
+    },
+    { timeout: 10000, maximumAge: 300000 },
+  );
+}
 const icon = (name, extra = "") => `<i data-lucide="${name}" ${extra}></i>`;
 const refreshIcons = () =>
   createIcons({
@@ -201,6 +252,7 @@ $("#app").innerHTML = `
   <button class="rail-btn" data-tab="filters" aria-label="Filtros" title="Filtros">${icon("sliders-horizontal")}<span>Filtros</span></button>
   <button class="rail-btn" id="linear-toggle" aria-label="Vista lineal" aria-pressed="false">${icon("arrow-down-up")}<span>Lineal</span></button>
   <button class="rail-btn" data-tab="appearance" aria-label="Temas">${icon("compass")}<span>Temas</span></button>
+  <button class="rail-btn" data-tab="clock" aria-label="Reloj y horarios">${icon("clock-3")}<span>Reloj</span></button>
   <div class="rail-spacer"></div>
   <button class="rail-btn" id="home-map" aria-label="Vista general" title="Vista general">${icon("scan")}<span>Vista</span></button>
   <button class="rail-btn" id="tilt" aria-label="Alternar vista 3D" title="Alternar vista 3D"><b>3D</b></button>
@@ -211,14 +263,15 @@ $("#app").innerHTML = `
  <div class="drawer-head"><span>${esc(APP_NAME)}</span><button id="drawer-close" aria-label="Contraer menú">${icon("x")}</button></div>
  <div class="explore-tools"><label class="city-picker"><span>CIUDAD O RED</span><select id="city-selector" aria-label="Ciudad o red de transporte"></select></label><button id="locate" class="nearby">${icon("locate-fixed")} Paradas cerca de mí</button><button id="source-state" class="text-link">${icon("database")} Fuentes y cobertura</button></div>
  <div id="panel"></div>
+ <section id="clock-controls" class="timeline" aria-label="Reloj del transporte" hidden>
+  <div class="clock-row"><button id="play" aria-label="Pausar" title="Pausar">${icon("pause")}</button><time id="time-readout">${clock(simTime)}</time><button id="reset-time" aria-label="Volver a ahora" title="Volver a ahora">${icon("rotate-ccw")}</button><span id="clock-note">Ahora</span></div>
+  <input id="time-slider" type="range" min="0" max="86399" step="60" value="${simTime}" aria-label="Hora del servicio">
+  <div id="clock-options"><label>Fecha <input id="date" type="date" value="${simDate}" aria-label="Fecha del horario"></label><label>Velocidad <button id="speed" aria-label="Cambiar velocidad de reproducción">1×</button></label><small>Hora peninsular · movimiento estimado por horario</small></div>
+ </section>
+ <section id="network-status" aria-label="Movimiento y fuentes" hidden><h3>Movimiento y fuentes</h3><p id="moving-count">Cargando horario…</p><button id="gps-status" class="gps-status" hidden>FGC GPS</button><p class="footnote">Los estimados se calculan por horario. Las posiciones FGC proceden de su publicación GPS.</p></section>
 </aside>
 <main class="map-area"><div id="map" aria-label="Mapa interactivo del transporte público"></div><section id="schematic" class="schematic" aria-label="Diagrama lineal del transporte" hidden></section><div id="detail" class="detail" hidden></div>
- <div class="timeline" aria-label="Reloj del transporte">
-  <div class="clock-row"><button id="play" aria-label="Pausar" title="Pausar">${icon("pause")}</button><time id="time-readout">${clock(simTime)}</time><button id="time-options" aria-label="Cambiar fecha y velocidad" aria-expanded="false">${icon("clock-3")}</button><button id="reset-time" aria-label="Volver a ahora" title="Volver a ahora">${icon("rotate-ccw")}</button><span id="clock-note">Ahora</span></div>
-  <input id="time-slider" type="range" min="0" max="86399" step="60" value="${simTime}" aria-label="Hora del servicio">
-  <div id="clock-options" hidden><label>Fecha <input id="date" type="date" value="${simDate}" aria-label="Fecha del horario"></label><button id="speed" aria-label="Cambiar velocidad de reproducción">1×</button><small>Hora peninsular · movimiento estimado por horario</small></div>
- </div>
- <div class="map-bottom"><span id="moving-count">Cargando horario…</span><button id="gps-status" class="gps-status" hidden>FGC GPS</button><span id="movement-label" hidden></span></div>
+ <section id="journey-banner" class="journey-banner" aria-label="Ruta resaltada" hidden><div><small>Ruta resaltada</small><b id="journey-title"></b><span id="journey-caption"></span></div><button id="journey-details">Ver viaje</button><button id="clear-journey" aria-label="Quitar ruta resaltada" title="Quitar ruta resaltada">${icon("x")}</button></section>
 </main></div>
 <div id="loading" class="loading"><img src="${favicon}" alt="" width="44" height="44"><h2>Cargando la red</h2><p>Preparando mapa y horarios…</p><div class="loading-line"></div></div><div id="toast" role="status" class="toast" hidden></div><dialog id="data-dialog"></dialog><dialog id="about-dialog" aria-labelledby="about-title"></dialog>`;
 refreshIcons();
@@ -248,6 +301,36 @@ function toast(message) {
   clearTimeout(toast.timer);
   toast.timer = setTimeout(() => ($("#toast").hidden = true), 5500);
 }
+let activeJourney = null,
+  journeyToken = 0,
+  journeyDraft = null;
+function rememberJourneyDraft() {
+  if (!$("#journey-form")) return;
+  journeyDraft = {
+    from: $("#from").value,
+    to: $("#to").value,
+    mode: $("#journey-mode").value,
+    accessible: $("#accessible").checked,
+  };
+}
+function highlightJourney(from, to, html, caption) {
+  activeJourney = { from, to, html, view: activeJourney?.view || map.view() };
+  $("#journey-result").innerHTML = html;
+  $("#journey-title").textContent =
+    `${n.stops[from].name} → ${n.stops[to].name}`;
+  $("#journey-caption").textContent = caption;
+  $("#journey-banner").hidden = false;
+}
+function clearJourney(restore = true) {
+  journeyToken++;
+  map?.set("journey", []);
+  if (restore && activeJourney) map?.restore(activeJourney.view);
+  activeJourney = null;
+  $("#journey-banner").hidden = true;
+  if ($("#journey-result")) $("#journey-result").innerHTML = "";
+}
+$("#clear-journey").onclick = () => clearJourney();
+$("#journey-details").onclick = () => setTab("journey", true);
 const badge = (r) => {
   const color = r.sourceColor || r.color || "#596c68",
     hex = color.slice(1),
@@ -266,6 +349,11 @@ function header(title, subtitle) {
 function renderPanel() {
   if (!n) return;
   let html = "";
+  if (tab === "clock")
+    html = header(
+      "Reloj y horarios",
+      "Consulta otro momento o reproduce el servicio. Pulsa «Volver a ahora» para recuperar la hora actual.",
+    );
   if (tab === "explore") {
     html = `<div class="segmented" role="group" aria-label="Modo de transporte">${[
       ["all", "Todo"],
@@ -303,15 +391,18 @@ function renderPanel() {
             `<section class="theme-group"><h3>${title}</h3><div class="theme-options">${entries
               .map(
                 ([id, t]) =>
-                  `<button data-theme="${id}" aria-pressed="${themeId === id}" class="theme-option ${themeId === id ? "active" : ""}" style="--sample-bg:${t.surface};--sample-accent:${t.accent};--sample-secondary:${t.secondary || t.accent}"><span></span><b>${t.name}</b><small>${t.reference || (id === "morning" ? "Claro y fresco" : id === "afternoon" ? "Cálido" : "Oscuro")}</small></button>`,
+                  `<button data-theme="${id}" aria-pressed="${themeId === id}" class="theme-option ${themeId === id ? "active" : ""}" style="--sample-bg:${t.surface};--sample-accent:${t.accent};--sample-secondary:${t.secondary || t.accent}"><span></span><b>${t.name}</b><small>${t.reference || (id === "auto" ? "Según el sol y tu ubicación" : id === "morning" ? "Claro y fresco" : id === "afternoon" ? "Cálido" : "Oscuro")}</small></button>`,
               )
               .join("")}</div></section>`,
         )
         .join("") +
+      (themeId === "auto"
+        ? `<p class="theme-source" id="auto-theme-state" aria-live="polite">${esc(automaticThemeLabel())}</p><p class="footnote">Cambia al amanecer, al mediodía solar y al anochecer. Sin acceso a tu ubicación se usa la ciudad seleccionada. No depende de la reproducción de horarios.</p><button class="text-link" id="theme-location">${icon("locate-fixed")} Usar mi ubicación</button>`
+        : "") +
       (themes[themeId]?.source
         ? `<p class="theme-source">Referencia de ${esc(themes[themeId].name)}: <a href="${themes[themeId].source}" target="_blank" rel="noopener">${esc(themes[themeId].reference)} ↗</a></p>`
         : "") +
-      `<p class="footnote">Paletas comprobadas en las webs de los operadores. Puedes usar cualquier estilo en cualquier ciudad. Las líneas conservan sus colores.</p>`;
+      `<p class="footnote">Al cargar una ciudad, el tema urbano cambia al de su red. Puedes elegir otro después. Mañana, Tarde y Noche se mantienen fijos. Andalucía agrupa las paletas de los consorcios; Sevilla conserva TUSSAM. Las líneas mantienen sus colores.</p>`;
   if (tab === "stories") {
     html =
       header(
@@ -341,7 +432,7 @@ function renderPanel() {
       .join("");
     html =
       header("Viajar", "Encuentra un viaje con los horarios oficiales.") +
-      `<form id="journey-form"><label class="field-label">ORIGEN<select id="from" required>${options}</select></label><div class="swap-row"><span class="route-dots">⋮</span><button type="button" id="swap" aria-label="Intercambiar origen y destino">${icon("arrow-down-up")}</button></div><label class="field-label">DESTINO<select id="to" required>${options}</select></label><div class="journey-options"><label>Transporte<select id="journey-mode"><option value="all">Todos los transportes</option><option value="rail">Metro, tren y tranvía</option><option value="bus">Solo bus</option></select></label><label class="check-label"><input id="accessible" type="checkbox"> Solo paradas accesibles³</label></div><button class="primary" id="plan-button" type="submit">${icon("route")} Encontrar mi viaje ${icon("arrow-right")}</button></form><div class="plan-notice">${icon("info")}<p>Salida a las <b id="departure-note">${clock(simTime)}</b> del día del reloj. Cambia la fecha y hora en el mapa.</p></div><div id="journey-result"></div><p class="footnote">³ Filtro según el campo de accesibilidad del GTFS. No verifica ascensores en servicio ni todo el itinerario peatonal. La planificación local usa transbordos aproximados y no incluye incidencias.</p>`;
+      `<form id="journey-form"><label class="field-label">ORIGEN<select id="from" required>${options}</select></label><div class="swap-row"><span class="route-dots">⋮</span><button type="button" id="swap" aria-label="Intercambiar origen y destino">${icon("arrow-down-up")}</button></div><label class="field-label">DESTINO<select id="to" required>${options}</select></label><div class="journey-options"><label>Transporte<select id="journey-mode"><option value="all">Todos los transportes</option><option value="rail">Metro, tren y tranvía</option><option value="bus">Solo bus</option></select></label><label class="check-label"><input id="accessible" type="checkbox"> Solo paradas accesibles³</label></div><button class="primary" id="plan-button" type="submit">${icon("route")} Encontrar mi viaje ${icon("arrow-right")}</button></form><div class="plan-notice">${icon("info")}<p>Salida a las <b id="departure-note">${clock(simTime)}</b>. <button type="button" id="journey-clock" class="text-link">Cambiar fecha y hora</button></p></div><div id="journey-result"></div><p class="footnote">³ Filtro según el campo de accesibilidad del GTFS. No verifica ascensores en servicio ni todo el itinerario peatonal. La planificación local usa transbordos aproximados y no incluye incidencias.</p>`;
   }
   const expired = n.meta.feeds.filter((f) => !feedCurrent(f));
   if (expired.length && (tab === "explore" || tab === "journey"))
@@ -350,6 +441,8 @@ function renderPanel() {
       `</div><div class="calendar-warning">${icon("info")}<span>${expired.map((f) => esc(f.publisher)).join(", ")}: calendario archivado hasta ${expired.map((f) => formatDate(f.end)).join(", ")}. No hay servicio publicado para hoy en esos archivos.</span></div>`,
     );
   $(".sidebar").dataset.tab = tab;
+  $("#clock-controls").hidden = tab !== "clock";
+  $("#network-status").hidden = tab !== "filters";
   $("#panel").innerHTML = html;
   refreshIcons();
   bindPanel();
@@ -375,6 +468,16 @@ function renderPanel() {
     const fallback = n.stops.flatMap((st, i) => (st.kind === 0 ? [i] : []));
     $("#from").value = selectedStop ?? (from >= 0 ? from : fallback[0]);
     $("#to").value = to >= 0 ? to : fallback[1];
+    if (journeyDraft) {
+      $("#from").value = journeyDraft.from;
+      $("#to").value = journeyDraft.to;
+      $("#journey-mode").value = journeyDraft.mode;
+      $("#accessible").checked = journeyDraft.accessible;
+    }
+    if (activeJourney) {
+      $("#journey-result").innerHTML = activeJourney.html;
+      refreshIcons();
+    }
   }
 }
 function stopRow(st, i) {
@@ -623,11 +726,14 @@ function bindPanel() {
         try {
           localStorage.setItem("enruta-theme", themeId);
         } catch {}
-        const style = applyTheme(themeId, city.id);
-        map?.theme(style);
+        updateAppearance();
         renderPanel();
+        if (themeId === "auto" && !themeLocationAttempted)
+          requestThemeLocation();
       }),
   );
+  if ($("#theme-location"))
+    $("#theme-location").onclick = () => requestThemeLocation(true);
   for (const id of [
     "routes",
     "rail-stops",
@@ -697,10 +803,22 @@ function bindPanel() {
       const v = $("#from").value;
       $("#from").value = $("#to").value;
       $("#to").value = v;
+      rememberJourneyDraft();
     };
-  if ($("#journey-form")) $("#journey-form").onsubmit = plan;
+  if ($("#journey-form")) {
+    $("#journey-form").onsubmit = plan;
+    $("#journey-form").onchange = rememberJourneyDraft;
+  }
+  if ($("#journey-clock"))
+    $("#journey-clock").onclick = () => {
+      rememberJourneyDraft();
+      setTab("clock");
+    };
 }
 function closePanel() {
+  $("#app").classList.remove("menu-open");
+  $("#menu-toggle").setAttribute("aria-expanded", "false");
+  $("#menu-toggle").setAttribute("aria-label", "Abrir menú");
   $(".sidebar").classList.remove("open");
   $(".sidebar").inert = true;
   $$("[data-tab]").forEach((b) => {
@@ -797,6 +915,7 @@ async function showStop(i) {
   $("#route-from").onclick = () => {
     setTab("journey");
     $("#from").value = i;
+    rememberJourneyDraft();
   };
   try {
     const deps = await ask("station", { stops: platforms, time: simTime });
@@ -1092,7 +1211,9 @@ function updateVehicleDetail() {
 }
 async function plan(e) {
   e.preventDefault();
+  rememberJourneyDraft();
   const epoch = cityEpoch;
+  const token = ++journeyToken;
   const from = +$("#from").value,
     to = +$("#to").value;
   if (from === to) {
@@ -1108,13 +1229,26 @@ async function plan(e) {
     minutes: city.id === "espana" ? 1440 : 180,
   };
   try {
-    if (await tryOfficialPlan(from, to, options)) return;
+    if (await tryOfficialPlan(from, to, options, token)) return;
+    if (epoch !== cityEpoch || token !== journeyToken) return;
     const result = await ask("plan", { from, to, time: simTime, options });
-    if (tab !== "journey" || epoch !== cityEpoch) return;
-    map.journey(result);
-    $("#journey-result").innerHTML = result
+    if (tab !== "journey" || epoch !== cityEpoch || token !== journeyToken)
+      return;
+    const html = result
       ? `<div class="journey-summary"><strong>${Math.ceil(result.duration / 60)}<small> min</small></strong><span>${clock(result.departure)} → ${clock(result.arrival)}<small>${result.legs.filter((l) => !l.walk).length} tramos de transporte · por horario</small></span></div><div class="journey-legs">${result.legs.map((l) => `<div class="journey-leg"><div>${l.walk ? icon("footprints") : badge(n.routes[l.route])}</div><span><b>${esc(n.stops[l.from].name)}</b><p>${l.walk ? "Camina hasta" : esc(l.head) + " · " + l.stops + " paradas"}<br><b>${esc(n.stops[l.to].name)}</b></p><small>${clock(l.start)} → ${clock(l.end)} · ${Math.ceil((l.end - l.start) / 60)} min</small></span></div>`).join("")}</div>`
       : `<div class="empty"><h3>No encontramos una conexión.</h3><p>Prueba otra hora, fecha o modo de transporte. La búsqueda cubre ${city.id === "espana" ? "24" : "tres"} horas desde la salida.</p></div>`;
+    if (result) {
+      highlightJourney(
+        from,
+        to,
+        html,
+        `${Math.ceil(result.duration / 60)} min · ${clock(result.departure)}–${clock(result.arrival)} · por horario`,
+      );
+      map.journey(result);
+    } else {
+      clearJourney(false);
+      $("#journey-result").innerHTML = html;
+    }
     refreshIcons();
   } catch {
     toast("No se pudo calcular el viaje.");
@@ -1205,7 +1339,7 @@ function showStationAccess(i) {
   );
   refreshIcons();
 }
-async function tryOfficialPlan(from, to, options) {
+async function tryOfficialPlan(from, to, options, token) {
   if (
     !serverConfigured ||
     options.accessible ||
@@ -1241,15 +1375,26 @@ async function tryOfficialPlan(from, to, options) {
     if (!response.ok) return false;
     const data = await response.json(),
       it = data.plan?.itineraries?.[0];
-    if (!it || tab !== "journey" || epoch !== cityEpoch) return false;
+    if (
+      !it ||
+      tab !== "journey" ||
+      epoch !== cityEpoch ||
+      token !== journeyToken
+    )
+      return false;
     const time = (t) =>
       new Date(t).toLocaleTimeString("es-ES", {
         timeZone: "Europe/Madrid",
         hour: "2-digit",
         minute: "2-digit",
       });
-    $("#journey-result").innerHTML =
-      `<div class="journey-summary"><strong>${Math.ceil(it.duration / 60)}<small> min</small></strong><span>${time(it.startTime)} → ${time(it.endTime)}<small>Planificador oficial TMB</small></span></div><div class="journey-legs">${it.legs.map((l) => `<div class="journey-leg"><div>${l.mode === "WALK" ? icon("footprints") : badge({ name: l.routeShortName || l.route || l.mode, color: /^[0-9a-f]{6}$/i.test(l.routeColor || "") ? "#" + l.routeColor : "#709774" })}</div><span><b>${esc(l.from.name)}</b><p>${l.mode === "WALK" ? "Camina hasta" : esc(l.headsign || l.mode)}<br><b>${esc(l.to.name)}</b></p><small>${time(l.startTime)} → ${time(l.endTime)}</small></span></div>`).join("")}</div>`;
+    const html = `<div class="journey-summary"><strong>${Math.ceil(it.duration / 60)}<small> min</small></strong><span>${time(it.startTime)} → ${time(it.endTime)}<small>Planificador oficial TMB</small></span></div><div class="journey-legs">${it.legs.map((l) => `<div class="journey-leg"><div>${l.mode === "WALK" ? icon("footprints") : badge({ name: l.routeShortName || l.route || l.mode, color: /^[0-9a-f]{6}$/i.test(l.routeColor || "") ? "#" + l.routeColor : "#709774" })}</div><span><b>${esc(l.from.name)}</b><p>${l.mode === "WALK" ? "Camina hasta" : esc(l.headsign || l.mode)}<br><b>${esc(l.to.name)}</b></p><small>${time(l.startTime)} → ${time(l.endTime)}</small></span></div>`).join("")}</div>`;
+    highlightJourney(
+      from,
+      to,
+      html,
+      `${Math.ceil(it.duration / 60)} min · ${time(it.startTime)}–${time(it.endTime)} · TMB`,
+    );
     map.journeyOfficial(it);
     refreshIcons();
     return true;
@@ -1290,6 +1435,8 @@ async function locate(automatic = false) {
   }
   navigator.geolocation.getCurrentPosition(
     async (pos) => {
+      themeLocationPending = false;
+      useThemeLocation(pos.coords);
       const here = { lat: pos.coords.latitude, lon: pos.coords.longitude };
       const nearestCity = cities
         .filter((c) => c.id !== "espana")
@@ -1360,11 +1507,6 @@ $("#menu-toggle").onclick = () => {
     open ? "Cerrar menú" : "Abrir menú",
   );
   if (!open) closePanel();
-};
-$("#time-options").onclick = () => {
-  const open = $("#clock-options").hidden;
-  $("#clock-options").hidden = !open;
-  $("#time-options").setAttribute("aria-expanded", String(open));
 };
 function updateClock() {
   $("#time-readout").textContent = clock(simTime);
@@ -1771,6 +1913,8 @@ async function loadCity(id) {
       throw new Error("No se encontraron los datos de esta red.");
     const data = await Promise.all(responses.map((r) => r.json()));
     schematic?.destroy();
+    clearJourney(false);
+    journeyDraft = null;
     schematic = null;
     map?.map.remove();
     map = null;
@@ -1782,13 +1926,13 @@ async function loadCity(id) {
     detailContext = stationBoard = vehicleDetail = null;
     networkFilters = new NetworkFilters(n);
     railMovement = busMovement = otherMovement = true;
-    themeId = resolveTheme(themeId, next.id);
+    themeId = themeOnCityLoad(themeId, next.id);
     try {
       localStorage.setItem("enruta-theme", themeId);
     } catch {}
-    const mapTheme = applyTheme(themeId);
-    applyRouteColors(n);
     city = next;
+    const mapTheme = applyTheme(themeId, city.id, appearancePosition());
+    applyRouteColors(n);
     stories = cityStories[id] || [];
     tours = cityTours[id] || [];
     selectedStop = selectedRoute = null;
@@ -1846,6 +1990,7 @@ async function loadCity(id) {
         ),
     });
     map = currentMap;
+    currentMap.userPosition(themeLocation);
     const reflectView = () => {
       const active = currentMap.map.getPitch() > 15;
       $("#tilt").classList.toggle("active", active);
@@ -1901,7 +2046,10 @@ async function init() {
     await loadCity(
       cities.some((c) => c.id === requested) ? requested : DEFAULT_CITY,
     );
-    if (!explicitCity) locate(true);
+    if (!explicitCity) {
+      themeLocationAttempted = true;
+      locate(true);
+    } else if (themeId === "auto") requestThemeLocation();
     checkServer();
     requestAnimationFrame(tick);
   } catch (e) {
@@ -1910,4 +2058,10 @@ async function init() {
     $("#retry").onclick = () => location.reload();
   }
 }
+setInterval(() => {
+  if (themeId === "auto" && !document.hidden) updateAppearance();
+}, 60000);
+document.addEventListener("visibilitychange", () => {
+  if (themeId === "auto" && !document.hidden && city) updateAppearance();
+});
 init();

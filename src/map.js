@@ -46,6 +46,11 @@ export class CityMap {
     this.map.on("load", () => {
       this.setup();
       this.ready = true;
+      const attribution = this.map
+        .getContainer()
+        .querySelector(".maplibregl-ctrl-attrib");
+      attribution?.classList.remove("maplibregl-compact-show");
+      attribution?.removeAttribute("open");
       onReady();
     });
     this.map.on("click", (e) => {
@@ -516,6 +521,20 @@ export class CityMap {
       bearing: 0,
       duration: 1200,
     });
+  }
+  userPosition(position) {
+    if (!position) return;
+    if (!this.locationMarker) {
+      const element = document.createElement("div");
+      element.className = "user-location";
+      element.setAttribute("role", "img");
+      element.setAttribute("aria-label", "Tu ubicación");
+      element.title = "Tu ubicación";
+      element.innerHTML = '<span class="location-dot"></span>';
+      this.locationMarker = new maplibregl.Marker({ element })
+        .setLngLat([position.lon, position.lat])
+        .addTo(this.map);
+    } else this.locationMarker.setLngLat([position.lon, position.lat]);
   }
   journeyOfficial(it) {
     const decode = (str) => {

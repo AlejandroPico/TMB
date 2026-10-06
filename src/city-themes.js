@@ -65,71 +65,31 @@ const references = {
     "https://www.renfe.com/es/es",
     "https://www.renfe.com/etc.clientlibs/renfe/clientlibs/clientlib-renfewebcomponents/resources/renfe-web-components-1761738998422.css",
   ],
-  cadiz: [
-    "Cádiz",
-    "Consorcio Bahía de Cádiz",
+  andalucia: [
+    "Andalucía",
+    "Consorcios de transporte",
     "#007a35",
     "#d7c500",
     "https://www.cmtbc.es/",
     "https://www.cmtbc.es/css/custom.css",
   ],
-  granada: [
-    "Granada",
-    "Consorcio de Granada",
-    "#007932",
-    "#f6ff95",
-    "https://ctagr.es/",
-    "https://ctagr.es/wp-content/uploads/maxmegamenu/style.css",
-  ],
-  malaga: [
-    "Málaga",
-    "Consorcio de Málaga",
-    "#017a38",
-    "#65bc7b",
-    "https://ctmam.es/",
-    "https://ctmam.es/wp-content/tablepress-combined.min.css",
-  ],
-  gibraltar: [
-    "Campo de Gibraltar",
-    "Consorcio Campo de Gibraltar",
-    "#007a35",
-    "#d7c500",
-    "https://www.ctmcg.es/",
-    "https://www.ctmcg.es/css/custom.css",
-  ],
-  almeria: [
-    "Almería",
-    "Consorcio de Almería",
-    "#007a35",
-    "#d7c500",
-    "https://www.ctal.es/",
-    "https://www.ctal.es/css/custom.css",
-  ],
-  jaen: [
-    "Jaén",
-    "Consorcio de Jaén",
-    "#007a35",
-    "#d7c500",
-    "https://www.ctja.es/",
-    "https://www.ctja.es/css/custom.css",
-  ],
-  cordoba: [
-    "Córdoba",
-    "Consorcio de Córdoba",
-    "#007a35",
-    "#d7c500",
-    "https://www.ctco.es/",
-    "https://www.ctco.es/css/custom.css",
-  ],
-  huelva: [
-    "Huelva",
-    "Consorcio de Huelva",
-    "#007a35",
-    "#d7c500",
-    "https://www.cthu.es/",
-    "https://www.cthu.es/css/custom.css",
-  ],
 };
+export const andalusianCities = new Set([
+  "cadiz",
+  "granada",
+  "malaga",
+  "gibraltar",
+  "almeria",
+  "jaen",
+  "cordoba",
+  "huelva",
+]);
+export const urbanThemeForCity = (city) =>
+  andalusianCities.has(city)
+    ? "andalucia"
+    : references[city]
+      ? city
+      : "barcelona";
 export const cityThemes = Object.fromEntries(
   Object.entries(references).map(
     ([id, [name, reference, accent, secondary, source, evidence]]) => [

@@ -1,6 +1,12 @@
 # Paletas y símbolos — comprobación del 6 de octubre de 2026
 
-Los temas de ciudad son estilos seleccionables de EnRuta, independientes de la red cargada. Se toman colores de las webs de los operadores, no una supuesta identidad municipal común a todas las empresas. La configuración, con página de referencia y hoja de estilos consultada para cada una de las 16 vistas, está en [src/city-themes.js](../src/city-themes.js). Mañana, Tarde y Noche siguen disponibles. La preferencia antigua «Ciudad» se migra al nombre de la red seleccionada.
+Los nueve temas urbanos toman colores de las webs de los operadores, no una supuesta identidad municipal común a todas las empresas. Al cargar una ciudad, una selección urbana cambia al tema de esa red. Después se permite elegir cualquier otro tema urbano manualmente. Mañana, Tarde y Noche conservan la elección al cambiar de ciudad. La configuración está en [src/city-themes.js](../src/city-themes.js).
+
+Cádiz, Granada, Málaga, Campo de Gibraltar, Almería, Jaén, Córdoba y Huelva comparten ahora una sola opción **Andalucía**, con la paleta verde y amarilla de los consorcios. Se agrupan las pequeñas variaciones de tonos de Granada y Málaga por decisión de diseño solicitada; Sevilla mantiene su tema diferenciado de TUSSAM. Las preferencias guardadas con los nombres antiguos se migran.
+
+**Automático** es la opción inicial para nuevas preferencias. Calcula cada minuto Mañana desde la salida del sol, Tarde desde el mediodía solar y Noche desde la puesta del sol. Utiliza [SunCalc](https://github.com/mourner/suncalc) con la fecha y hora reales, independientemente de la fecha de reproducción del transporte. La ubicación, cuando se autoriza al navegador, se mantiene únicamente en memoria y el cálculo se realiza localmente. Si no está disponible se usa el centro de la red seleccionada y se indica en Temas. La interfaz muestra la fase actual y permite volver a solicitar ubicación. No utiliza un sensor de iluminación ni meteorología.
+
+Referencias de las paletas antes de agruparlas:
 
 | Tema                                                      | Referencia                                                 | Colores observados                                                                          |
 | --------------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------- |

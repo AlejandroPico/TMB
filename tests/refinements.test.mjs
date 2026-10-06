@@ -120,12 +120,12 @@ test("every registered operator asset is an image, including HTTP 200 block-page
     else assert.fail("Unvalidated image format: " + file);
   }
 });
-test("city themes are selectable independently, have evidence and migrate the old City choice", () => {
+test("urban themes remain selectable, have evidence and migrate former city choices", () => {
   assert.equal(resolveTheme("operator", "madrid"), "madrid");
   assert.equal(resolveTheme("barcelona", "madrid"), "barcelona");
-  assert.equal(resolveTheme("unknown"), "night");
+  assert.equal(resolveTheme("unknown"), "auto");
   assert.ok(!themes.operator);
-  assert.equal(Object.keys(cityThemes).length, 16);
+  assert.equal(Object.keys(cityThemes).length, 9);
   for (const t of Object.values(cityThemes)) {
     assert.match(t.source, /^https:\/\//);
     assert.match(t.evidence, /^https:\/\//);

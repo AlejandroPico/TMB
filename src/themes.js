@@ -1,5 +1,11 @@
-import { cityThemes, accentText } from "./city-themes.js";
-export const themes = {
+import {
+  cityThemes,
+  accentText,
+  andalusianCities,
+  urbanThemeForCity,
+} from "./city-themes.js";
+import { solarTheme } from "./solar-theme.js";
+const lightThemes = {
   morning: {
     name: "Mañana",
     style: "positron",
@@ -30,22 +36,35 @@ export const themes = {
     border: "#34413b",
     accent: "#d7eaa1",
   },
+};
+export const themes = {
+  auto: { ...lightThemes.morning, name: "Automático" },
+  ...lightThemes,
   ...cityThemes,
 };
 export const resolveTheme = (id, city = "barcelona") =>
   id === "operator"
-    ? cityThemes[city]
-      ? city
-      : "barcelona"
-    : themes[id]
-      ? id
-      : "night";
-export function applyTheme(id, city) {
+    ? urbanThemeForCity(city)
+    : andalusianCities.has(id)
+      ? "andalucia"
+      : themes[id]
+        ? id
+        : "auto";
+export function themeOnCityLoad(id, city) {
+  const normalized = resolveTheme(id, city);
+  return cityThemes[normalized] ? urbanThemeForCity(city) : normalized;
+}
+export function displayedTheme(id, position, date = new Date()) {
+  return id === "auto" ? solarTheme(date, position) : id;
+}
+export function applyTheme(id, city, position = { lat: 41.391, lon: 2.165 }) {
   id = resolveTheme(id, city);
-  const theme = themes[id];
+  const effective = displayedTheme(id, position);
+  const theme = themes[effective];
   document.documentElement.dataset.theme = id;
+  document.documentElement.dataset.light = effective;
   document.documentElement.style.colorScheme =
-    id === "night" ? "dark" : "light";
+    effective === "night" ? "dark" : "light";
   document.documentElement.style.setProperty(
     "--ui-on-accent",
     accentText(theme.accent),
