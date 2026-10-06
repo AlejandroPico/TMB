@@ -4,7 +4,7 @@ on:
     branches: [main]
   workflow_dispatch:
   schedule:
-    - cron: "23 4 * * 1"
+    - cron: "23 4 * * *"
 permissions:
   contents: read
   pages: write
@@ -47,6 +47,7 @@ jobs:
       - run: pnpm test
       - run: python -m unittest discover -s tests -p 'test_*.py'
       - run: python tools/audit_geometry.py
+      - run: python tools/audit_night_services.py
       - run: pnpm build
         env:
           BASE_PATH: /TMB/

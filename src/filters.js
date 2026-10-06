@@ -19,6 +19,7 @@ export class NetworkFilters {
           network.routes.flatMap((r, i) =>
             r.stops.length &&
             (layer !== "motion" ||
+              r.night === true ||
               !["bus", "ferry", "other"].includes(transportMode(r)))
               ? [i]
               : [],
@@ -32,9 +33,15 @@ export class NetworkFilters {
     this.network.routes.forEach((r, i) => {
       if (!r.stops.length) return;
       const type = transportMode(r),
-        key = type + ":" + r.feed;
+        key = type + ":" + r.feed + (r.night ? ":night" : "");
       if (!groups.has(key))
-        groups.set(key, { key, type, operator: r.operator, ids: [] });
+        groups.set(key, {
+          key,
+          type,
+          night: r.night === true,
+          operator: r.operator,
+          ids: [],
+        });
       groups.get(key).ids.push(i);
     });
     return [...groups.values()].sort(

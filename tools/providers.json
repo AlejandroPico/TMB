@@ -33,7 +33,8 @@
       "website": "https://datos.emtmadrid.es/",
       "license": "https://www.crtm.es/licencia-de-uso",
       "url": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip",
-      "frequencyPolicy": "scheduled"
+      "frequencyPolicy": "scheduled",
+      "nightRoutePattern": "N(?:C)?\\d+"
     },
     {
       "id": "ml-madrid",
@@ -49,7 +50,8 @@
       "cache": "mdb-2770",
       "website": "https://www.tussam.es/",
       "license": "https://nap.transportes.gob.es/licencia-datos",
-      "mirror": "mdb-2770"
+      "mirror": "mdb-2770",
+      "nightRoutePattern": "A[1-8]"
     },
     {
       "id": "metro-sevilla",
@@ -76,7 +78,8 @@
       "website": "https://www.zaragoza.es/web/espacio-de-datos/servicio/catalogo/335",
       "license": "https://nap.transportes.gob.es/licencia-datos",
       "mirror": "mdb-2773",
-      "excludeModes": ["tram"]
+      "excludeModes": ["tram"],
+      "nightRoutePattern": "N\\d+"
     },
     {
       "id": "tranvia-zaragoza",
@@ -237,6 +240,72 @@
       "website": "https://www.metrobilbao.eus/",
       "license": "https://opendata.euskadi.eus/como-reutilizar/-/reutilizar-datos-abiertos/",
       "url": "https://opendata.euskadi.eus/transport/moveuskadi/metro_bilbao/gtfs_metro_bilbao.zip"
+    },
+    {
+      "id": "amb",
+      "name": "AMB · Bus metropolità / Nitbus",
+      "cache": "amb",
+      "url": "https://www.ambmobilitat.cat/OpenData/google_transit.zip",
+      "website": "https://www.ambmobilitat.cat/",
+      "license": "https://www.amb.cat/web/area-metropolitana/dades-obertes",
+      "nightRoutePattern": "N\\d+"
+    },
+    {
+      "id": "emt-malaga",
+      "name": "EMT Málaga",
+      "cache": "emt-malaga",
+      "url": "https://gtfs.emtmalaga.es/GTFS/google_transit.zip",
+      "website": "https://www.emtmalaga.es/",
+      "license": "https://nap.transportes.gob.es/licencia-datos",
+      "nightRoutePattern": "N\\d+"
+    },
+    {
+      "id": "granada-urbano",
+      "name": "Granada · Bus urbano",
+      "cache": "granada",
+      "url": "http://movilidadgranada.org/gtfs/gtfs.zip",
+      "website": "https://movilidadgranada.org/",
+      "license": "https://movilidadgranada.org/",
+      "nightRoutePattern": "111|121"
+    },
+    {
+      "id": "bilbobus",
+      "name": "Bilbobus",
+      "cache": "bilbobus",
+      "url": "https://www.bilbao.eus/opendata/datos/bilbobus-gtfs",
+      "website": "https://www.bilbao.eus/bilbobus",
+      "license": "https://creativecommons.org/licenses/by/3.0/es/",
+      "nightRoutePattern": "G\\d+"
+    },
+    {
+      "id": "dbus",
+      "name": "Dbus",
+      "cache": "dbus",
+      "url": "https://opendata.euskadi.eus/transport/moveuskadi/dbus/gtfs_dbus.zip",
+      "website": "https://dbus.eus/",
+      "license": "https://opendata.euskadi.eus/como-reutilizar/-/reutilizar-datos-abiertos/",
+      "nightRoutePattern": "B\\d+"
+    },
+    {
+      "id": "tuvisa",
+      "name": "TUVISA",
+      "cache": "tuvisa",
+      "url": "https://opendata.euskadi.eus/transport/moveuskadi/tuvisa/gtfs_tuvisa.zip",
+      "website": "https://www.vitoria-gasteiz.org/tuvisa",
+      "license": "https://opendata.euskadi.eus/como-reutilizar/-/reutilizar-datos-abiertos/",
+      "nightRoutePattern": "G\\d+|N\\d+|FN"
+    },
+    {
+      "id": "jaen-buho",
+      "name": "Alsa · Búho de Jaén",
+      "cache": "alsa",
+      "website": "https://www.transporteurbanodejaen.es/es/horarios",
+      "license": "https://nap.transportes.gob.es/licencia-datos",
+      "mirror": "mdb-2825",
+      "includeRouteNames": ["ALSA - Buho"],
+      "routeNameAliases": {
+        "ALSA - Buho": "BÚHO"
+      }
     }
   ],
   "cities": [
@@ -246,9 +315,9 @@
       "region": "Cataluña",
       "center": [2.165, 41.391],
       "zoom": 12.5,
-      "feeds": ["tmb", "fgc", "tram-tbx", "tram-tbs"],
+      "feeds": ["tmb", "fgc", "tram-tbx", "tram-tbs", "amb"],
       "source": "https://developer.tmb.cat/",
-      "coverage": "TMB, FGC y TRAM (Trambaix y Trambesòs). No incluye todos los operadores del área metropolitana.",
+      "coverage": "TMB, FGC, TRAM (Trambaix y Trambesòs) y autobuses metropolitanos de AMB, incluido el Nitbus. No incluye todos los operadores del área metropolitana.",
       "journey": ["Catalunya", "Sagrada Família"]
     },
     {
@@ -301,9 +370,9 @@
       "region": "Andalucía",
       "center": [-3.5986, 37.1773],
       "zoom": 11.8,
-      "feeds": ["ctan-granada"],
+      "feeds": ["ctan-granada", "granada-urbano"],
       "source": "https://api.ctan.es/",
-      "coverage": "Red publicada por el Consorcio de Granada. Cobertura metropolitana parcial; no incluye todos los autobuses urbanos ni operadores de la provincia.",
+      "coverage": "Autobuses urbanos de Granada, incluidos los Búho 111 y 121, y Consorcio de Granada. No incluye todos los operadores de la provincia.",
       "journey": ["Estación de Autobuses", "Centro"]
     },
     {
@@ -312,9 +381,9 @@
       "region": "Andalucía",
       "center": [-4.4214, 36.7213],
       "zoom": 11.8,
-      "feeds": ["ctan-malaga"],
+      "feeds": ["ctan-malaga", "emt-malaga"],
       "source": "https://api.ctan.es/",
-      "coverage": "Red publicada por el Consorcio de Málaga. Cobertura metropolitana parcial; no incluye todos los autobuses urbanos ni operadores de la provincia.",
+      "coverage": "EMT Málaga, incluidas las líneas nocturnas, y Consorcio de Málaga. Cobertura parcial; no incluye todos los operadores de la provincia.",
       "journey": ["Estación de Autobuses", "Centro"]
     },
     {
@@ -345,9 +414,9 @@
       "region": "Andalucía",
       "center": [-3.7903, 37.7796],
       "zoom": 11.8,
-      "feeds": ["ctan-jaen"],
+      "feeds": ["ctan-jaen", "jaen-buho"],
       "source": "https://api.ctan.es/",
-      "coverage": "Red publicada por el Consorcio de Jaén. Cobertura metropolitana parcial; no incluye todos los autobuses urbanos ni operadores de la provincia.",
+      "coverage": "Consorcio de Jaén y Búho urbano de Alsa. El Búho incluye paradas y horarios; la fuente no publica su trazado. No incluye el resto de los autobuses urbanos ni todos los operadores de la provincia.",
       "journey": ["Estación de Autobuses", "Centro"]
     },
     {
@@ -378,9 +447,9 @@
       "region": "Euskadi",
       "center": [-2.935, 43.263],
       "zoom": 12.2,
-      "feeds": ["euskotren-bilbao", "metro-bilbao"],
+      "feeds": ["euskotren-bilbao", "metro-bilbao", "bilbobus"],
       "source": "https://www.euskadi.eus/contenidos/ds_movilidad/md_ideeu_moveuskadi/es_def/index.shtml",
-      "coverage": "Euskotren y Metro Bilbao. El archivo de Metro Bilbao agrupa L1/L2 en una sola ruta. No incluye todos los autobuses urbanos ni otros operadores. La E1 es interurbana entre Bilbao y Donostia.",
+      "coverage": "Euskotren, Metro Bilbao y Bilbobus, incluidos los Gautxori. Metro Bilbao agrupa L1/L2 en una sola ruta. Cobertura parcial; no incluye Bizkaibus ni todos los operadores. La E1 conecta Bilbao y Donostia.",
       "journey": ["Matiko", "Zazpikaleak"]
     },
     {
@@ -389,9 +458,9 @@
       "region": "Euskadi",
       "center": [-1.981, 43.318],
       "zoom": 12.2,
-      "feeds": ["euskotren-donostia"],
+      "feeds": ["euskotren-donostia", "dbus"],
       "source": "https://www.euskadi.eus/contenidos/ds_movilidad/md_ideeu_moveuskadi/es_def/index.shtml",
-      "coverage": "Red ferroviaria publicada por Euskotren. No incluye todos los autobuses urbanos ni otros operadores. La E1 es interurbana entre Bilbao y Donostia.",
+      "coverage": "Euskotren y Dbus, incluidos los servicios nocturnos Búho. Cobertura parcial; no incluye todos los operadores. La E1 conecta Bilbao y Donostia.",
       "journey": ["Amara", "Hendaia"]
     },
     {
@@ -400,9 +469,9 @@
       "region": "Euskadi",
       "center": [-2.673, 42.846],
       "zoom": 12.2,
-      "feeds": ["euskotren-vitoria"],
+      "feeds": ["euskotren-vitoria", "tuvisa"],
       "source": "https://www.euskadi.eus/contenidos/ds_movilidad/md_ideeu_moveuskadi/es_def/index.shtml",
-      "coverage": "Tranvía de Vitoria-Gasteiz publicado por Euskotren. No incluye los autobuses urbanos.",
+      "coverage": "Tranvía de Euskotren y autobuses de TUVISA, incluidos los Gautxori y servicios nocturnos especiales según su calendario.",
       "journey": ["Ibaiondo", "Salburua"]
     },
     {

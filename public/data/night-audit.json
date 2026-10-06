@@ -1,0 +1,7497 @@
+{
+  "generatedAt": "2026-10-06T21:23:57.254794+00:00",
+  "policy": "Operator-specific night brands and explicit night descriptions. N alone is not a night-service indicator. Availability follows GTFS calendars, exceptions and service times, including times above 24:00. Missing geometry is never drawn or animated. Network absence does not prove that a city has no night services.",
+  "cities": [
+    {
+      "id": "barcelona",
+      "name": "Barcelona",
+      "coverage": "TMB, FGC, TRAM (Trambaix y Trambesòs) y autobuses metropolitanos de AMB, incluido el Nitbus. No incluye todos los operadores del área metropolitana.",
+      "nightRoutes": [
+        {
+          "id": "amb:216",
+          "name": "N0",
+          "feed": "amb",
+          "stops": 98,
+          "scheduledTrips": 44,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "amb:216.28.9",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20250430",
+                "20271231",
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "source": "https://www.ambmobilitat.cat/OpenData/google_transit.zip"
+        },
+        {
+          "id": "amb:217",
+          "name": "N1",
+          "feed": "amb",
+          "stops": 115,
+          "scheduledTrips": 112,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "amb:217.1654.29",
+              "dates": [
+                "20260403",
+                "20260406",
+                "20260501",
+                "20260624",
+                "20260815",
+                "20260911",
+                "20261012",
+                "20261101",
+                "20261206",
+                "20261208",
+                "20261225",
+                "20261226"
+              ],
+              "removed": [],
+              "calendar": [
+                "20260330",
+                "20281231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1
+              ]
+            },
+            {
+              "id": "amb:217.2252.29",
+              "dates": [
+                "20260402",
+                "20260405",
+                "20260430",
+                "20260623",
+                "20260814",
+                "20260910",
+                "20261011",
+                "20261031",
+                "20261205",
+                "20261207",
+                "20261224",
+                "20261225",
+                "20261231"
+              ],
+              "removed": [],
+              "calendar": [
+                "20260330",
+                "20281231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "amb:217.2268.28",
+              "dates": [],
+              "removed": [
+                "20260402",
+                "20260405",
+                "20260430",
+                "20260623",
+                "20260814",
+                "20260910",
+                "20261011",
+                "20261031",
+                "20261205",
+                "20261207",
+                "20261224",
+                "20261225",
+                "20261231"
+              ],
+              "calendar": [
+                "20260330",
+                "20281231",
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "amb:217.28.28",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260330",
+                "20281231",
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "source": "https://www.ambmobilitat.cat/OpenData/google_transit.zip"
+        },
+        {
+          "id": "amb:218",
+          "name": "N11",
+          "feed": "amb",
+          "stops": 114,
+          "scheduledTrips": 42,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "amb:218.28.34",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260803",
+                "20281231",
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "source": "https://www.ambmobilitat.cat/OpenData/google_transit.zip"
+        },
+        {
+          "id": "amb:219",
+          "name": "N12",
+          "feed": "amb",
+          "stops": 116,
+          "scheduledTrips": 60,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "amb:219.2298.18",
+              "dates": [],
+              "removed": [
+                "20260717",
+                "20260718",
+                "20260719",
+                "20260720",
+                "20260721",
+                "20260722",
+                "20260723",
+                "20260724",
+                "20260725",
+                "20260726",
+                "20260727",
+                "20260728",
+                "20260729",
+                "20260730",
+                "20260731",
+                "20260801",
+                "20260802",
+                "20260803",
+                "20260804",
+                "20260805",
+                "20260806",
+                "20260807",
+                "20260808",
+                "20260809",
+                "20260810",
+                "20260811",
+                "20260812",
+                "20260813",
+                "20260814",
+                "20260815",
+                "20260816",
+                "20260817",
+                "20260818",
+                "20260819",
+                "20260820",
+                "20260821",
+                "20260822",
+                "20260823",
+                "20260824",
+                "20260825",
+                "20260826",
+                "20260827",
+                "20260828",
+                "20260829",
+                "20260830",
+                "20260831",
+                "20260901",
+                "20260902",
+                "20260903",
+                "20260904",
+                "20260905",
+                "20260906",
+                "20260907",
+                "20260908",
+                "20260909",
+                "20260910",
+                "20260911",
+                "20260912",
+                "20260913",
+                "20260914",
+                "20260915",
+                "20260916",
+                "20260917",
+                "20260918",
+                "20260919",
+                "20260920",
+                "20260921",
+                "20260922",
+                "20260923",
+                "20260924",
+                "20260925",
+                "20260926",
+                "20260927",
+                "20260928",
+                "20260929",
+                "20260930"
+              ],
+              "calendar": [
+                "20260716",
+                "20271231",
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "id": "amb:219.2299.18",
+              "dates": [
+                "20260717",
+                "20260718",
+                "20260719",
+                "20260720",
+                "20260721",
+                "20260722",
+                "20260723",
+                "20260724",
+                "20260725",
+                "20260726",
+                "20260727",
+                "20260728",
+                "20260729",
+                "20260730",
+                "20260731",
+                "20260801",
+                "20260802",
+                "20260803",
+                "20260804",
+                "20260805",
+                "20260806",
+                "20260807",
+                "20260808",
+                "20260809",
+                "20260810",
+                "20260811",
+                "20260812",
+                "20260813",
+                "20260814",
+                "20260815",
+                "20260816",
+                "20260817",
+                "20260818",
+                "20260819",
+                "20260820",
+                "20260821",
+                "20260822",
+                "20260823",
+                "20260824",
+                "20260825",
+                "20260826",
+                "20260827",
+                "20260828",
+                "20260829",
+                "20260830",
+                "20260831",
+                "20260901",
+                "20260902",
+                "20260903",
+                "20260904",
+                "20260905",
+                "20260906",
+                "20260907",
+                "20260908",
+                "20260909",
+                "20260910",
+                "20260911",
+                "20260912",
+                "20260913",
+                "20260914",
+                "20260915",
+                "20260916",
+                "20260917",
+                "20260918",
+                "20260919",
+                "20260920",
+                "20260921",
+                "20260922",
+                "20260923",
+                "20260924",
+                "20260925",
+                "20260926",
+                "20260927",
+                "20260928",
+                "20260929",
+                "20260930"
+              ],
+              "removed": [],
+              "calendar": [
+                "20260716",
+                "20271231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "amb:219.28.18",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260716",
+                "20271231",
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "source": "https://www.ambmobilitat.cat/OpenData/google_transit.zip"
+        },
+        {
+          "id": "amb:220",
+          "name": "N13",
+          "feed": "amb",
+          "stops": 117,
+          "scheduledTrips": 82,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "amb:220.2252.41",
+              "dates": [
+                "20260623",
+                "20260814",
+                "20260910",
+                "20261011",
+                "20261031",
+                "20261205",
+                "20261207",
+                "20261224",
+                "20261225",
+                "20261231"
+              ],
+              "removed": [],
+              "calendar": [
+                "20260527",
+                "20271231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "amb:220.2268.41",
+              "dates": [],
+              "removed": [
+                "20260623",
+                "20260814",
+                "20260910",
+                "20261011",
+                "20261031",
+                "20261205",
+                "20261207",
+                "20261224",
+                "20261225",
+                "20261231"
+              ],
+              "calendar": [
+                "20260527",
+                "20271231",
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1
+              ]
+            }
+          ],
+          "source": "https://www.ambmobilitat.cat/OpenData/google_transit.zip"
+        },
+        {
+          "id": "amb:221",
+          "name": "N14",
+          "feed": "amb",
+          "stops": 143,
+          "scheduledTrips": 53,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "amb:221.2252.33",
+              "dates": [
+                "20260814",
+                "20260910",
+                "20261011",
+                "20261031",
+                "20261205",
+                "20261207",
+                "20261224",
+                "20261225",
+                "20261231"
+              ],
+              "removed": [],
+              "calendar": [
+                "20260716",
+                "20281231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "amb:221.28.33",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260716",
+                "20281231",
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "source": "https://www.ambmobilitat.cat/OpenData/google_transit.zip"
+        },
+        {
+          "id": "amb:222",
+          "name": "N15",
+          "feed": "amb",
+          "stops": 129,
+          "scheduledTrips": 39,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "amb:222.28.30",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260527",
+                "20281231",
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "source": "https://www.ambmobilitat.cat/OpenData/google_transit.zip"
+        },
+        {
+          "id": "amb:223",
+          "name": "N16",
+          "feed": "amb",
+          "stops": 102,
+          "scheduledTrips": 95,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "amb:223.2256.38",
+              "dates": [
+                "20260717",
+                "20260718",
+                "20260719",
+                "20260720",
+                "20260721",
+                "20260722",
+                "20260723",
+                "20260724",
+                "20260725",
+                "20260726",
+                "20260727",
+                "20260728",
+                "20260729",
+                "20260730",
+                "20260731",
+                "20260801",
+                "20260802",
+                "20260803",
+                "20260804",
+                "20260805",
+                "20260806",
+                "20260807",
+                "20260808",
+                "20260809",
+                "20260810",
+                "20260811",
+                "20260812",
+                "20260813",
+                "20260814",
+                "20260815",
+                "20260816",
+                "20260817",
+                "20260818",
+                "20260819",
+                "20260820",
+                "20260821",
+                "20260822",
+                "20260823",
+                "20260824",
+                "20260825",
+                "20260826",
+                "20260827",
+                "20260828",
+                "20260829",
+                "20260830",
+                "20260831",
+                "20260901",
+                "20260902",
+                "20260903",
+                "20260904",
+                "20260905",
+                "20260906",
+                "20260907",
+                "20260908",
+                "20260909",
+                "20260910",
+                "20260911",
+                "20260912",
+                "20260913",
+                "20260914",
+                "20260915",
+                "20260916",
+                "20260917",
+                "20260918",
+                "20260919",
+                "20260920",
+                "20260921",
+                "20260922",
+                "20260923",
+                "20260924",
+                "20260925",
+                "20260926",
+                "20260927",
+                "20260928",
+                "20260929",
+                "20260930",
+                "20261011",
+                "20261031",
+                "20261205",
+                "20261207",
+                "20261224",
+                "20261225",
+                "20261231"
+              ],
+              "removed": [],
+              "calendar": [
+                "20260716",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "amb:223.2264.38",
+              "dates": [],
+              "removed": [
+                "20260717",
+                "20260718",
+                "20260719",
+                "20260720",
+                "20260721",
+                "20260722",
+                "20260723",
+                "20260724",
+                "20260725",
+                "20260726",
+                "20260727",
+                "20260728",
+                "20260729",
+                "20260730",
+                "20260731",
+                "20260801",
+                "20260802",
+                "20260803",
+                "20260804",
+                "20260805",
+                "20260806",
+                "20260807",
+                "20260808",
+                "20260809",
+                "20260810",
+                "20260811",
+                "20260812",
+                "20260813",
+                "20260814",
+                "20260815",
+                "20260816",
+                "20260817",
+                "20260818",
+                "20260819",
+                "20260820",
+                "20260821",
+                "20260822",
+                "20260823",
+                "20260824",
+                "20260825",
+                "20260826",
+                "20260827",
+                "20260828",
+                "20260829",
+                "20260830",
+                "20260831",
+                "20260901",
+                "20260902",
+                "20260903",
+                "20260904",
+                "20260905",
+                "20260906",
+                "20260907",
+                "20260908",
+                "20260909",
+                "20260910",
+                "20260911",
+                "20260912",
+                "20260913",
+                "20260914",
+                "20260915",
+                "20260916",
+                "20260917",
+                "20260918",
+                "20260919",
+                "20260920",
+                "20260921",
+                "20260922",
+                "20260923",
+                "20260924",
+                "20260925",
+                "20260926",
+                "20260927",
+                "20260928",
+                "20260929",
+                "20260930",
+                "20261011",
+                "20261031",
+                "20261205",
+                "20261207",
+                "20261224",
+                "20261225",
+                "20261231"
+              ],
+              "calendar": [
+                "20260716",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1
+              ]
+            }
+          ],
+          "source": "https://www.ambmobilitat.cat/OpenData/google_transit.zip"
+        },
+        {
+          "id": "amb:224",
+          "name": "N17",
+          "feed": "amb",
+          "stops": 67,
+          "scheduledTrips": 54,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "amb:224.22.15",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20231001",
+                "20281231",
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "id": "amb:224.28.15",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20231001",
+                "20281231",
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "source": "https://www.ambmobilitat.cat/OpenData/google_transit.zip"
+        },
+        {
+          "id": "amb:225",
+          "name": "N2",
+          "feed": "amb",
+          "stops": 144,
+          "scheduledTrips": 59,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "amb:225.28.56",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260914",
+                "20271231",
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "source": "https://www.ambmobilitat.cat/OpenData/google_transit.zip"
+        },
+        {
+          "id": "amb:226",
+          "name": "N3",
+          "feed": "amb",
+          "stops": 108,
+          "scheduledTrips": 40,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "amb:226.28.19",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260722",
+                "20281231",
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "source": "https://www.ambmobilitat.cat/OpenData/google_transit.zip"
+        },
+        {
+          "id": "amb:227",
+          "name": "N4",
+          "feed": "amb",
+          "stops": 98,
+          "scheduledTrips": 41,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "amb:227.28.27",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260209",
+                "20281231",
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "source": "https://www.ambmobilitat.cat/OpenData/google_transit.zip"
+        },
+        {
+          "id": "amb:228",
+          "name": "N5",
+          "feed": "amb",
+          "stops": 52,
+          "scheduledTrips": 42,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "amb:228.28.9",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20250417",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "source": "https://www.ambmobilitat.cat/OpenData/google_transit.zip"
+        },
+        {
+          "id": "amb:229",
+          "name": "N6",
+          "feed": "amb",
+          "stops": 184,
+          "scheduledTrips": 41,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "amb:229.28.36",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260608",
+                "20271231",
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "source": "https://www.ambmobilitat.cat/OpenData/google_transit.zip"
+        },
+        {
+          "id": "amb:230",
+          "name": "N7",
+          "feed": "amb",
+          "stops": 78,
+          "scheduledTrips": 42,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "amb:230.28.17",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20250317",
+                "20281231",
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "source": "https://www.ambmobilitat.cat/OpenData/google_transit.zip"
+        },
+        {
+          "id": "amb:231",
+          "name": "N8",
+          "feed": "amb",
+          "stops": 138,
+          "scheduledTrips": 42,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "amb:231.28.37",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260811",
+                "20281231",
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "source": "https://www.ambmobilitat.cat/OpenData/google_transit.zip"
+        },
+        {
+          "id": "amb:232",
+          "name": "N9",
+          "feed": "amb",
+          "stops": 145,
+          "scheduledTrips": 44,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "amb:232.28.28",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260411",
+                "20281231",
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "id": "amb:232.28.29",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260411",
+                "20281231",
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "source": "https://www.ambmobilitat.cat/OpenData/google_transit.zip"
+        },
+        {
+          "id": "amb:394",
+          "name": "N18",
+          "feed": "amb",
+          "stops": 48,
+          "scheduledTrips": 38,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "amb:394.28.11",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20251122",
+                "20271231",
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "source": "https://www.ambmobilitat.cat/OpenData/google_transit.zip"
+        },
+        {
+          "id": "amb:395",
+          "name": "N28",
+          "feed": "amb",
+          "stops": 86,
+          "scheduledTrips": 55,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "amb:395.28.13",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20250630",
+                "20281231",
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "source": "https://www.ambmobilitat.cat/OpenData/google_transit.zip"
+        },
+        {
+          "id": "amb:471",
+          "name": "N19",
+          "feed": "amb",
+          "stops": 82,
+          "scheduledTrips": 25,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "amb:471.28.17",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260929",
+                "20281231",
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "source": "https://www.ambmobilitat.cat/OpenData/google_transit.zip"
+        },
+        {
+          "id": "amb:483",
+          "name": "N20",
+          "feed": "amb",
+          "stops": 53,
+          "scheduledTrips": 26,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "amb:483.28.3",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20251027",
+                "20271231",
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "source": "https://www.ambmobilitat.cat/OpenData/google_transit.zip"
+        },
+        {
+          "id": "amb:496",
+          "name": "N23",
+          "feed": "amb",
+          "stops": 78,
+          "scheduledTrips": 42,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "amb:496.28.4",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260722",
+                "20281231",
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "source": "https://www.ambmobilitat.cat/OpenData/google_transit.zip"
+        },
+        {
+          "id": "amb:497",
+          "name": "N24",
+          "feed": "amb",
+          "stops": 84,
+          "scheduledTrips": 41,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "amb:497.28.3",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20250630",
+                "20281231",
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "source": "https://www.ambmobilitat.cat/OpenData/google_transit.zip"
+        },
+        {
+          "id": "amb:518",
+          "name": "N21",
+          "feed": "amb",
+          "stops": 66,
+          "scheduledTrips": 12,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "amb:518.2297.4",
+              "dates": [
+                "20261011",
+                "20261031",
+                "20261205",
+                "20261207",
+                "20261224",
+                "20261225",
+                "20261231"
+              ],
+              "removed": [],
+              "calendar": [
+                "20260914",
+                "20271231",
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                0
+              ]
+            }
+          ],
+          "source": "https://www.ambmobilitat.cat/OpenData/google_transit.zip"
+        }
+      ],
+      "declaredWithoutJourneys": []
+    },
+    {
+      "id": "madrid",
+      "name": "Madrid",
+      "coverage": "Metro, EMT y Metro Ligero. Cercanías se encuentra en la vista nacional de Renfe.",
+      "nightRoutes": [
+        {
+          "id": "emt:501",
+          "name": "N1",
+          "feed": "emt",
+          "stops": 68,
+          "scheduledTrips": 132,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:502",
+          "name": "N2",
+          "feed": "emt",
+          "stops": 74,
+          "scheduledTrips": 134,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:503",
+          "name": "N3",
+          "feed": "emt",
+          "stops": 65,
+          "scheduledTrips": 134,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:504",
+          "name": "N4",
+          "feed": "emt",
+          "stops": 65,
+          "scheduledTrips": 134,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:505",
+          "name": "N5",
+          "feed": "emt",
+          "stops": 91,
+          "scheduledTrips": 132,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:506",
+          "name": "N6",
+          "feed": "emt",
+          "stops": 79,
+          "scheduledTrips": 132,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:507",
+          "name": "N7",
+          "feed": "emt",
+          "stops": 69,
+          "scheduledTrips": 134,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:508",
+          "name": "N8",
+          "feed": "emt",
+          "stops": 69,
+          "scheduledTrips": 134,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:509",
+          "name": "N9",
+          "feed": "emt",
+          "stops": 71,
+          "scheduledTrips": 134,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:510",
+          "name": "N10",
+          "feed": "emt",
+          "stops": 43,
+          "scheduledTrips": 142,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:511",
+          "name": "N11",
+          "feed": "emt",
+          "stops": 54,
+          "scheduledTrips": 134,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:512",
+          "name": "N12",
+          "feed": "emt",
+          "stops": 73,
+          "scheduledTrips": 134,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:513",
+          "name": "N13",
+          "feed": "emt",
+          "stops": 56,
+          "scheduledTrips": 138,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:514",
+          "name": "N14",
+          "feed": "emt",
+          "stops": 64,
+          "scheduledTrips": 134,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:515",
+          "name": "N15",
+          "feed": "emt",
+          "stops": 62,
+          "scheduledTrips": 134,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:516",
+          "name": "N16",
+          "feed": "emt",
+          "stops": 77,
+          "scheduledTrips": 134,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:517",
+          "name": "N17",
+          "feed": "emt",
+          "stops": 70,
+          "scheduledTrips": 134,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:518",
+          "name": "N18",
+          "feed": "emt",
+          "stops": 64,
+          "scheduledTrips": 138,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:519",
+          "name": "N19",
+          "feed": "emt",
+          "stops": 69,
+          "scheduledTrips": 134,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:520",
+          "name": "N20",
+          "feed": "emt",
+          "stops": 74,
+          "scheduledTrips": 134,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:521",
+          "name": "N21",
+          "feed": "emt",
+          "stops": 71,
+          "scheduledTrips": 134,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:522",
+          "name": "N22",
+          "feed": "emt",
+          "stops": 61,
+          "scheduledTrips": 138,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:523",
+          "name": "N23",
+          "feed": "emt",
+          "stops": 76,
+          "scheduledTrips": 134,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:524",
+          "name": "N24",
+          "feed": "emt",
+          "stops": 79,
+          "scheduledTrips": 134,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:525",
+          "name": "N25",
+          "feed": "emt",
+          "stops": 47,
+          "scheduledTrips": 134,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:526",
+          "name": "N26",
+          "feed": "emt",
+          "stops": 61,
+          "scheduledTrips": 134,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:527",
+          "name": "N27",
+          "feed": "emt",
+          "stops": 8,
+          "scheduledTrips": 140,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:528",
+          "name": "N28",
+          "feed": "emt",
+          "stops": 30,
+          "scheduledTrips": 130,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:529",
+          "name": "NC1",
+          "feed": "emt",
+          "stops": 34,
+          "scheduledTrips": 135,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:530",
+          "name": "NC2",
+          "feed": "emt",
+          "stops": 34,
+          "scheduledTrips": 135,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:531",
+          "name": "N31",
+          "feed": "emt",
+          "stops": 37,
+          "scheduledTrips": 82,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        },
+        {
+          "id": "emt:532",
+          "name": "N32",
+          "feed": "emt",
+          "stops": 18,
+          "scheduledTrips": 120,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt:FE",
+              "dates": [
+                "20261012",
+                "20261102",
+                "20261109",
+                "20261207",
+                "20261208",
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "emt:LJ",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "emt:SA",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "emt:VV",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261005",
+                "20261231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip"
+        }
+      ],
+      "declaredWithoutJourneys": []
+    },
+    {
+      "id": "sevilla",
+      "name": "Sevilla",
+      "coverage": "TUSSAM, Metro y Consorcio del Área de Sevilla.",
+      "nightRoutes": [
+        {
+          "id": "tussam:101",
+          "name": "A1",
+          "feed": "tussam",
+          "stops": 45,
+          "scheduledTrips": 60,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "tussam:INVFES40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261004",
+                "20270117",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "tussam:INVLAB40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260928",
+                "20270117",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "tussam:INVSAB40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261003",
+                "20270117",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "tussam:INVVIE40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261002",
+                "20270117",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://files.mobilitydatabase.org/mdb-2770/mdb-2770-202609300035/mdb-2770-202609300035.zip"
+        },
+        {
+          "id": "tussam:102",
+          "name": "A2",
+          "feed": "tussam",
+          "stops": 48,
+          "scheduledTrips": 60,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "tussam:INVFES40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261004",
+                "20270117",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "tussam:INVLAB40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260928",
+                "20270117",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "tussam:INVSAB40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261003",
+                "20270117",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "tussam:INVVIE40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261002",
+                "20270117",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://files.mobilitydatabase.org/mdb-2770/mdb-2770-202609300035/mdb-2770-202609300035.zip"
+        },
+        {
+          "id": "tussam:103",
+          "name": "A3",
+          "feed": "tussam",
+          "stops": 48,
+          "scheduledTrips": 60,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "tussam:INVFES40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261004",
+                "20270117",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "tussam:INVLAB40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260928",
+                "20270117",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "tussam:INVSAB40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261003",
+                "20270117",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "tussam:INVVIE40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261002",
+                "20270117",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://files.mobilitydatabase.org/mdb-2770/mdb-2770-202609300035/mdb-2770-202609300035.zip"
+        },
+        {
+          "id": "tussam:104",
+          "name": "A4",
+          "feed": "tussam",
+          "stops": 43,
+          "scheduledTrips": 56,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "tussam:INVFES40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261004",
+                "20270117",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "tussam:INVLAB40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260928",
+                "20270117",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "tussam:INVSAB40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261003",
+                "20270117",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "tussam:INVVIE40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261002",
+                "20270117",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://files.mobilitydatabase.org/mdb-2770/mdb-2770-202609300035/mdb-2770-202609300035.zip"
+        },
+        {
+          "id": "tussam:105",
+          "name": "A5",
+          "feed": "tussam",
+          "stops": 36,
+          "scheduledTrips": 56,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "tussam:INVFES40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261004",
+                "20270117",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "tussam:INVLAB40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260928",
+                "20270117",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "tussam:INVSAB40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261003",
+                "20270117",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "tussam:INVVIE40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261002",
+                "20270117",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://files.mobilitydatabase.org/mdb-2770/mdb-2770-202609300035/mdb-2770-202609300035.zip"
+        },
+        {
+          "id": "tussam:106",
+          "name": "A6",
+          "feed": "tussam",
+          "stops": 48,
+          "scheduledTrips": 62,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "tussam:INVFES40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261004",
+                "20270117",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "tussam:INVLAB40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260928",
+                "20270117",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "tussam:INVSAB40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261003",
+                "20270117",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "tussam:INVVIE40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261002",
+                "20270117",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://files.mobilitydatabase.org/mdb-2770/mdb-2770-202609300035/mdb-2770-202609300035.zip"
+        },
+        {
+          "id": "tussam:107",
+          "name": "A7",
+          "feed": "tussam",
+          "stops": 38,
+          "scheduledTrips": 56,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "tussam:INVFES40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261004",
+                "20270117",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "tussam:INVLAB40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260928",
+                "20270117",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "tussam:INVSAB40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261003",
+                "20270117",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "tussam:INVVIE40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261002",
+                "20270117",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://files.mobilitydatabase.org/mdb-2770/mdb-2770-202609300035/mdb-2770-202609300035.zip"
+        },
+        {
+          "id": "tussam:110",
+          "name": "A8",
+          "feed": "tussam",
+          "stops": 50,
+          "scheduledTrips": 56,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "tussam:INVFES40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261004",
+                "20270117",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "tussam:INVLAB40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260928",
+                "20270117",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "tussam:INVSAB40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261003",
+                "20270117",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "tussam:INVVIE40",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20261002",
+                "20270117",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "source": "https://files.mobilitydatabase.org/mdb-2770/mdb-2770-202609300035/mdb-2770-202609300035.zip"
+        },
+        {
+          "id": "ctas:1_271",
+          "name": "1640",
+          "feed": "ctas",
+          "stops": 15,
+          "scheduledTrips": 5,
+          "mappedDirections": 1,
+          "directions": 1,
+          "services": [
+            {
+              "id": "ctas:1_901_420_10_271_4",
+              "dates": [
+                "20260101",
+                "20260106",
+                "20260228",
+                "20260402",
+                "20260403",
+                "20260501",
+                "20260815",
+                "20261212",
+                "20261102",
+                "20261207",
+                "20261208",
+                "20261225",
+                "20260422",
+                "20260604"
+              ],
+              "removed": [],
+              "calendar": [
+                "20260901",
+                "20270630",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1
+              ]
+            }
+          ],
+          "source": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip"
+        },
+        {
+          "id": "ctas:1_468",
+          "name": "1213",
+          "feed": "ctas",
+          "stops": 25,
+          "scheduledTrips": 19,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "ctas:1_872_1508_9_468_5",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260901",
+                "20270630",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "ctas:1_873_1509_9_468_2",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260901",
+                "20270630",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "ctas:1_874_1510_9_468_3",
+              "dates": [
+                "20260101",
+                "20260106",
+                "20260228",
+                "20260402",
+                "20260403",
+                "20260501",
+                "20260815",
+                "20261212",
+                "20261102",
+                "20261207",
+                "20261208",
+                "20261225",
+                "20260422",
+                "20260604"
+              ],
+              "removed": [],
+              "calendar": [
+                "20260901",
+                "20270630",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            }
+          ],
+          "source": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip"
+        }
+      ],
+      "declaredWithoutJourneys": []
+    },
+    {
+      "id": "zaragoza",
+      "name": "Zaragoza",
+      "coverage": "Avanza y tranvía. Comprueba la vigencia del calendario de cada operador.",
+      "nightRoutes": [
+        {
+          "id": "avanza-zaragoza:111",
+          "name": "N1",
+          "feed": "avanza-zaragoza",
+          "stops": 48,
+          "scheduledTrips": 14,
+          "mappedDirections": 1,
+          "directions": 1,
+          "services": [
+            {
+              "id": "avanza-zaragoza:N01018F_N01E1_",
+              "dates": [
+                "20260628",
+                "20260705",
+                "20260712",
+                "20260719",
+                "20260726",
+                "20260802",
+                "20260809",
+                "20260815",
+                "20260816",
+                "20260823",
+                "20260830",
+                "20260906",
+                "20260913",
+                "20260920",
+                "20260927",
+                "20261004"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "avanza-zaragoza:N01018S_N01E1_",
+              "dates": [
+                "20260627",
+                "20260704",
+                "20260711",
+                "20260718",
+                "20260725",
+                "20260801",
+                "20260808",
+                "20260822",
+                "20260829",
+                "20260905",
+                "20260912",
+                "20260919",
+                "20260926",
+                "20261003"
+              ],
+              "removed": [],
+              "calendar": null
+            }
+          ],
+          "source": "https://files.mobilitydatabase.org/mdb-2773/mdb-2773-202607010006/mdb-2773-202607010006.zip"
+        },
+        {
+          "id": "avanza-zaragoza:112",
+          "name": "N2",
+          "feed": "avanza-zaragoza",
+          "stops": 39,
+          "scheduledTrips": 40,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "avanza-zaragoza:N02018F_N02E1_",
+              "dates": [
+                "20260628",
+                "20260705",
+                "20260712",
+                "20260719",
+                "20260726",
+                "20260802",
+                "20260809",
+                "20260815",
+                "20260816",
+                "20260823",
+                "20260830",
+                "20260906",
+                "20260913",
+                "20260920",
+                "20260927",
+                "20261004"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "avanza-zaragoza:N02018F_N02E2_",
+              "dates": [
+                "20260628",
+                "20260705",
+                "20260712",
+                "20260719",
+                "20260726",
+                "20260802",
+                "20260809",
+                "20260815",
+                "20260816",
+                "20260823",
+                "20260830",
+                "20260906",
+                "20260913",
+                "20260920",
+                "20260927",
+                "20261004"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "avanza-zaragoza:N02018S_N02E1_",
+              "dates": [
+                "20260627",
+                "20260704",
+                "20260711",
+                "20260718",
+                "20260725",
+                "20260801",
+                "20260808",
+                "20260822",
+                "20260829",
+                "20260905",
+                "20260912",
+                "20260919",
+                "20260926",
+                "20261003"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "avanza-zaragoza:N02018S_N02E2_",
+              "dates": [
+                "20260627",
+                "20260704",
+                "20260711",
+                "20260718",
+                "20260725",
+                "20260801",
+                "20260808",
+                "20260822",
+                "20260829",
+                "20260905",
+                "20260912",
+                "20260919",
+                "20260926",
+                "20261003"
+              ],
+              "removed": [],
+              "calendar": null
+            }
+          ],
+          "source": "https://files.mobilitydatabase.org/mdb-2773/mdb-2773-202607010006/mdb-2773-202607010006.zip"
+        },
+        {
+          "id": "avanza-zaragoza:113",
+          "name": "N3",
+          "feed": "avanza-zaragoza",
+          "stops": 46,
+          "scheduledTrips": 20,
+          "mappedDirections": 1,
+          "directions": 1,
+          "services": [
+            {
+              "id": "avanza-zaragoza:N03018F_N03E1_",
+              "dates": [
+                "20260628",
+                "20260705",
+                "20260712",
+                "20260719",
+                "20260726",
+                "20260802",
+                "20260809",
+                "20260815",
+                "20260816",
+                "20260823",
+                "20260830",
+                "20260906",
+                "20260913",
+                "20260920",
+                "20260927",
+                "20261004"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "avanza-zaragoza:N03018F_N03E2_",
+              "dates": [
+                "20260628",
+                "20260705",
+                "20260712",
+                "20260719",
+                "20260726",
+                "20260802",
+                "20260809",
+                "20260815",
+                "20260816",
+                "20260823",
+                "20260830",
+                "20260906",
+                "20260913",
+                "20260920",
+                "20260927",
+                "20261004"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "avanza-zaragoza:N03018S_N03E1_",
+              "dates": [
+                "20260627",
+                "20260704",
+                "20260711",
+                "20260718",
+                "20260725",
+                "20260801",
+                "20260808",
+                "20260822",
+                "20260829",
+                "20260905",
+                "20260912",
+                "20260919",
+                "20260926",
+                "20261003"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "avanza-zaragoza:N03018S_N03E2_",
+              "dates": [
+                "20260627",
+                "20260704",
+                "20260711",
+                "20260718",
+                "20260725",
+                "20260801",
+                "20260808",
+                "20260822",
+                "20260829",
+                "20260905",
+                "20260912",
+                "20260919",
+                "20260926",
+                "20261003"
+              ],
+              "removed": [],
+              "calendar": null
+            }
+          ],
+          "source": "https://files.mobilitydatabase.org/mdb-2773/mdb-2773-202607010006/mdb-2773-202607010006.zip"
+        },
+        {
+          "id": "avanza-zaragoza:114",
+          "name": "N4",
+          "feed": "avanza-zaragoza",
+          "stops": 50,
+          "scheduledTrips": 20,
+          "mappedDirections": 1,
+          "directions": 1,
+          "services": [
+            {
+              "id": "avanza-zaragoza:N04018F_N04E1_",
+              "dates": [
+                "20260628",
+                "20260705",
+                "20260712",
+                "20260719",
+                "20260726",
+                "20260802",
+                "20260809",
+                "20260815",
+                "20260816",
+                "20260823",
+                "20260830",
+                "20260906",
+                "20260913",
+                "20260920",
+                "20260927",
+                "20261004"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "avanza-zaragoza:N04018F_N04E2_",
+              "dates": [
+                "20260628",
+                "20260705",
+                "20260712",
+                "20260719",
+                "20260726",
+                "20260802",
+                "20260809",
+                "20260815",
+                "20260816",
+                "20260823",
+                "20260830",
+                "20260906",
+                "20260913",
+                "20260920",
+                "20260927",
+                "20261004"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "avanza-zaragoza:N04018S_N04E1_",
+              "dates": [
+                "20260627",
+                "20260704",
+                "20260711",
+                "20260718",
+                "20260725",
+                "20260801",
+                "20260808",
+                "20260822",
+                "20260829",
+                "20260905",
+                "20260912",
+                "20260919",
+                "20260926",
+                "20261003"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "avanza-zaragoza:N04018S_N04E2_",
+              "dates": [
+                "20260627",
+                "20260704",
+                "20260711",
+                "20260718",
+                "20260725",
+                "20260801",
+                "20260808",
+                "20260822",
+                "20260829",
+                "20260905",
+                "20260912",
+                "20260919",
+                "20260926",
+                "20261003"
+              ],
+              "removed": [],
+              "calendar": null
+            }
+          ],
+          "source": "https://files.mobilitydatabase.org/mdb-2773/mdb-2773-202607010006/mdb-2773-202607010006.zip"
+        },
+        {
+          "id": "avanza-zaragoza:115",
+          "name": "N5",
+          "feed": "avanza-zaragoza",
+          "stops": 46,
+          "scheduledTrips": 14,
+          "mappedDirections": 1,
+          "directions": 1,
+          "services": [
+            {
+              "id": "avanza-zaragoza:N05018F_N05E1_",
+              "dates": [
+                "20260628",
+                "20260705",
+                "20260712",
+                "20260719",
+                "20260726",
+                "20260802",
+                "20260809",
+                "20260815",
+                "20260816",
+                "20260823",
+                "20260830",
+                "20260906",
+                "20260913",
+                "20260920",
+                "20260927",
+                "20261004"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "avanza-zaragoza:N05018S_N05E1_",
+              "dates": [
+                "20260627",
+                "20260704",
+                "20260711",
+                "20260718",
+                "20260725",
+                "20260801",
+                "20260808",
+                "20260822",
+                "20260829",
+                "20260905",
+                "20260912",
+                "20260919",
+                "20260926",
+                "20261003"
+              ],
+              "removed": [],
+              "calendar": null
+            }
+          ],
+          "source": "https://files.mobilitydatabase.org/mdb-2773/mdb-2773-202607010006/mdb-2773-202607010006.zip"
+        },
+        {
+          "id": "avanza-zaragoza:116",
+          "name": "N6",
+          "feed": "avanza-zaragoza",
+          "stops": 59,
+          "scheduledTrips": 16,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "avanza-zaragoza:N06018F_N06E1_",
+              "dates": [
+                "20260628",
+                "20260705",
+                "20260712",
+                "20260719",
+                "20260726",
+                "20260802",
+                "20260809",
+                "20260815",
+                "20260816",
+                "20260823",
+                "20260830",
+                "20260906",
+                "20260913",
+                "20260920",
+                "20260927",
+                "20261004"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "avanza-zaragoza:N06018S_N06E1_",
+              "dates": [
+                "20260627",
+                "20260704",
+                "20260711",
+                "20260718",
+                "20260725",
+                "20260801",
+                "20260808",
+                "20260822",
+                "20260829",
+                "20260905",
+                "20260912",
+                "20260919",
+                "20260926",
+                "20261003"
+              ],
+              "removed": [],
+              "calendar": null
+            }
+          ],
+          "source": "https://files.mobilitydatabase.org/mdb-2773/mdb-2773-202607010006/mdb-2773-202607010006.zip"
+        },
+        {
+          "id": "avanza-zaragoza:117",
+          "name": "N7",
+          "feed": "avanza-zaragoza",
+          "stops": 119,
+          "scheduledTrips": 8,
+          "mappedDirections": 1,
+          "directions": 1,
+          "services": [
+            {
+              "id": "avanza-zaragoza:N07018F_N07E1_",
+              "dates": [
+                "20260628",
+                "20260705",
+                "20260712",
+                "20260719",
+                "20260726",
+                "20260802",
+                "20260809",
+                "20260815",
+                "20260816",
+                "20260823",
+                "20260830",
+                "20260906",
+                "20260913",
+                "20260920",
+                "20260927",
+                "20261004"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "avanza-zaragoza:N07018S_N07E1_",
+              "dates": [
+                "20260627",
+                "20260704",
+                "20260711",
+                "20260718",
+                "20260725",
+                "20260801",
+                "20260808",
+                "20260822",
+                "20260829",
+                "20260905",
+                "20260912",
+                "20260919",
+                "20260926",
+                "20261003"
+              ],
+              "removed": [],
+              "calendar": null
+            }
+          ],
+          "source": "https://files.mobilitydatabase.org/mdb-2773/mdb-2773-202607010006/mdb-2773-202607010006.zip"
+        }
+      ],
+      "declaredWithoutJourneys": []
+    },
+    {
+      "id": "cadiz",
+      "name": "Bahía de Cádiz",
+      "coverage": "Red publicada por el Consorcio de Bahía de Cádiz. Cobertura metropolitana parcial; no incluye todos los autobuses urbanos ni operadores de la provincia.",
+      "nightRoutes": [],
+      "declaredWithoutJourneys": []
+    },
+    {
+      "id": "granada",
+      "name": "Granada",
+      "coverage": "Autobuses urbanos de Granada, incluidos los Búho 111 y 121, y Consorcio de Granada. No incluye todos los operadores de la provincia.",
+      "nightRoutes": [
+        {
+          "id": "granada-urbano:42451884-3ef7-4ebb-9617-829bdc21db47",
+          "name": "111",
+          "feed": "granada-urbano",
+          "stops": 58,
+          "scheduledTrips": 24,
+          "mappedDirections": 1,
+          "directions": 1,
+          "services": [
+            {
+              "id": "granada-urbano:66804cca-d0d6-4d2b-8ee4-6d588aecdeb1_11e094f0-4e0b-4ee8-8ebc-cfc6ee88126d",
+              "dates": [],
+              "removed": [
+                "20261225",
+                "20270101",
+                "20270326"
+              ],
+              "calendar": [
+                "20260918",
+                "20271024",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "granada-urbano:8cc552a0-4669-473b-9e86-052eb879142c_11e094f0-4e0b-4ee8-8ebc-cfc6ee88126d",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260918",
+                "20271024",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            }
+          ],
+          "source": "http://movilidadgranada.org/gtfs/gtfs.zip"
+        },
+        {
+          "id": "granada-urbano:1b8e01b1-cc19-4dbc-bc6d-d214fae105b1",
+          "name": "121",
+          "feed": "granada-urbano",
+          "stops": 73,
+          "scheduledTrips": 22,
+          "mappedDirections": 1,
+          "directions": 1,
+          "services": [
+            {
+              "id": "granada-urbano:66804cca-d0d6-4d2b-8ee4-6d588aecdeb1_11e094f0-4e0b-4ee8-8ebc-cfc6ee88126d",
+              "dates": [],
+              "removed": [
+                "20261225",
+                "20270101",
+                "20270326"
+              ],
+              "calendar": [
+                "20260918",
+                "20271024",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "granada-urbano:8cc552a0-4669-473b-9e86-052eb879142c_11e094f0-4e0b-4ee8-8ebc-cfc6ee88126d",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260918",
+                "20271024",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            }
+          ],
+          "source": "http://movilidadgranada.org/gtfs/gtfs.zip"
+        }
+      ],
+      "declaredWithoutJourneys": []
+    },
+    {
+      "id": "malaga",
+      "name": "Málaga",
+      "coverage": "EMT Málaga, incluidas las líneas nocturnas, y Consorcio de Málaga. Cobertura parcial; no incluye todos los operadores de la provincia.",
+      "nightRoutes": [
+        {
+          "id": "ctan-malaga:4_297",
+          "name": "M-168C",
+          "feed": "ctan-malaga",
+          "stops": 41,
+          "scheduledTrips": 10,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "ctan-malaga:4_1862_2834_4_297_116",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260907",
+                "20301231",
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "ctan-malaga:4_1862_2835_4_297_152",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260907",
+                "20301231",
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1
+              ]
+            }
+          ],
+          "source": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip"
+        },
+        {
+          "id": "emt-malaga:41",
+          "name": "N1",
+          "feed": "emt-malaga",
+          "stops": 72,
+          "scheduledTrips": 258,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt-malaga:G2606D_D12",
+              "dates": [
+                "20261018",
+                "20261025",
+                "20261108",
+                "20261115",
+                "20261122",
+                "20261129"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "emt-malaga:G2606D_D14",
+              "dates": [
+                "20261004"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "emt-malaga:G2606S_F18",
+              "dates": [
+                "20261010",
+                "20261017",
+                "20261024",
+                "20261031",
+                "20261107",
+                "20261114",
+                "20261121",
+                "20261128"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "emt-malaga:G2606S_F20",
+              "dates": [
+                "20261003"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "emt-malaga:G2609L_F22",
+              "dates": [
+                "20260928",
+                "20260929",
+                "20260930",
+                "20261005",
+                "20261006",
+                "20261007",
+                "20261008",
+                "20261009",
+                "20261013",
+                "20261014",
+                "20261015",
+                "20261016",
+                "20261019",
+                "20261020",
+                "20261021",
+                "20261022",
+                "20261023",
+                "20261026",
+                "20261027",
+                "20261028",
+                "20261029",
+                "20261030",
+                "20261103",
+                "20261104",
+                "20261105",
+                "20261106",
+                "20261109",
+                "20261110",
+                "20261111",
+                "20261112",
+                "20261113",
+                "20261116",
+                "20261117",
+                "20261118",
+                "20261119",
+                "20261120",
+                "20261123",
+                "20261124",
+                "20261125",
+                "20261126",
+                "20261127",
+                "20261130"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "emt-malaga:G2609L_F24",
+              "dates": [
+                "20261001",
+                "20261002"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "emt-malaga:G2610D_F2",
+              "dates": [
+                "20261011",
+                "20261101"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "emt-malaga:G2610F_D1",
+              "dates": [
+                "20261012",
+                "20261102"
+              ],
+              "removed": [],
+              "calendar": null
+            }
+          ],
+          "source": "https://gtfs.emtmalaga.es/GTFS/google_transit.zip"
+        },
+        {
+          "id": "emt-malaga:42",
+          "name": "N2",
+          "feed": "emt-malaga",
+          "stops": 50,
+          "scheduledTrips": 48,
+          "mappedDirections": 1,
+          "directions": 1,
+          "services": [
+            {
+              "id": "emt-malaga:G2606D_D12",
+              "dates": [
+                "20261018",
+                "20261025",
+                "20261108",
+                "20261115",
+                "20261122",
+                "20261129"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "emt-malaga:G2606D_D14",
+              "dates": [
+                "20261004"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "emt-malaga:G2606S_F18",
+              "dates": [
+                "20261010",
+                "20261017",
+                "20261024",
+                "20261031",
+                "20261107",
+                "20261114",
+                "20261121",
+                "20261128"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "emt-malaga:G2606S_F20",
+              "dates": [
+                "20261003"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "emt-malaga:G2609L_F22",
+              "dates": [
+                "20260928",
+                "20260929",
+                "20260930",
+                "20261005",
+                "20261006",
+                "20261007",
+                "20261008",
+                "20261009",
+                "20261013",
+                "20261014",
+                "20261015",
+                "20261016",
+                "20261019",
+                "20261020",
+                "20261021",
+                "20261022",
+                "20261023",
+                "20261026",
+                "20261027",
+                "20261028",
+                "20261029",
+                "20261030",
+                "20261103",
+                "20261104",
+                "20261105",
+                "20261106",
+                "20261109",
+                "20261110",
+                "20261111",
+                "20261112",
+                "20261113",
+                "20261116",
+                "20261117",
+                "20261118",
+                "20261119",
+                "20261120",
+                "20261123",
+                "20261124",
+                "20261125",
+                "20261126",
+                "20261127",
+                "20261130"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "emt-malaga:G2609L_F24",
+              "dates": [
+                "20261001",
+                "20261002"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "emt-malaga:G2610D_F2",
+              "dates": [
+                "20261011",
+                "20261101"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "emt-malaga:G2610F_D1",
+              "dates": [
+                "20261012",
+                "20261102"
+              ],
+              "removed": [],
+              "calendar": null
+            }
+          ],
+          "source": "https://gtfs.emtmalaga.es/GTFS/google_transit.zip"
+        },
+        {
+          "id": "emt-malaga:43",
+          "name": "N3",
+          "feed": "emt-malaga",
+          "stops": 78,
+          "scheduledTrips": 12,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt-malaga:G2606S_F18",
+              "dates": [
+                "20261010",
+                "20261017",
+                "20261024",
+                "20261031",
+                "20261107",
+                "20261114",
+                "20261121",
+                "20261128"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "emt-malaga:G2606S_F20",
+              "dates": [
+                "20261003"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "emt-malaga:G2609L_F22",
+              "dates": [
+                "20260928",
+                "20260929",
+                "20260930",
+                "20261005",
+                "20261006",
+                "20261007",
+                "20261008",
+                "20261009",
+                "20261013",
+                "20261014",
+                "20261015",
+                "20261016",
+                "20261019",
+                "20261020",
+                "20261021",
+                "20261022",
+                "20261023",
+                "20261026",
+                "20261027",
+                "20261028",
+                "20261029",
+                "20261030",
+                "20261103",
+                "20261104",
+                "20261105",
+                "20261106",
+                "20261109",
+                "20261110",
+                "20261111",
+                "20261112",
+                "20261113",
+                "20261116",
+                "20261117",
+                "20261118",
+                "20261119",
+                "20261120",
+                "20261123",
+                "20261124",
+                "20261125",
+                "20261126",
+                "20261127",
+                "20261130"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "emt-malaga:G2609L_F24",
+              "dates": [
+                "20261001",
+                "20261002"
+              ],
+              "removed": [],
+              "calendar": null
+            }
+          ],
+          "source": "https://gtfs.emtmalaga.es/GTFS/google_transit.zip"
+        },
+        {
+          "id": "emt-malaga:44",
+          "name": "N4",
+          "feed": "emt-malaga",
+          "stops": 76,
+          "scheduledTrips": 144,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "emt-malaga:G2606D_D12",
+              "dates": [
+                "20261018",
+                "20261025",
+                "20261108",
+                "20261115",
+                "20261122",
+                "20261129"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "emt-malaga:G2606D_D14",
+              "dates": [
+                "20261004"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "emt-malaga:G2606S_F18",
+              "dates": [
+                "20261010",
+                "20261017",
+                "20261024",
+                "20261031",
+                "20261107",
+                "20261114",
+                "20261121",
+                "20261128"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "emt-malaga:G2606S_F20",
+              "dates": [
+                "20261003"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "emt-malaga:G2609L_F22",
+              "dates": [
+                "20260928",
+                "20260929",
+                "20260930",
+                "20261005",
+                "20261006",
+                "20261007",
+                "20261008",
+                "20261009",
+                "20261013",
+                "20261014",
+                "20261015",
+                "20261016",
+                "20261019",
+                "20261020",
+                "20261021",
+                "20261022",
+                "20261023",
+                "20261026",
+                "20261027",
+                "20261028",
+                "20261029",
+                "20261030",
+                "20261103",
+                "20261104",
+                "20261105",
+                "20261106",
+                "20261109",
+                "20261110",
+                "20261111",
+                "20261112",
+                "20261113",
+                "20261116",
+                "20261117",
+                "20261118",
+                "20261119",
+                "20261120",
+                "20261123",
+                "20261124",
+                "20261125",
+                "20261126",
+                "20261127",
+                "20261130"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "emt-malaga:G2609L_F24",
+              "dates": [
+                "20261001",
+                "20261002"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "emt-malaga:G2610D_F2",
+              "dates": [
+                "20261011",
+                "20261101"
+              ],
+              "removed": [],
+              "calendar": null
+            },
+            {
+              "id": "emt-malaga:G2610F_D1",
+              "dates": [
+                "20261012",
+                "20261102"
+              ],
+              "removed": [],
+              "calendar": null
+            }
+          ],
+          "source": "https://gtfs.emtmalaga.es/GTFS/google_transit.zip"
+        }
+      ],
+      "declaredWithoutJourneys": []
+    },
+    {
+      "id": "gibraltar",
+      "name": "Campo de Gibraltar",
+      "coverage": "Red publicada por el Consorcio de Campo de Gibraltar. Cobertura metropolitana parcial; no incluye todos los autobuses urbanos ni operadores de la provincia.",
+      "nightRoutes": [],
+      "declaredWithoutJourneys": []
+    },
+    {
+      "id": "almeria",
+      "name": "Almería",
+      "coverage": "Red publicada por el Consorcio de Almería. Cobertura metropolitana parcial; no incluye todos los autobuses urbanos ni operadores de la provincia.",
+      "nightRoutes": [],
+      "declaredWithoutJourneys": []
+    },
+    {
+      "id": "jaen",
+      "name": "Jaén",
+      "coverage": "Consorcio de Jaén y Búho urbano de Alsa. El Búho incluye paradas y horarios; la fuente no publica su trazado. No incluye el resto de los autobuses urbanos ni todos los operadores de la provincia.",
+      "nightRoutes": [
+        {
+          "id": "jaen-buho:35360",
+          "name": "BÚHO",
+          "feed": "jaen-buho",
+          "stops": 60,
+          "scheduledTrips": 6,
+          "mappedDirections": 0,
+          "directions": 1,
+          "services": [
+            {
+              "id": "jaen-buho:000002030003536000000001",
+              "dates": [
+                "20260101",
+                "20260106",
+                "20260228",
+                "20260402",
+                "20260403",
+                "20260501",
+                "20260611",
+                "20260815",
+                "20261012",
+                "20261101",
+                "20261102",
+                "20261207",
+                "20261208",
+                "20261225",
+                "20270101",
+                "20270106",
+                "20270301",
+                "20270325",
+                "20270326",
+                "20270501",
+                "20270816",
+                "20271012",
+                "20271101",
+                "20271206",
+                "20271208",
+                "20271225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20260101",
+                "20280101",
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "jaen-buho:000002030003536000000002",
+              "dates": [
+                "20260101",
+                "20260106",
+                "20260228",
+                "20260402",
+                "20260403",
+                "20260501",
+                "20260611",
+                "20260815",
+                "20261012",
+                "20261101",
+                "20261102",
+                "20261207",
+                "20261208",
+                "20261225",
+                "20270101",
+                "20270106",
+                "20270301",
+                "20270325",
+                "20270326",
+                "20270501",
+                "20270816",
+                "20271012",
+                "20271101",
+                "20271206",
+                "20271208",
+                "20271225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20260101",
+                "20280101",
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "jaen-buho:000002030003536000000003",
+              "dates": [
+                "20260101",
+                "20260106",
+                "20260228",
+                "20260402",
+                "20260403",
+                "20260501",
+                "20260611",
+                "20260815",
+                "20261012",
+                "20261102",
+                "20261207",
+                "20261208",
+                "20261225",
+                "20270101",
+                "20270106",
+                "20270301",
+                "20270325",
+                "20270326",
+                "20270501",
+                "20270816",
+                "20271012",
+                "20271101",
+                "20271206",
+                "20271208",
+                "20271225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20260101",
+                "20280101",
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "id": "jaen-buho:000002030003536000000004",
+              "dates": [
+                "20260101",
+                "20260106",
+                "20260228",
+                "20260402",
+                "20260403",
+                "20260501",
+                "20260611",
+                "20260815",
+                "20261012",
+                "20261102",
+                "20261207",
+                "20261208",
+                "20261225",
+                "20270101",
+                "20270106",
+                "20270301",
+                "20270325",
+                "20270326",
+                "20270501",
+                "20270816",
+                "20271012",
+                "20271101",
+                "20271206",
+                "20271208",
+                "20271225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20260101",
+                "20280101",
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "id": "jaen-buho:000002030003536000000005",
+              "dates": [
+                "20260101",
+                "20260106",
+                "20260228",
+                "20260402",
+                "20260403",
+                "20260501",
+                "20260611",
+                "20260815",
+                "20261012",
+                "20261102",
+                "20261207",
+                "20261208",
+                "20261225",
+                "20270101",
+                "20270106",
+                "20270301",
+                "20270325",
+                "20270326",
+                "20270501",
+                "20270816",
+                "20271012",
+                "20271101",
+                "20271206",
+                "20271208",
+                "20271225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20260101",
+                "20280101",
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "id": "jaen-buho:000002030003536000000006",
+              "dates": [
+                "20260101",
+                "20260106",
+                "20260228",
+                "20260402",
+                "20260403",
+                "20260501",
+                "20260611",
+                "20260815",
+                "20261012",
+                "20261102",
+                "20261207",
+                "20261208",
+                "20261225",
+                "20270101",
+                "20270106",
+                "20270301",
+                "20270325",
+                "20270326",
+                "20270501",
+                "20270816",
+                "20271012",
+                "20271101",
+                "20271206",
+                "20271208",
+                "20271225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20260101",
+                "20280101",
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1
+              ]
+            }
+          ],
+          "source": "https://files.mobilitydatabase.org/mdb-2825/mdb-2825-202610060132/mdb-2825-202610060132.zip"
+        }
+      ],
+      "declaredWithoutJourneys": []
+    },
+    {
+      "id": "cordoba",
+      "name": "Córdoba",
+      "coverage": "Red publicada por el Consorcio de Córdoba. Cobertura metropolitana parcial; no incluye todos los autobuses urbanos ni operadores de la provincia.",
+      "nightRoutes": [],
+      "declaredWithoutJourneys": []
+    },
+    {
+      "id": "huelva",
+      "name": "Huelva",
+      "coverage": "Red publicada por el Consorcio de Huelva. Cobertura metropolitana parcial; no incluye todos los autobuses urbanos ni operadores de la provincia.",
+      "nightRoutes": [],
+      "declaredWithoutJourneys": []
+    },
+    {
+      "id": "bilbao",
+      "name": "Bilbao",
+      "coverage": "Euskotren, Metro Bilbao y Bilbobus, incluidos los Gautxori. Metro Bilbao agrupa L1/L2 en una sola ruta. Cobertura parcial; no incluye Bizkaibus ni todos los operadores. La E1 conecta Bilbao y Donostia.",
+      "nightRoutes": [
+        {
+          "id": "bilbobus:41",
+          "name": "G1",
+          "feed": "bilbobus",
+          "stops": 23,
+          "scheduledTrips": 50,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "bilbobus:24-61",
+              "dates": [],
+              "removed": [
+                "20261225",
+                "20270101",
+                "20270326"
+              ],
+              "calendar": [
+                "20260901",
+                "20270630",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "bilbobus:24-62",
+              "dates": [],
+              "removed": [
+                "20270501"
+              ],
+              "calendar": [
+                "20260901",
+                "20270630",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            }
+          ],
+          "source": "https://www.bilbao.eus/opendata/datos/bilbobus-gtfs"
+        },
+        {
+          "id": "bilbobus:42",
+          "name": "G2",
+          "feed": "bilbobus",
+          "stops": 27,
+          "scheduledTrips": 46,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "bilbobus:24-61",
+              "dates": [],
+              "removed": [
+                "20261225",
+                "20270101",
+                "20270326"
+              ],
+              "calendar": [
+                "20260901",
+                "20270630",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "bilbobus:24-62",
+              "dates": [],
+              "removed": [
+                "20270501"
+              ],
+              "calendar": [
+                "20260901",
+                "20270630",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            }
+          ],
+          "source": "https://www.bilbao.eus/opendata/datos/bilbobus-gtfs"
+        },
+        {
+          "id": "bilbobus:43",
+          "name": "G3",
+          "feed": "bilbobus",
+          "stops": 47,
+          "scheduledTrips": 51,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "bilbobus:24-61",
+              "dates": [],
+              "removed": [
+                "20261225",
+                "20270101",
+                "20270326"
+              ],
+              "calendar": [
+                "20260901",
+                "20270630",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "bilbobus:24-62",
+              "dates": [],
+              "removed": [
+                "20270501"
+              ],
+              "calendar": [
+                "20260901",
+                "20270630",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            }
+          ],
+          "source": "https://www.bilbao.eus/opendata/datos/bilbobus-gtfs"
+        },
+        {
+          "id": "bilbobus:44",
+          "name": "G4",
+          "feed": "bilbobus",
+          "stops": 25,
+          "scheduledTrips": 44,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "bilbobus:24-61",
+              "dates": [],
+              "removed": [
+                "20261225",
+                "20270101",
+                "20270326"
+              ],
+              "calendar": [
+                "20260901",
+                "20270630",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "bilbobus:24-62",
+              "dates": [],
+              "removed": [
+                "20270501"
+              ],
+              "calendar": [
+                "20260901",
+                "20270630",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            }
+          ],
+          "source": "https://www.bilbao.eus/opendata/datos/bilbobus-gtfs"
+        },
+        {
+          "id": "bilbobus:45",
+          "name": "G5",
+          "feed": "bilbobus",
+          "stops": 19,
+          "scheduledTrips": 48,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "bilbobus:24-61",
+              "dates": [],
+              "removed": [
+                "20261225",
+                "20270101",
+                "20270326"
+              ],
+              "calendar": [
+                "20260901",
+                "20270630",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "bilbobus:24-62",
+              "dates": [],
+              "removed": [
+                "20270501"
+              ],
+              "calendar": [
+                "20260901",
+                "20270630",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            }
+          ],
+          "source": "https://www.bilbao.eus/opendata/datos/bilbobus-gtfs"
+        },
+        {
+          "id": "bilbobus:46",
+          "name": "G6",
+          "feed": "bilbobus",
+          "stops": 32,
+          "scheduledTrips": 50,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "bilbobus:24-61",
+              "dates": [],
+              "removed": [
+                "20261225",
+                "20270101",
+                "20270326"
+              ],
+              "calendar": [
+                "20260901",
+                "20270630",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "bilbobus:24-62",
+              "dates": [],
+              "removed": [
+                "20270501"
+              ],
+              "calendar": [
+                "20260901",
+                "20270630",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            }
+          ],
+          "source": "https://www.bilbao.eus/opendata/datos/bilbobus-gtfs"
+        },
+        {
+          "id": "bilbobus:47",
+          "name": "G7",
+          "feed": "bilbobus",
+          "stops": 25,
+          "scheduledTrips": 52,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "bilbobus:24-61",
+              "dates": [],
+              "removed": [
+                "20261225",
+                "20270101",
+                "20270326"
+              ],
+              "calendar": [
+                "20260901",
+                "20270630",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "bilbobus:24-62",
+              "dates": [],
+              "removed": [
+                "20270501"
+              ],
+              "calendar": [
+                "20260901",
+                "20270630",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            }
+          ],
+          "source": "https://www.bilbao.eus/opendata/datos/bilbobus-gtfs"
+        },
+        {
+          "id": "bilbobus:49",
+          "name": "G8",
+          "feed": "bilbobus",
+          "stops": 33,
+          "scheduledTrips": 51,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "bilbobus:24-61",
+              "dates": [],
+              "removed": [
+                "20261225",
+                "20270101",
+                "20270326"
+              ],
+              "calendar": [
+                "20260901",
+                "20270630",
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ]
+            },
+            {
+              "id": "bilbobus:24-62",
+              "dates": [],
+              "removed": [
+                "20270501"
+              ],
+              "calendar": [
+                "20260901",
+                "20270630",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            }
+          ],
+          "source": "https://www.bilbao.eus/opendata/datos/bilbobus-gtfs"
+        }
+      ],
+      "declaredWithoutJourneys": []
+    },
+    {
+      "id": "donostia",
+      "name": "Donostia / San Sebastián",
+      "coverage": "Euskotren y Dbus, incluidos los servicios nocturnos Búho. Cobertura parcial; no incluye todos los operadores. La E1 conecta Bilbao y Donostia.",
+      "nightRoutes": [
+        {
+          "id": "dbus:110",
+          "name": "B10",
+          "feed": "dbus",
+          "stops": 54,
+          "scheduledTrips": 35,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "dbus:1808",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260929",
+                "20261226",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "dbus:1826",
+              "dates": [
+                "20261012",
+                "20261208"
+              ],
+              "removed": [
+                "20261018",
+                "20261025",
+                "20261101",
+                "20261108",
+                "20261115",
+                "20261122",
+                "20261129",
+                "20261206"
+              ],
+              "calendar": [
+                "20261011",
+                "20261208",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "dbus:1830",
+              "dates": [
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261225",
+                "20261225",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "dbus:1831",
+              "dates": [],
+              "removed": [
+                "20261011"
+              ],
+              "calendar": [
+                "20260929",
+                "20261220",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            }
+          ],
+          "source": "https://opendata.euskadi.eus/transport/moveuskadi/dbus/gtfs_dbus.zip"
+        },
+        {
+          "id": "dbus:101",
+          "name": "B1",
+          "feed": "dbus",
+          "stops": 38,
+          "scheduledTrips": 37,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "dbus:1808",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260929",
+                "20261226",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "dbus:1826",
+              "dates": [
+                "20261012",
+                "20261208"
+              ],
+              "removed": [
+                "20261018",
+                "20261025",
+                "20261101",
+                "20261108",
+                "20261115",
+                "20261122",
+                "20261129",
+                "20261206"
+              ],
+              "calendar": [
+                "20261011",
+                "20261208",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "dbus:1830",
+              "dates": [
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261225",
+                "20261225",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "dbus:1831",
+              "dates": [],
+              "removed": [
+                "20261011"
+              ],
+              "calendar": [
+                "20260929",
+                "20261220",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            }
+          ],
+          "source": "https://opendata.euskadi.eus/transport/moveuskadi/dbus/gtfs_dbus.zip"
+        },
+        {
+          "id": "dbus:102",
+          "name": "B2",
+          "feed": "dbus",
+          "stops": 29,
+          "scheduledTrips": 38,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "dbus:1808",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260929",
+                "20261226",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "dbus:1826",
+              "dates": [
+                "20261012",
+                "20261208"
+              ],
+              "removed": [
+                "20261018",
+                "20261025",
+                "20261101",
+                "20261108",
+                "20261115",
+                "20261122",
+                "20261129",
+                "20261206"
+              ],
+              "calendar": [
+                "20261011",
+                "20261208",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "dbus:1830",
+              "dates": [
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261225",
+                "20261225",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "dbus:1831",
+              "dates": [],
+              "removed": [
+                "20261011"
+              ],
+              "calendar": [
+                "20260929",
+                "20261220",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            }
+          ],
+          "source": "https://opendata.euskadi.eus/transport/moveuskadi/dbus/gtfs_dbus.zip"
+        },
+        {
+          "id": "dbus:103",
+          "name": "B3",
+          "feed": "dbus",
+          "stops": 36,
+          "scheduledTrips": 46,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "dbus:1808",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260929",
+                "20261226",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "dbus:1826",
+              "dates": [
+                "20261012",
+                "20261208"
+              ],
+              "removed": [
+                "20261018",
+                "20261025",
+                "20261101",
+                "20261108",
+                "20261115",
+                "20261122",
+                "20261129",
+                "20261206"
+              ],
+              "calendar": [
+                "20261011",
+                "20261208",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "dbus:1830",
+              "dates": [
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261225",
+                "20261225",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "dbus:1831",
+              "dates": [],
+              "removed": [
+                "20261011"
+              ],
+              "calendar": [
+                "20260929",
+                "20261220",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            }
+          ],
+          "source": "https://opendata.euskadi.eus/transport/moveuskadi/dbus/gtfs_dbus.zip"
+        },
+        {
+          "id": "dbus:104",
+          "name": "B4",
+          "feed": "dbus",
+          "stops": 38,
+          "scheduledTrips": 39,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "dbus:1808",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260929",
+                "20261226",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "dbus:1826",
+              "dates": [
+                "20261012",
+                "20261208"
+              ],
+              "removed": [
+                "20261018",
+                "20261025",
+                "20261101",
+                "20261108",
+                "20261115",
+                "20261122",
+                "20261129",
+                "20261206"
+              ],
+              "calendar": [
+                "20261011",
+                "20261208",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "dbus:1830",
+              "dates": [
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261225",
+                "20261225",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "dbus:1831",
+              "dates": [],
+              "removed": [
+                "20261011"
+              ],
+              "calendar": [
+                "20260929",
+                "20261220",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            }
+          ],
+          "source": "https://opendata.euskadi.eus/transport/moveuskadi/dbus/gtfs_dbus.zip"
+        },
+        {
+          "id": "dbus:106",
+          "name": "B6",
+          "feed": "dbus",
+          "stops": 47,
+          "scheduledTrips": 37,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "dbus:1808",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260929",
+                "20261226",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "dbus:1826",
+              "dates": [
+                "20261012",
+                "20261208"
+              ],
+              "removed": [
+                "20261018",
+                "20261025",
+                "20261101",
+                "20261108",
+                "20261115",
+                "20261122",
+                "20261129",
+                "20261206"
+              ],
+              "calendar": [
+                "20261011",
+                "20261208",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "dbus:1830",
+              "dates": [
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261225",
+                "20261225",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "dbus:1831",
+              "dates": [],
+              "removed": [
+                "20261011"
+              ],
+              "calendar": [
+                "20260929",
+                "20261220",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            }
+          ],
+          "source": "https://opendata.euskadi.eus/transport/moveuskadi/dbus/gtfs_dbus.zip"
+        },
+        {
+          "id": "dbus:108",
+          "name": "B8",
+          "feed": "dbus",
+          "stops": 36,
+          "scheduledTrips": 35,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "dbus:1808",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260929",
+                "20261226",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "dbus:1826",
+              "dates": [
+                "20261012",
+                "20261208"
+              ],
+              "removed": [
+                "20261018",
+                "20261025",
+                "20261101",
+                "20261108",
+                "20261115",
+                "20261122",
+                "20261129",
+                "20261206"
+              ],
+              "calendar": [
+                "20261011",
+                "20261208",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "dbus:1830",
+              "dates": [
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261225",
+                "20261225",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "dbus:1831",
+              "dates": [],
+              "removed": [
+                "20261011"
+              ],
+              "calendar": [
+                "20260929",
+                "20261220",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            }
+          ],
+          "source": "https://opendata.euskadi.eus/transport/moveuskadi/dbus/gtfs_dbus.zip"
+        },
+        {
+          "id": "dbus:109",
+          "name": "B9",
+          "feed": "dbus",
+          "stops": 20,
+          "scheduledTrips": 36,
+          "mappedDirections": 2,
+          "directions": 2,
+          "services": [
+            {
+              "id": "dbus:1808",
+              "dates": [],
+              "removed": [],
+              "calendar": [
+                "20260929",
+                "20261226",
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "id": "dbus:1826",
+              "dates": [
+                "20261012",
+                "20261208"
+              ],
+              "removed": [
+                "20261018",
+                "20261025",
+                "20261101",
+                "20261108",
+                "20261115",
+                "20261122",
+                "20261129",
+                "20261206"
+              ],
+              "calendar": [
+                "20261011",
+                "20261208",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "dbus:1830",
+              "dates": [
+                "20261225"
+              ],
+              "removed": [],
+              "calendar": [
+                "20261225",
+                "20261225",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "id": "dbus:1831",
+              "dates": [],
+              "removed": [
+                "20261011"
+              ],
+              "calendar": [
+                "20260929",
+                "20261220",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            }
+          ],
+          "source": "https://opendata.euskadi.eus/transport/moveuskadi/dbus/gtfs_dbus.zip"
+        }
+      ],
+      "declaredWithoutJourneys": [
+        {
+          "id": "dbus:111",
+          "name": "B11",
+          "feed": "dbus"
+        },
+        {
+          "id": "dbus:112",
+          "name": "B12",
+          "feed": "dbus"
+        },
+        {
+          "id": "dbus:113",
+          "name": "B13",
+          "feed": "dbus"
+        },
+        {
+          "id": "dbus:114",
+          "name": "B14",
+          "feed": "dbus"
+        },
+        {
+          "id": "dbus:105",
+          "name": "B5",
+          "feed": "dbus"
+        },
+        {
+          "id": "dbus:107",
+          "name": "B7",
+          "feed": "dbus"
+        }
+      ]
+    },
+    {
+      "id": "vitoria",
+      "name": "Vitoria-Gasteiz",
+      "coverage": "Tranvía de Euskotren y autobuses de TUVISA, incluidos los Gautxori y servicios nocturnos especiales según su calendario.",
+      "nightRoutes": [
+        {
+          "id": "tuvisa:G1",
+          "name": "G1",
+          "feed": "tuvisa",
+          "stops": 15,
+          "scheduledTrips": 11,
+          "mappedDirections": 1,
+          "directions": 1,
+          "services": [
+            {
+              "id": "tuvisa:Gautxori",
+              "dates": [
+                "20261009",
+                "20261010",
+                "20261011",
+                "20261016",
+                "20261017",
+                "20261023",
+                "20261024",
+                "20261030",
+                "20261031"
+              ],
+              "removed": [],
+              "calendar": null
+            }
+          ],
+          "source": "https://opendata.euskadi.eus/transport/moveuskadi/tuvisa/gtfs_tuvisa.zip"
+        },
+        {
+          "id": "tuvisa:G2",
+          "name": "G2",
+          "feed": "tuvisa",
+          "stops": 23,
+          "scheduledTrips": 7,
+          "mappedDirections": 1,
+          "directions": 1,
+          "services": [
+            {
+              "id": "tuvisa:Gautxori",
+              "dates": [
+                "20261009",
+                "20261010",
+                "20261011",
+                "20261016",
+                "20261017",
+                "20261023",
+                "20261024",
+                "20261030",
+                "20261031"
+              ],
+              "removed": [],
+              "calendar": null
+            }
+          ],
+          "source": "https://opendata.euskadi.eus/transport/moveuskadi/tuvisa/gtfs_tuvisa.zip"
+        },
+        {
+          "id": "tuvisa:G3",
+          "name": "G3",
+          "feed": "tuvisa",
+          "stops": 15,
+          "scheduledTrips": 11,
+          "mappedDirections": 1,
+          "directions": 1,
+          "services": [
+            {
+              "id": "tuvisa:Gautxori",
+              "dates": [
+                "20261009",
+                "20261010",
+                "20261011",
+                "20261016",
+                "20261017",
+                "20261023",
+                "20261024",
+                "20261030",
+                "20261031"
+              ],
+              "removed": [],
+              "calendar": null
+            }
+          ],
+          "source": "https://opendata.euskadi.eus/transport/moveuskadi/tuvisa/gtfs_tuvisa.zip"
+        },
+        {
+          "id": "tuvisa:G4",
+          "name": "G4",
+          "feed": "tuvisa",
+          "stops": 19,
+          "scheduledTrips": 11,
+          "mappedDirections": 1,
+          "directions": 1,
+          "services": [
+            {
+              "id": "tuvisa:Gautxori",
+              "dates": [
+                "20261009",
+                "20261010",
+                "20261011",
+                "20261016",
+                "20261017",
+                "20261023",
+                "20261024",
+                "20261030",
+                "20261031"
+              ],
+              "removed": [],
+              "calendar": null
+            }
+          ],
+          "source": "https://opendata.euskadi.eus/transport/moveuskadi/tuvisa/gtfs_tuvisa.zip"
+        },
+        {
+          "id": "tuvisa:G6",
+          "name": "G6",
+          "feed": "tuvisa",
+          "stops": 12,
+          "scheduledTrips": 7,
+          "mappedDirections": 1,
+          "directions": 1,
+          "services": [
+            {
+              "id": "tuvisa:Gautxori",
+              "dates": [
+                "20261009",
+                "20261010",
+                "20261011",
+                "20261016",
+                "20261017",
+                "20261023",
+                "20261024",
+                "20261030",
+                "20261031"
+              ],
+              "removed": [],
+              "calendar": null
+            }
+          ],
+          "source": "https://opendata.euskadi.eus/transport/moveuskadi/tuvisa/gtfs_tuvisa.zip"
+        }
+      ],
+      "declaredWithoutJourneys": [
+        {
+          "id": "tuvisa:FN",
+          "name": "FN",
+          "feed": "tuvisa"
+        },
+        {
+          "id": "tuvisa:N1",
+          "name": "N1",
+          "feed": "tuvisa"
+        },
+        {
+          "id": "tuvisa:N2",
+          "name": "N2",
+          "feed": "tuvisa"
+        },
+        {
+          "id": "tuvisa:N3",
+          "name": "N3",
+          "feed": "tuvisa"
+        },
+        {
+          "id": "tuvisa:N4",
+          "name": "N4",
+          "feed": "tuvisa"
+        }
+      ]
+    },
+    {
+      "id": "espana",
+      "name": "España · Renfe",
+      "coverage": "Renfe: AVE, Larga y Media Distancia, Cercanías y Rodalies. No incluye todos los operadores ferroviarios ni enlaces puerta a puerta entre vistas.",
+      "nightRoutes": [],
+      "declaredWithoutJourneys": []
+    }
+  ]
+}

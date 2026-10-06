@@ -14,24 +14,28 @@ También puedes cambiarlo en GitHub → Settings → Secrets and variables → A
 
 | Vista           | Operadores                                                                                         |
 | --------------- | -------------------------------------------------------------------------------------------------- |
-| Barcelona       | TMB, FGC y TRAM (T1–T6), incluidas sus líneas regionales publicadas                                |
+| Barcelona       | TMB, FGC, TRAM (T1–T6) y AMB, incluido Nitbus                                                      |
 | Madrid          | Metro, EMT y Metro Ligero                                                                          |
 | Sevilla         | TUSSAM, Metro y Consorcio del Área de Sevilla                                                      |
 | Zaragoza        | Avanza urbana y tranvía                                                                            |
 | Andalucía       | Consorcios de Bahía de Cádiz, Granada, Málaga, Campo de Gibraltar, Almería, Jaén, Córdoba y Huelva |
-| Bilbao          | Metro Bilbao, Euskotren, tranvía y funicular de Larreineta                                         |
-| Donostia        | Euskotren E1 y E2                                                                                  |
-| Vitoria-Gasteiz | Tranvía Euskotren TG1 y TG2                                                                        |
+| Bilbao          | Metro Bilbao, Euskotren, tranvía, funicular de Larreineta y Bilbobus                               |
+| Donostia        | Euskotren E1 y E2, Dbus y Búhos                                                                    |
+| Vitoria-Gasteiz | Tranvía Euskotren TG1/TG2 y autobuses TUVISA                                                       |
 | España · Renfe  | AVE, Larga y Media Distancia, Cercanías y Rodalies                                                 |
 
-Dieciséis vistas: siete ciudades, ocho áreas adicionales de consorcios andaluces y la red nacional de Renfe. Las áreas adicionales muestran los servicios del consorcio, no todos los autobuses urbanos de cada ciudad. No cubre todavía todos los operadores de España. Cercanías se explora en la vista nacional; no se planifican enlaces entre vistas. Las líneas GTFS pueden representar variantes de un servicio, no números comerciales únicos. Los datos se cargan al seleccionar cada vista. Puedes compartirla con `?city=madrid`, `sevilla`, `zaragoza`, `barcelona` `bilbao`, `donostia`, `vitoria` o `espana`.
+Dieciséis vistas: siete ciudades, ocho áreas adicionales de consorcios andaluces y la red nacional de Renfe. Las áreas adicionales muestran los servicios del consorcio; Málaga y Granada añaden sus redes urbanas y Jaén añade el Búho. No incluyen todos los operadores de cada ciudad. No cubre todavía todos los operadores de España. Cercanías se explora en la vista nacional; no se planifican enlaces entre vistas. Las líneas GTFS pueden representar variantes de un servicio, no números comerciales únicos. Los datos se cargan al seleccionar cada vista. Puedes compartirla con `?city=madrid`, `sevilla`, `zaragoza`, `barcelona` `bilbao`, `donostia`, `vitoria` o `espana`.
 
 **El calendario público consultado de Metro de Madrid termina el 27 de mayo de 2026, y el de Avanza Zaragoza el 5 de octubre de 2026.** Se conservan sus redes y horarios archivados con un aviso visible. No se extienden las fechas. El resto de operadores tiene calendarios independientes. «Fuentes» muestra procedencia, licencia, versión, vigencia y SHA-256 por operador.
+
+## Autobuses nocturnos
+
+«Explorar → Nocturnos» filtra el mapa y la vista lineal. Filtros separa los nocturnos por operador y línea. Se respetan calendarios, excepciones y la continuidad después de medianoche; no todas las líneas circulan todas las noches. [Fuentes, cobertura y revisión](docs/night-services-review.md). Las fuentes se renuevan diariamente; las posiciones por horario siguen siendo estimaciones.
 
 ## Funciones
 
 - Mapa a pantalla completa, menú lateral contraído y paneles que se despliegan a la derecha. En móvil, hamburguesa. Sin cabecera ni tarjetas promocionales. Paneles y botones con esquinas rectas.
-- Filtros jerárquicos independientes de recorridos, paradas y vehículos: todos, tipo/operador y línea. Botón «Solo» para aislar una línea; estados parciales y reinicio. Historias y movimiento de autobuses apagados al iniciar.
+- Filtros jerárquicos independientes de recorridos, paradas y vehículos: todos, tipo/operador y línea. Botón «Solo» para aislar una línea; estados parciales y reinicio. Historias y movimiento de autobuses diurnos apagados al iniciar; los nocturnos conservan el movimiento según su calendario.
 - Vista lineal con líneas ordenadas, sentidos paralelos, ramales, paradas y vehículos estimados seleccionables. Una barra horizontal por línea, arrastre con ratón y desplazamiento táctil. Comparte los filtros de recorridos y vehículos con el mapa. Cada recorrido mantiene todas sus paradas y transbordos, incluso al añadir líneas después de usar «Solo». «Paradas en el mapa» controla únicamente los puntos del mapa. Los diagramas se cargan al entrar en pantalla.
 - Fichas de estación con líneas y destinos, logotipos agrupados una vez en el encabezado, dos llegadas por sentido y cuenta atrás en segundos. Fichas de vehículos con próxima parada, destino e identificador del viaje. Cerrar la ficha recupera la cámara, selección y desplazamiento previos.
 - Fichas navegables: los distintivos de línea abren el recorrido completo, sus paradas abren las llegadas y cada servicio de horario abre su ficha y localización estimada cuando circula. «Volver» recorre las fichas consultadas. «Copiar enlace» comparte una parada, línea o servicio mediante identificadores publicados; los enlaces de servicio incluyen la fecha, hora y salida concreta para distinguir frecuencias y viajes después de medianoche. El número real del autobús solo se muestra si iBus lo facilita; no se asocia un vehículo real a una estimación GTFS por coincidencia de línea. Si no hay posición publicada, se indica.
@@ -106,7 +110,7 @@ pnpm preview
 
 `python tools/import_networks.py` renueva todas las vistas; `--city madrid` solo una; `--local` normaliza ZIP de caché. Python usa la biblioteca estándar. Cachés y credenciales están excluidas de Git.
 
-Actions renueva, valida, compila y publica con cada subida a `main`, los lunes a las 04:23 UTC y manualmente. Si una ciudad falla conserva su copia publicada. No genera commits automáticos. Descargar hoy un archivo no garantiza que su calendario esté vigente: se muestran sus fechas reales.
+Actions renueva, valida, compila y publica con cada subida a `main`, cada día a las 04:23 UTC y manualmente. Si una ciudad falla conserva su copia publicada. No genera commits automáticos. Descargar hoy un archivo no garantiza que su calendario esté vigente: se muestran sus fechas reales.
 
 La incorporación de TRAM incluye la T4 hasta Verdaguer, Sicília y Monumental. Euskadi añade las redes publicadas, no toda la cobertura de autobuses urbanos. Metro Bilbao agrupa L1/L2 en una ruta GTFS del operador: no se inventan números de línea ausentes. [Investigación de redes y APIs](docs/network-research.md).
 

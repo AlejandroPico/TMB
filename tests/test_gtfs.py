@@ -1,10 +1,11 @@
 import io
 import pathlib
+import json
 import sys
 import unittest
 import zipfile
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / 'tools'))
-from gtfs import parse_gtfs, merge_networks
+from gtfs import parse_gtfs, merge_networks, is_night_route
 
 def archive():
     raw = io.BytesIO()
@@ -20,6 +21,34 @@ def archive():
     return raw.getvalue()
 
 class ImportTests(unittest.TestCase):
+    def test_night_brands_are_scoped_to_the_operator(self):
+        config = json.loads((pathlib.Path(__file__).resolve().parents[1] / 'tools/providers.json').read_text(encoding='utf-8'))
+        feeds = {f['id']: f for f in config['feeds']}
+        for fid, name, expected in [('amb','N7',True),('emt','NC1',True),('emt','N32',True),
+                                    ('tussam','A8',True),('tussam','EA',False),
+                                    ('avanza-zaragoza','N7',True),('bilbobus','G8',True),
+                                    ('dbus','B14',True),('tuvisa','B',False),
+                                    ('granada-urbano','111',True),('granada-urbano','N1',False)]:
+            with self.subTest(feed=fid, name=name):
+                self.assertEqual(is_night_route({'route_short_name':name}, feeds[fid], 'bus'), expected)
+        self.assertFalse(is_night_route({'route_short_name':'N1'}, {}, 'bus'))
+        self.assertFalse(is_night_route({'route_short_name':'N7'}, feeds['amb'], 'rail'))
+        self.assertTrue(is_night_route({'route_long_name':'Servicio Búho'}, {}, 'bus'))
+        self.assertTrue(is_night_route({'route_desc':'Servicio nocturno'}, {}, 'bus'))
+
+    def test_import_preserves_after_midnight_times_and_night_metadata(self):
+        raw = io.BytesIO()
+        with zipfile.ZipFile(io.BytesIO(archive())) as original, zipfile.ZipFile(raw,'w') as output:
+            for name in original.namelist():
+                content = original.read(name).decode('utf-8')
+                if name.endswith('stop_times.txt'):
+                    content = content.replace('10:00:00','23:55:00').replace('10:10:00','24:05:00')
+                output.writestr(name,content)
+        n,s = parse_gtfs(raw.getvalue(),self.feed(nightRoutePattern='1'),'https://example.org')
+        self.assertTrue(n['routes'][0]['night'])
+        self.assertEqual(s['trips'][0][-1],23*3600+55*60)
+        self.assertEqual(s['patterns'][0][1][-1],600)
+
     def feed(self, id='one', **extra):
         return {'id':id,'name':id,'website':'https://example.org','license':'https://example.org/license','agency':'selected',**extra}
     def test_filter_interpolation_restrictions_and_missing_shapes(self):

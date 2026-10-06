@@ -451,6 +451,9 @@ export class CityMap {
     motionIds = this.network.routes.map((_, i) => i),
   }) {
     if (!this.ready) return;
+    // Night routes and stops are already restricted by their route/stop IDs.
+    // GeoJSON uses the transport group "bus" for these services too.
+    if (mode === "night") mode = "bus";
     const routeFilter = [
       "all",
       ["in", ["get", "index"], ["literal", routeIds]],

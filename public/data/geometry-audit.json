@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-06T18:27:13.058437+00:00",
+  "generatedAt": "2026-10-06T21:23:29.154292+00:00",
   "policy": "No stop-to-stop fallback. Missing shapes are empty and are neither drawn nor animated. Rail-network alignments are inferred infrastructure paths, not operator-confirmed service itineraries.",
   "cities": [
     {
@@ -15,7 +15,7 @@
     },
     {
       "id": "barcelona",
-      "shapes": 352,
+      "shapes": 1079,
       "unavailableShapes": 0,
       "scheduledTripsByGeometry": {
         "tmb": {
@@ -29,12 +29,15 @@
         },
         "tram-tbs": {
           "gtfs": 3203
+        },
+        "amb": {
+          "gtfs": 28869
         }
       }
     },
     {
       "id": "bilbao",
-      "shapes": 87,
+      "shapes": 233,
       "unavailableShapes": 0,
       "scheduledTripsByGeometry": {
         "euskotren-bilbao": {
@@ -42,6 +45,9 @@
         },
         "metro-bilbao": {
           "gtfs": 6184
+        },
+        "bilbobus": {
+          "gtfs": 15009
         }
       }
     },
@@ -67,11 +73,14 @@
     },
     {
       "id": "donostia",
-      "shapes": 51,
+      "shapes": 176,
       "unavailableShapes": 0,
       "scheduledTripsByGeometry": {
         "euskotren-donostia": {
           "gtfs": 3232
+        },
+        "dbus": {
+          "gtfs": 23309
         }
       }
     },
@@ -102,11 +111,14 @@
     },
     {
       "id": "granada",
-      "shapes": 137,
+      "shapes": 206,
       "unavailableShapes": 0,
       "scheduledTripsByGeometry": {
         "ctan-granada": {
           "gtfs": 3155
+        },
+        "granada-urbano": {
+          "gtfs": 11134
         }
       }
     },
@@ -122,11 +134,14 @@
     },
     {
       "id": "jaen",
-      "shapes": 75,
-      "unavailableShapes": 0,
+      "shapes": 76,
+      "unavailableShapes": 1,
       "scheduledTripsByGeometry": {
         "ctan-jaen": {
           "gtfs": 465
+        },
+        "jaen-buho": {
+          "missing": 6
         }
       }
     },
@@ -148,11 +163,14 @@
     },
     {
       "id": "malaga",
-      "shapes": 182,
+      "shapes": 273,
       "unavailableShapes": 0,
       "scheduledTripsByGeometry": {
         "ctan-malaga": {
           "gtfs": 3084
+        },
+        "emt-malaga": {
+          "gtfs": 21618
         }
       }
     },
@@ -174,11 +192,14 @@
     },
     {
       "id": "vitoria",
-      "shapes": 5,
+      "shapes": 103,
       "unavailableShapes": 0,
       "scheduledTripsByGeometry": {
         "euskotren-vitoria": {
           "gtfs": 529
+        },
+        "tuvisa": {
+          "gtfs": 4350
         }
       }
     },

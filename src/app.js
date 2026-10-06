@@ -388,6 +388,7 @@ function renderPanel() {
       ["all", "Todo"],
       ["rail", "Raíles"],
       ["bus", "Bus"],
+      ["night", "Nocturnos"],
     ]
       .map(
         ([id, label]) =>
@@ -395,8 +396,8 @@ function renderPanel() {
       )
       .join("")}</div>
     <label class="search-box">${icon("search")}<input id="search" placeholder="Línea o parada" value="${esc(query)}" aria-label="Buscar líneas y paradas"><kbd>/</kbd></label>
-    <div class="list-heading"><span>${query ? "RESULTADOS" : "LÍNEAS"}</span><button id="clear-route">${selectedRoute != null ? "Ver todas" : n.routes.length}</button></div>
-    <div class="network-list" id="network-list">${networkList()}</div>${coverageNotice()}`;
+    <div class="list-heading"><span>${query ? "RESULTADOS" : "LÍNEAS"}</span><button id="clear-route">${selectedRoute != null ? "Ver todas" : n.routes.filter((r) => r.stops.length && matchesTransport(r, mode)).length}</button></div>
+    ${mode === "night" ? '<p class="footnote">Líneas con servicio nocturno. Los vehículos aparecen cuando circulan según el calendario publicado; algunos servicios operan solo ciertas noches.</p>' : ""}<div class="network-list" id="network-list">${networkList()}</div>${coverageNotice()}`;
   }
   if (tab === "filters") {
     html =
@@ -526,7 +527,18 @@ function networkList() {
       (r) =>
         r.stops.length > 0 &&
         matchesTransport(r, mode) &&
-        (!q || normalize(r.name + " " + r.description).includes(q)),
+        (!q ||
+          normalize(
+            r.name +
+              " " +
+              r.description +
+              (r.night ? " nocturno búho nitbus gautxori" : ""),
+          ).includes(q)),
+    )
+    .sort(
+      (a, b) =>
+        Number(b.night) - Number(a.night) ||
+        a.name.localeCompare(b.name, "es", { numeric: true }),
     );
   let html = rs
     .slice(0, 150)
@@ -537,18 +549,28 @@ function networkList() {
             .split(/ - | \/ /)
             .slice(1)
             .join(" - ") || r.description,
-        )} · ${esc(r.operator)}</small></span><span class="route-size">${r.stops.length}<small>paradas</small></span></button>`,
+        )} · ${esc(r.operator)}${r.night ? " · Nocturno" : ""}</small></span><span class="route-size">${r.stops.length}<small>paradas</small></span></button>`,
     )
     .join("");
   if (rs.length > 150)
     html += `<p class="footnote">Mostrando 150 de ${rs.length} líneas. Busca un destino o número de línea para afinar.</p>`;
   if (q) {
+    const nightStops =
+      mode === "night"
+        ? new Set(
+            n.routes
+              .filter((r) => matchesTransport(r, mode))
+              .flatMap((r) => r.stops),
+          )
+        : null;
     const ss = n.stops
       .map((st, i) => ({ ...st, index: i }))
       .filter(
         (st) =>
           st.kind === 0 &&
-          matchesTransport(st, mode) &&
+          (nightStops
+            ? nightStops.has(st.index)
+            : matchesTransport(st, mode)) &&
           normalize(st.name + " " + st.code).includes(q),
       )
       .slice(0, 35);
@@ -556,7 +578,9 @@ function networkList() {
   }
   return (
     html ||
-    '<div class="no-results">No hay coincidencias. Prueba otro nombre o cambia el filtro.</div>'
+    (mode === "night" && !n.routes.some((r) => r.night && r.stops.length)
+      ? '<div class="no-results">No hay líneas identificadas como nocturnas en las fuentes importadas de esta ciudad. Consulta la cobertura en Fuentes.</div>'
+      : '<div class="no-results">No hay coincidencias. Prueba otro nombre o cambia el filtro.</div>')
   );
 }
 function bindList() {
@@ -583,7 +607,7 @@ function filterTree() {
     ]
       .map(
         ([layer, label]) =>
-          `<details class="filter-tree"><summary>${label}<small>${networkFilters.ids(layer).length} líneas</small></summary>${check(layer, all, "Todos", "all")}${groups.map((g) => `<details class="filter-group"><summary>${typeNames[g.type]}<small>${esc(g.operator)}</small></summary>${check(layer, g.ids, "Todo este grupo", g.key)}${g.ids.map((i) => `<div class="filter-line">${check(layer, [i], badge(n.routes[i]) + `<span>${esc(n.routes[i].description)}</span>`, "line:" + i)}<button data-only-line="${i}" title="Mostrar solo ${esc(n.routes[i].name)}" aria-label="Mostrar solo ${esc(n.routes[i].name)}">Solo</button></div>`).join("")}</details>`).join("")}</details>`,
+          `<details class="filter-tree"><summary>${label}<small>${networkFilters.ids(layer).length} líneas</small></summary>${check(layer, all, "Todos", "all")}${groups.map((g) => `<details class="filter-group"><summary>${g.night ? "Autobús nocturno" : typeNames[g.type]}<small>${esc(g.operator)}</small></summary>${check(layer, g.ids, "Todo este grupo", g.key)}${g.ids.map((i) => `<div class="filter-line">${check(layer, [i], badge(n.routes[i]) + `<span>${esc(n.routes[i].description)}</span>`, "line:" + i)}<button data-only-line="${i}" title="Mostrar solo ${esc(n.routes[i].name)}" aria-label="Mostrar solo ${esc(n.routes[i].name)}">Solo</button></div>`).join("")}</details>`).join("")}</details>`,
       )
       .join("") +
     '<p class="footnote">En la vista lineal, cada recorrido conserva todas sus paradas y transbordos. El filtro de paradas controla los puntos del mapa.</p>'
@@ -1281,7 +1305,7 @@ function showRoute(i) {
   );
   const d = displayDirections[0];
   showDetail(
-    `<div class="eyebrow">${esc(r.operator)} · ${esc(modeLabel(r.mode))}</div><div class="route-detail-title">${badge(r)}<h2>${esc(r.name)}</h2></div><p class="route-description">${esc(r.description)}</p>${r.directions.some((d) => n.shapeInfo[d.shape]?.kind === "rail-network") ? `<p class="footnote">Recorrido reconstruido sobre vías del IGN a través de las estaciones publicadas. El corredor se estima; Renfe no confirma en este archivo qué vías usa cada servicio.</p>` : ""}${r.directions.some((d) => d.approximate) ? `<p class="footnote">Trazado no disponible. Se conservan las paradas y los horarios, pero este recorrido no se dibuja ni se anima.</p>` : ""}<div class="direction-switch">${displayDirections.map((d, k) => `<button data-direction="${k}" class="${k === 0 ? "active" : ""}">Hacia ${esc(n.stops[d.stops.at(-1)]?.name || `sentido ${k + 1}`)}</button>`).join("")}</div><div class="line-stations" id="line-stations">${lineStations(d, r)}</div><a class="text-link" href="${esc(r.url)}" target="_blank" rel="noopener">Ver la fuente de la línea ${icon("arrow-up-right")}</a>`,
+    `<div class="eyebrow">${esc(r.operator)} · ${esc(modeLabel(r.mode))}${r.night ? " · Nocturno" : ""}</div><div class="route-detail-title">${badge(r)}<h2>${esc(r.name)}</h2></div><p class="route-description">${esc(r.description)}</p>${r.directions.some((d) => n.shapeInfo[d.shape]?.kind === "rail-network") ? `<p class="footnote">Recorrido reconstruido sobre vías del IGN a través de las estaciones publicadas. El corredor se estima; Renfe no confirma en este archivo qué vías usa cada servicio.</p>` : ""}${r.directions.some((d) => d.approximate) ? `<p class="footnote">Trazado no disponible. Se conservan las paradas y los horarios, pero este recorrido no se dibuja ni se anima.</p>` : ""}<div class="direction-switch">${displayDirections.map((d, k) => `<button data-direction="${k}" class="${k === 0 ? "active" : ""}">Hacia ${esc(n.stops[d.stops.at(-1)]?.name || `sentido ${k + 1}`)}</button>`).join("")}</div><div class="line-stations" id="line-stations">${lineStations(d, r)}</div><a class="text-link" href="${esc(r.url)}" target="_blank" rel="noopener">Ver la fuente de la línea ${icon("arrow-up-right")}</a>`,
   );
   attachTransitTools(r);
   bindDetailStops();
@@ -2036,7 +2060,7 @@ function drawMovement() {
     ? schematicVehicles()
     : lastFeatures.filter(
         (f) =>
-          (mode === "all" || f.properties.mode === mode) &&
+          matchesTransport(n.routes[f.properties.route], mode) &&
           (selectedRoute == null || f.properties.route === selectedRoute),
       );
   $("#moving-count").textContent =

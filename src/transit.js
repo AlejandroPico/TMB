@@ -29,6 +29,9 @@ export const transportGroup = (route) =>
     : transportMode(route);
 export const matchesTransport = (route, mode) =>
   mode === "all" ||
+  (mode === "night" &&
+    transportMode(route) === "bus" &&
+    route.night === true) ||
   transportMode(route) === mode ||
   (mode === "rail" && transportGroup(route) === "rail");
 export const clock = (t) =>

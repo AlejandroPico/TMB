@@ -5,6 +5,8 @@ import datetime
 import hashlib
 import io
 import json
+import re
+import unicodedata
 import zipfile
 
 
@@ -17,6 +19,16 @@ def transport_mode(value):
     if value == 7 or 1400 <= value < 1500: return 'funicular'
     if value == 4 or 1000 <= value < 1100: return 'ferry'
     return 'other'
+
+
+def is_night_route(route, feed, mode):
+    """Night brands are operator-specific: N also means Norte in Granada."""
+    if mode != 'bus': return False
+    name = route.get('route_short_name') or route.get('name', '')
+    text = ' '.join(str(route.get(k, '')) for k in ['route_short_name', 'route_long_name', 'route_desc', 'name', 'description'])
+    text = ''.join(c for c in unicodedata.normalize('NFD', text.casefold()) if not unicodedata.combining(c))
+    return bool(re.search(r'\b(?:nitbus|nocturn\w*|buho\w*|gautxori\w*)\b', text) or
+                (feed.get('nightRoutePattern') and re.fullmatch(feed['nightRoutePattern'], name, re.IGNORECASE)))
 
 
 def parse_gtfs(raw, feed, source):
@@ -64,7 +76,9 @@ def parse_gtfs(raw, feed, source):
         routes.append({'id': prefix + route['route_id'], 'sourceId': route['route_id'], 'feed': feed['id'],
                        'operator': feed['name'], 'name': route.get('route_short_name') or route.get('route_long_name') or route['route_id'],
                        'description': route.get('route_long_name') or '', 'type': number(route['route_type']), 'mode': mode,
+                       'night': is_night_route(route, feed, mode),
                        'color': '#' + color, 'url': route.get('route_url') or feed['website']})
+        routes[-1]['name'] = feed.get('routeNameAliases', {}).get(routes[-1]['name'], routes[-1]['name'])
         text_color = route.get('route_text_color', '')
         if len(text_color) == 6 and all(c in '0123456789abcdefABCDEF' for c in text_color): routes[-1]['textColor'] = '#'+text_color
     routeindex = {r['sourceId']: i for i, r in enumerate(routes)}

@@ -17,7 +17,7 @@
           "source": "https://files.mobilitydatabase.org/mdb-2359/mdb-2359-202610030154/mdb-2359-202610030154.zip",
           "website": "https://developer.tmb.cat/",
           "license": "https://developer.tmb.cat/docs/terms-conditions",
-          "fetchedAt": "2026-10-06T10:37:34.062444+00:00",
+          "fetchedAt": "2026-10-06T20:58:53.504525+00:00",
           "version": "082602102026002",
           "start": "20261002",
           "end": "20270529",
@@ -38,7 +38,7 @@
           "source": "https://www.fgc.cat/google/google_transit.zip",
           "website": "https://dadesobertes.fgc.cat/",
           "license": "https://creativecommons.org/licenses/by/4.0/",
-          "fetchedAt": "2026-10-06T10:37:37.971627+00:00",
+          "fetchedAt": "2026-10-06T20:58:55.185604+00:00",
           "version": "2026-10-02T13:25:51+02:00_not tagged",
           "start": "20240101",
           "end": "20261231",
@@ -59,7 +59,7 @@
           "source": "https://opendata.tram.cat/GTFS/zip/TBX.zip",
           "website": "https://www.tram.cat/",
           "license": "https://opendata.tram.cat/privacy",
-          "fetchedAt": "2026-10-06T10:37:39.384751+00:00",
+          "fetchedAt": "2026-10-06T20:58:55.671483+00:00",
           "version": "8029d3dc22fe",
           "start": "20261006",
           "end": "20261105",
@@ -80,7 +80,7 @@
           "source": "https://opendata.tram.cat/GTFS/zip/TBS.zip",
           "website": "https://www.tram.cat/",
           "license": "https://opendata.tram.cat/privacy",
-          "fetchedAt": "2026-10-06T10:37:39.974532+00:00",
+          "fetchedAt": "2026-10-06T20:58:56.068904+00:00",
           "version": "d38a9cc232f4",
           "start": "20261006",
           "end": "20261105",
@@ -94,17 +94,38 @@
           "frequencyPolicy": "expand",
           "missingShapes": 0,
           "retainedShapes": 0
+        },
+        {
+          "id": "amb",
+          "publisher": "AMB · Bus metropolità / Nitbus",
+          "source": "https://www.ambmobilitat.cat/OpenData/google_transit.zip",
+          "website": "https://www.ambmobilitat.cat/",
+          "license": "https://www.amb.cat/web/area-metropolitana/dades-obertes",
+          "fetchedAt": "2026-10-06T20:59:06.151618+00:00",
+          "version": "20261006",
+          "start": "20261006",
+          "end": "20261011",
+          "sha256": "6b201b2db742cc2e16b2e8b75fe0bd691f346c3b6f5cbb2111d003ffc0d4f51d",
+          "routes": 140,
+          "stops": 3609,
+          "trips": 28869,
+          "skippedTrips": 75,
+          "approximateShapes": 0,
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand",
+          "missingShapes": 0,
+          "retainedShapes": 0
         }
       ],
       "source": "https://developer.tmb.cat/",
-      "coverage": "TMB, FGC y TRAM (Trambaix y Trambesòs). No incluye todos los operadores del área metropolitana.",
+      "coverage": "TMB, FGC, TRAM (Trambaix y Trambesòs) y autobuses metropolitanos de AMB, incluido el Nitbus. No incluye todos los operadores del área metropolitana.",
       "journey": [
         "Catalunya",
         "Sagrada Família"
       ],
-      "routes": 143,
-      "stops": 3082,
-      "trips": 75637,
+      "routes": 283,
+      "stops": 6691,
+      "trips": 104506,
       "network": "./data/barcelona/network.json",
       "schedule": "./data/barcelona/schedule.json"
     },
@@ -124,7 +145,7 @@
           "source": "https://www.arcgis.com/sharing/rest/content/items/5c7f2951962540d69ffe8f640d94c246/data",
           "website": "https://datos.crtm.es/",
           "license": "https://www.crtm.es/licencia-de-uso",
-          "fetchedAt": "2026-10-06T07:58:49.522609+00:00",
+          "fetchedAt": "2026-10-06T21:00:00.034915+00:00",
           "version": "20250527",
           "start": "20250101",
           "end": "20260527",
@@ -136,9 +157,8 @@
           "approximateShapes": 0,
           "timezone": "Europe/Madrid",
           "frequencyPolicy": "expand",
-          "originalMissingShapes": 0,
           "missingShapes": 0,
-          "reconstructedShapes": 0
+          "retainedShapes": 0
         },
         {
           "id": "emt",
@@ -146,7 +166,7 @@
           "source": "https://datos.emtmadrid.es/dataset/9b23259a-4491-494b-9695-36a7709b2c12/resource/3cba2058-9833-422c-a704-bf992d31d2ee/download/gtfs_emt.zip",
           "website": "https://datos.emtmadrid.es/",
           "license": "https://www.crtm.es/licencia-de-uso",
-          "fetchedAt": "2026-10-06T07:59:15.890974+00:00",
+          "fetchedAt": "2026-10-06T21:00:26.139409+00:00",
           "version": "61328df991ef",
           "start": "20261005",
           "end": "20261231",
@@ -158,9 +178,8 @@
           "approximateShapes": 0,
           "timezone": "Europe/Madrid",
           "frequencyPolicy": "scheduled",
-          "originalMissingShapes": 0,
           "missingShapes": 0,
-          "reconstructedShapes": 0
+          "retainedShapes": 0
         },
         {
           "id": "ml-madrid",
@@ -168,7 +187,7 @@
           "source": "https://www.arcgis.com/sharing/rest/content/items/aaed26cc0ff64b0c947ac0bc3e033196/data",
           "website": "https://datos.crtm.es/",
           "license": "https://www.crtm.es/licencia-de-uso",
-          "fetchedAt": "2026-10-06T07:59:16.850184+00:00",
+          "fetchedAt": "2026-10-06T21:00:26.927798+00:00",
           "version": "20260722",
           "start": "20260101",
           "end": "20270722",
@@ -180,9 +199,8 @@
           "approximateShapes": 0,
           "timezone": "Europe/Madrid",
           "frequencyPolicy": "expand",
-          "originalMissingShapes": 0,
           "missingShapes": 0,
-          "reconstructedShapes": 0
+          "retainedShapes": 0
         }
       ],
       "source": "https://datos.crtm.es/",
@@ -213,7 +231,7 @@
           "source": "https://files.mobilitydatabase.org/mdb-2770/mdb-2770-202609300035/mdb-2770-202609300035.zip",
           "website": "https://www.tussam.es/",
           "license": "https://nap.transportes.gob.es/licencia-datos",
-          "fetchedAt": "2026-10-06T08:05:24.881696+00:00",
+          "fetchedAt": "2026-10-06T21:00:34.660844+00:00",
           "version": "20260928",
           "start": "20260928",
           "end": "20270117",
@@ -225,12 +243,13 @@
           "approximateShapes": 0,
           "timezone": "Europe/Madrid",
           "frequencyPolicy": "expand",
+          "originalMissingShapes": 225,
           "missingShapes": 0,
           "reconstructedShapes": 225,
           "geometrySources": [
             "https://services1.arcgis.com/hcmP7kr0Cx3AcTJk/arcgis/rest/services/TUSSAM_Lineas/FeatureServer/0"
           ],
-          "originalMissingShapes": 225
+          "retainedShapes": 0
         },
         {
           "id": "metro-sevilla",
@@ -238,7 +257,7 @@
           "source": "https://files.mobilitydatabase.org/mdb-2781/mdb-2781-202604160110/mdb-2781-202604160110.zip",
           "website": "https://www.metro-sevilla.es/",
           "license": "https://nap.transportes.gob.es/licencia-datos",
-          "fetchedAt": "2026-10-06T08:05:27.635450+00:00",
+          "fetchedAt": "2026-10-06T21:00:34.739153+00:00",
           "version": "2.13",
           "start": "20250101",
           "end": "20261231",
@@ -250,12 +269,13 @@
           "approximateShapes": 0,
           "timezone": "Europe/Madrid",
           "frequencyPolicy": "expand",
+          "originalMissingShapes": 4,
           "missingShapes": 0,
           "reconstructedShapes": 4,
           "geometrySources": [
             "https://www.openstreetmap.org/relation/255088"
           ],
-          "originalMissingShapes": 4
+          "retainedShapes": 0
         },
         {
           "id": "ctas",
@@ -263,7 +283,7 @@
           "source": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip",
           "website": "https://api.ctan.es/",
           "license": "https://api.ctan.es/avisolegal.html",
-          "fetchedAt": "2026-10-06T08:05:31.130222+00:00",
+          "fetchedAt": "2026-10-06T21:00:37.729301+00:00",
           "version": "3d70c9fa54fa",
           "start": "20200914",
           "end": "20270711",
@@ -275,9 +295,8 @@
           "approximateShapes": 0,
           "timezone": "Europe/Madrid",
           "frequencyPolicy": "expand",
-          "originalMissingShapes": 0,
           "missingShapes": 0,
-          "reconstructedShapes": 0
+          "retainedShapes": 0
         }
       ],
       "source": "https://api.ctan.es/",
@@ -308,7 +327,7 @@
           "source": "https://files.mobilitydatabase.org/mdb-2773/mdb-2773-202607010006/mdb-2773-202607010006.zip",
           "website": "https://www.zaragoza.es/web/espacio-de-datos/servicio/catalogo/335",
           "license": "https://nap.transportes.gob.es/licencia-datos",
-          "fetchedAt": "2026-10-06T07:59:45.567351+00:00",
+          "fetchedAt": "2026-10-06T21:00:51.026796+00:00",
           "version": "20260623_AUZSA_Y_TRANVIA",
           "start": "20260623",
           "end": "20261005",
@@ -320,9 +339,8 @@
           "approximateShapes": 0,
           "timezone": "Europe/Madrid",
           "frequencyPolicy": "expand",
-          "originalMissingShapes": 0,
           "missingShapes": 0,
-          "reconstructedShapes": 0
+          "retainedShapes": 0
         },
         {
           "id": "tranvia-zaragoza",
@@ -330,7 +348,7 @@
           "source": "https://files.mobilitydatabase.org/mdb-2801/mdb-2801-202607080131/mdb-2801-202607080131.zip",
           "website": "https://www.tranviasdezaragoza.es/",
           "license": "https://nap.transportes.gob.es/licencia-datos",
-          "fetchedAt": "2026-10-06T07:59:46.873494+00:00",
+          "fetchedAt": "2026-10-06T21:00:52.228620+00:00",
           "version": "20260623_TRANVIA",
           "start": "20260623",
           "end": "20261231",
@@ -342,9 +360,8 @@
           "approximateShapes": 0,
           "timezone": "Europe/Madrid",
           "frequencyPolicy": "expand",
-          "originalMissingShapes": 0,
           "missingShapes": 0,
-          "reconstructedShapes": 0
+          "retainedShapes": 0
         }
       ],
       "source": "https://www.zaragoza.es/web/espacio-de-datos/servicio/catalogo/335",
@@ -375,7 +392,7 @@
           "source": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip",
           "website": "https://api.ctan.es/",
           "license": "https://api.ctan.es/avisolegal.html",
-          "fetchedAt": "2026-10-06T08:08:54.399271+00:00",
+          "fetchedAt": "2026-10-06T21:20:53.360293+00:00",
           "version": "3d70c9fa54fa",
           "start": "20210605",
           "end": "20261231",
@@ -387,9 +404,8 @@
           "approximateShapes": 0,
           "timezone": "Europe/Madrid",
           "frequencyPolicy": "expand",
-          "originalMissingShapes": 0,
           "missingShapes": 0,
-          "reconstructedShapes": 0
+          "retainedShapes": 0
         }
       ],
       "source": "https://api.ctan.es/",
@@ -420,7 +436,7 @@
           "source": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip",
           "website": "https://api.ctan.es/",
           "license": "https://api.ctan.es/avisolegal.html",
-          "fetchedAt": "2026-10-06T08:08:57.521759+00:00",
+          "fetchedAt": "2026-10-06T20:59:24.139026+00:00",
           "version": "3d70c9fa54fa",
           "start": "20200701",
           "end": "20380430",
@@ -432,20 +448,40 @@
           "approximateShapes": 0,
           "timezone": "Europe/Madrid",
           "frequencyPolicy": "expand",
-          "originalMissingShapes": 0,
           "missingShapes": 0,
-          "reconstructedShapes": 0
+          "retainedShapes": 0
+        },
+        {
+          "id": "granada-urbano",
+          "publisher": "Granada · Bus urbano",
+          "source": "http://movilidadgranada.org/gtfs/gtfs.zip",
+          "website": "https://movilidadgranada.org/",
+          "license": "https://movilidadgranada.org/",
+          "fetchedAt": "2026-10-06T20:59:27.155023+00:00",
+          "version": "219ca15ba582",
+          "start": "20260918",
+          "end": "20271024",
+          "sha256": "219ca15ba5824b32b27de9cd240b946e037c5659653019738f96aed152704004",
+          "routes": 34,
+          "stops": 641,
+          "trips": 11134,
+          "skippedTrips": 0,
+          "approximateShapes": 0,
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand",
+          "missingShapes": 0,
+          "retainedShapes": 0
         }
       ],
       "source": "https://api.ctan.es/",
-      "coverage": "Red publicada por el Consorcio de Granada. Cobertura metropolitana parcial; no incluye todos los autobuses urbanos ni operadores de la provincia.",
+      "coverage": "Autobuses urbanos de Granada, incluidos los Búho 111 y 121, y Consorcio de Granada. No incluye todos los operadores de la provincia.",
       "journey": [
         "Estación de Autobuses",
         "Centro"
       ],
-      "routes": 69,
-      "stops": 1290,
-      "trips": 3155,
+      "routes": 103,
+      "stops": 1931,
+      "trips": 14289,
       "network": "./data/granada/network.json",
       "schedule": "./data/granada/schedule.json"
     },
@@ -465,7 +501,7 @@
           "source": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip",
           "website": "https://api.ctan.es/",
           "license": "https://api.ctan.es/avisolegal.html",
-          "fetchedAt": "2026-10-06T08:09:00.649762+00:00",
+          "fetchedAt": "2026-10-06T20:59:12.854378+00:00",
           "version": "3d70c9fa54fa",
           "start": "20200518",
           "end": "20301231",
@@ -477,20 +513,40 @@
           "approximateShapes": 0,
           "timezone": "Europe/Madrid",
           "frequencyPolicy": "expand",
-          "originalMissingShapes": 0,
           "missingShapes": 0,
-          "reconstructedShapes": 0
+          "retainedShapes": 0
+        },
+        {
+          "id": "emt-malaga",
+          "publisher": "EMT Málaga",
+          "source": "https://gtfs.emtmalaga.es/GTFS/google_transit.zip",
+          "website": "https://www.emtmalaga.es/",
+          "license": "https://nap.transportes.gob.es/licencia-datos",
+          "fetchedAt": "2026-10-06T20:59:19.610407+00:00",
+          "version": "vers28septiembre2026",
+          "start": "20260928",
+          "end": "20261130",
+          "sha256": "1a6a2b7cdd1c6a959b8f714f7778eef108d9cbca22b177b7b90d9d88ec6fcb34",
+          "routes": 48,
+          "stops": 1127,
+          "trips": 21618,
+          "skippedTrips": 0,
+          "approximateShapes": 0,
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand",
+          "missingShapes": 0,
+          "retainedShapes": 0
         }
       ],
       "source": "https://api.ctan.es/",
-      "coverage": "Red publicada por el Consorcio de Málaga. Cobertura metropolitana parcial; no incluye todos los autobuses urbanos ni operadores de la provincia.",
+      "coverage": "EMT Málaga, incluidas las líneas nocturnas, y Consorcio de Málaga. Cobertura parcial; no incluye todos los operadores de la provincia.",
       "journey": [
         "Estación de Autobuses",
         "Centro"
       ],
-      "routes": 94,
-      "stops": 1315,
-      "trips": 3084,
+      "routes": 142,
+      "stops": 2442,
+      "trips": 24702,
       "network": "./data/malaga/network.json",
       "schedule": "./data/malaga/schedule.json"
     },
@@ -510,7 +566,7 @@
           "source": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip",
           "website": "https://api.ctan.es/",
           "license": "https://api.ctan.es/avisolegal.html",
-          "fetchedAt": "2026-10-06T08:09:03.752359+00:00",
+          "fetchedAt": "2026-10-06T21:20:57.514662+00:00",
           "version": "3d70c9fa54fa",
           "start": "20210601",
           "end": "20451231",
@@ -522,9 +578,8 @@
           "approximateShapes": 0,
           "timezone": "Europe/Madrid",
           "frequencyPolicy": "expand",
-          "originalMissingShapes": 0,
           "missingShapes": 0,
-          "reconstructedShapes": 0
+          "retainedShapes": 0
         }
       ],
       "source": "https://api.ctan.es/",
@@ -555,7 +610,7 @@
           "source": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip",
           "website": "https://api.ctan.es/",
           "license": "https://api.ctan.es/avisolegal.html",
-          "fetchedAt": "2026-10-06T08:09:07.626963+00:00",
+          "fetchedAt": "2026-10-06T21:21:01.568925+00:00",
           "version": "3d70c9fa54fa",
           "start": "20170101",
           "end": "20270709",
@@ -569,7 +624,9 @@
           "frequencyPolicy": "expand",
           "originalMissingShapes": 1,
           "missingShapes": 1,
-          "reconstructedShapes": 0
+          "reconstructedShapes": 0,
+          "geometrySources": [],
+          "retainedShapes": 0
         }
       ],
       "source": "https://api.ctan.es/",
@@ -600,7 +657,7 @@
           "source": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip",
           "website": "https://api.ctan.es/",
           "license": "https://api.ctan.es/avisolegal.html",
-          "fetchedAt": "2026-10-06T08:09:10.488785+00:00",
+          "fetchedAt": "2026-10-06T20:59:52.285232+00:00",
           "version": "3d70c9fa54fa",
           "start": "20220118",
           "end": "20270831",
@@ -612,20 +669,43 @@
           "approximateShapes": 0,
           "timezone": "Europe/Madrid",
           "frequencyPolicy": "expand",
-          "originalMissingShapes": 0,
           "missingShapes": 0,
-          "reconstructedShapes": 0
+          "retainedShapes": 0
+        },
+        {
+          "id": "jaen-buho",
+          "publisher": "Alsa · Búho de Jaén",
+          "source": "https://files.mobilitydatabase.org/mdb-2825/mdb-2825-202610060132/mdb-2825-202610060132.zip",
+          "website": "https://www.transporteurbanodejaen.es/es/horarios",
+          "license": "https://nap.transportes.gob.es/licencia-datos",
+          "fetchedAt": "2026-10-06T20:59:57.949124+00:00",
+          "version": "9d33df20b3b2",
+          "start": "20260101",
+          "end": "20280101",
+          "sha256": "9d33df20b3b2cd9382b5977dc0b1b78bcf38be74653b664f5dbebb06096d8c6b",
+          "routes": 1,
+          "stops": 60,
+          "trips": 6,
+          "skippedTrips": 0,
+          "approximateShapes": 1,
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand",
+          "originalMissingShapes": 1,
+          "missingShapes": 1,
+          "reconstructedShapes": 0,
+          "geometrySources": [],
+          "retainedShapes": 0
         }
       ],
       "source": "https://api.ctan.es/",
-      "coverage": "Red publicada por el Consorcio de Jaén. Cobertura metropolitana parcial; no incluye todos los autobuses urbanos ni operadores de la provincia.",
+      "coverage": "Consorcio de Jaén y Búho urbano de Alsa. El Búho incluye paradas y horarios; la fuente no publica su trazado. No incluye el resto de los autobuses urbanos ni todos los operadores de la provincia.",
       "journey": [
         "Estación de Autobuses",
         "Centro"
       ],
-      "routes": 39,
-      "stops": 79,
-      "trips": 465,
+      "routes": 40,
+      "stops": 139,
+      "trips": 471,
       "network": "./data/jaen/network.json",
       "schedule": "./data/jaen/schedule.json"
     },
@@ -645,7 +725,7 @@
           "source": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip",
           "website": "https://api.ctan.es/",
           "license": "https://api.ctan.es/avisolegal.html",
-          "fetchedAt": "2026-10-06T08:09:13.301896+00:00",
+          "fetchedAt": "2026-10-06T21:21:05.331471+00:00",
           "version": "3d70c9fa54fa",
           "start": "20260608",
           "end": "20300630",
@@ -657,9 +737,8 @@
           "approximateShapes": 0,
           "timezone": "Europe/Madrid",
           "frequencyPolicy": "expand",
-          "originalMissingShapes": 0,
           "missingShapes": 0,
-          "reconstructedShapes": 0
+          "retainedShapes": 0
         }
       ],
       "source": "https://api.ctan.es/",
@@ -690,7 +769,7 @@
           "source": "https://api.ctan.es/v1/datos/UNIFICADO/gtfs.zip",
           "website": "https://api.ctan.es/",
           "license": "https://api.ctan.es/avisolegal.html",
-          "fetchedAt": "2026-10-06T08:09:15.920675+00:00",
+          "fetchedAt": "2026-10-06T21:21:09.003508+00:00",
           "version": "3d70c9fa54fa",
           "start": "20260901",
           "end": "20270630",
@@ -702,9 +781,8 @@
           "approximateShapes": 0,
           "timezone": "Europe/Madrid",
           "frequencyPolicy": "expand",
-          "originalMissingShapes": 0,
           "missingShapes": 0,
-          "reconstructedShapes": 0
+          "retainedShapes": 0
         }
       ],
       "source": "https://api.ctan.es/",
@@ -735,7 +813,7 @@
           "source": "https://opendata.euskadi.eus/transport/moveuskadi/euskotren/gtfs_euskotren.zip",
           "website": "https://www.euskotren.eus/",
           "license": "https://opendata.euskadi.eus/como-reutilizar/-/reutilizar-datos-abiertos/",
-          "fetchedAt": "2026-10-06T10:37:46.430083+00:00",
+          "fetchedAt": "2026-10-06T20:59:30.464081+00:00",
           "version": "20261006043347",
           "start": "20261006",
           "end": "20261115",
@@ -756,7 +834,7 @@
           "source": "https://opendata.euskadi.eus/transport/moveuskadi/metro_bilbao/gtfs_metro_bilbao.zip",
           "website": "https://www.metrobilbao.eus/",
           "license": "https://opendata.euskadi.eus/como-reutilizar/-/reutilizar-datos-abiertos/",
-          "fetchedAt": "2026-10-06T10:37:48.351769+00:00",
+          "fetchedAt": "2026-10-06T20:59:31.935036+00:00",
           "version": "8dd134cf7ccd",
           "start": "20261005",
           "end": "20261105",
@@ -770,17 +848,38 @@
           "frequencyPolicy": "expand",
           "missingShapes": 0,
           "retainedShapes": 0
+        },
+        {
+          "id": "bilbobus",
+          "publisher": "Bilbobus",
+          "source": "https://www.bilbao.eus/opendata/datos/bilbobus-gtfs",
+          "website": "https://www.bilbao.eus/bilbobus",
+          "license": "https://creativecommons.org/licenses/by/3.0/es/",
+          "fetchedAt": "2026-10-06T20:59:34.971155+00:00",
+          "version": "1791234059875",
+          "start": "20260901",
+          "end": "20270630",
+          "sha256": "0f64c2ef67715ef75b7f3080f6aab2e32c2821b0353615ed6e6f618019d36099",
+          "routes": 56,
+          "stops": 530,
+          "trips": 15009,
+          "skippedTrips": 245,
+          "approximateShapes": 0,
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand",
+          "missingShapes": 0,
+          "retainedShapes": 0
         }
       ],
       "source": "https://www.euskadi.eus/contenidos/ds_movilidad/md_ideeu_moveuskadi/es_def/index.shtml",
-      "coverage": "Euskotren y Metro Bilbao. El archivo de Metro Bilbao agrupa L1/L2 en una sola ruta. No incluye todos los autobuses urbanos ni otros operadores. La E1 es interurbana entre Bilbao y Donostia.",
+      "coverage": "Euskotren, Metro Bilbao y Bilbobus, incluidos los Gautxori. Metro Bilbao agrupa L1/L2 en una sola ruta. Cobertura parcial; no incluye Bizkaibus ni todos los operadores. La E1 conecta Bilbao y Donostia.",
       "journey": [
         "Matiko",
         "Zazpikaleak"
       ],
-      "routes": 8,
-      "stops": 194,
-      "trips": 10382,
+      "routes": 64,
+      "stops": 724,
+      "trips": 25391,
       "network": "./data/bilbao/network.json",
       "schedule": "./data/bilbao/schedule.json"
     },
@@ -800,7 +899,7 @@
           "source": "https://opendata.euskadi.eus/transport/moveuskadi/euskotren/gtfs_euskotren.zip",
           "website": "https://www.euskotren.eus/",
           "license": "https://opendata.euskadi.eus/como-reutilizar/-/reutilizar-datos-abiertos/",
-          "fetchedAt": "2026-10-06T10:37:51.995638+00:00",
+          "fetchedAt": "2026-10-06T20:59:38.035319+00:00",
           "version": "20261006043347",
           "start": "20261006",
           "end": "20261115",
@@ -814,17 +913,38 @@
           "frequencyPolicy": "expand",
           "missingShapes": 0,
           "retainedShapes": 0
+        },
+        {
+          "id": "dbus",
+          "publisher": "Dbus",
+          "source": "https://opendata.euskadi.eus/transport/moveuskadi/dbus/gtfs_dbus.zip",
+          "website": "https://dbus.eus/",
+          "license": "https://opendata.euskadi.eus/como-reutilizar/-/reutilizar-datos-abiertos/",
+          "fetchedAt": "2026-10-06T20:59:42.243006+00:00",
+          "version": "20260929095305",
+          "start": "20260929",
+          "end": "20261226",
+          "sha256": "bc28590869c719780aea66ddfbbe2aa5cc25a8bab851412a56342f7f70d44df6",
+          "routes": 49,
+          "stops": 540,
+          "trips": 23309,
+          "skippedTrips": 0,
+          "approximateShapes": 0,
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand",
+          "missingShapes": 0,
+          "retainedShapes": 0
         }
       ],
       "source": "https://www.euskadi.eus/contenidos/ds_movilidad/md_ideeu_moveuskadi/es_def/index.shtml",
-      "coverage": "Red ferroviaria publicada por Euskotren. No incluye todos los autobuses urbanos ni otros operadores. La E1 es interurbana entre Bilbao y Donostia.",
+      "coverage": "Euskotren y Dbus, incluidos los servicios nocturnos Búho. Cobertura parcial; no incluye todos los operadores. La E1 conecta Bilbao y Donostia.",
       "journey": [
         "Amara",
         "Hendaia"
       ],
-      "routes": 2,
-      "stops": 120,
-      "trips": 3232,
+      "routes": 51,
+      "stops": 660,
+      "trips": 26541,
       "network": "./data/donostia/network.json",
       "schedule": "./data/donostia/schedule.json"
     },
@@ -844,7 +964,7 @@
           "source": "https://opendata.euskadi.eus/transport/moveuskadi/euskotren/gtfs_euskotren.zip",
           "website": "https://www.euskotren.eus/",
           "license": "https://opendata.euskadi.eus/como-reutilizar/-/reutilizar-datos-abiertos/",
-          "fetchedAt": "2026-10-06T10:37:54.713152+00:00",
+          "fetchedAt": "2026-10-06T20:59:45.788337+00:00",
           "version": "20261006043347",
           "start": "20261006",
           "end": "20261115",
@@ -858,17 +978,38 @@
           "frequencyPolicy": "expand",
           "missingShapes": 0,
           "retainedShapes": 0
+        },
+        {
+          "id": "tuvisa",
+          "publisher": "TUVISA",
+          "source": "https://opendata.euskadi.eus/transport/moveuskadi/tuvisa/gtfs_tuvisa.zip",
+          "website": "https://www.vitoria-gasteiz.org/tuvisa",
+          "license": "https://opendata.euskadi.eus/como-reutilizar/-/reutilizar-datos-abiertos/",
+          "fetchedAt": "2026-10-06T20:59:48.186078+00:00",
+          "version": "1.0",
+          "start": "20261004",
+          "end": "20261104",
+          "sha256": "4847b5d2ddafa87f942a5df1d95472d59f6db26ee7ba475576ba851743183aab",
+          "routes": 31,
+          "stops": 368,
+          "trips": 4350,
+          "skippedTrips": 0,
+          "approximateShapes": 0,
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand",
+          "missingShapes": 0,
+          "retainedShapes": 0
         }
       ],
       "source": "https://www.euskadi.eus/contenidos/ds_movilidad/md_ideeu_moveuskadi/es_def/index.shtml",
-      "coverage": "Tranvía de Vitoria-Gasteiz publicado por Euskotren. No incluye los autobuses urbanos.",
+      "coverage": "Tranvía de Euskotren y autobuses de TUVISA, incluidos los Gautxori y servicios nocturnos especiales según su calendario.",
       "journey": [
         "Ibaiondo",
         "Salburua"
       ],
-      "routes": 3,
-      "stops": 55,
-      "trips": 529,
+      "routes": 34,
+      "stops": 423,
+      "trips": 4879,
       "network": "./data/vitoria/network.json",
       "schedule": "./data/vitoria/schedule.json"
     },
