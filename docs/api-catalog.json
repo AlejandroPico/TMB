@@ -44,11 +44,7 @@
     "/parades/{codi_parada}/corresp",
     "/parades/{codi_parada}/mobiliari"
   ],
-  "ibus": [
-    "/bus/parades/{codi_parada}"
-  ],
-  "planner": [
-    "/plan"
-  ],
+  "ibus": ["/bus/parades/{codi_parada}"],
+  "planner": ["/plan"],
   "checked": "2026-10-06"
 }

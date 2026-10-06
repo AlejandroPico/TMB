@@ -27,12 +27,12 @@ La planificación local aplica los transbordos explícitos del GTFS y añade enl
 
 Se revisaron las especificaciones oficiales el 6 de octubre de 2026. [El catálogo](docs/api-catalog.json) recoge todos los recursos publicados en Transit, iBus y Planner.
 
-| Servicio | Uso | Acceso |
-| --- | --- | --- |
-| Static / GTFS | Red, recorridos, paradas, accesos, horarios y calendario | Archivo público; descarga oficial con claves |
-| Transit | Más información en líneas, mobiliario y correspondencias de bus; servidor con todos los recursos del catálogo | Requiere credenciales |
-| iBus | Próximos buses por parada, con timestamp y control de antigüedad | Requiere credenciales |
-| Planner | Planificador oficial cuando el servidor está configurado; alternativa local sin acceso | Requiere credenciales |
+| Servicio      | Uso                                                                                                           | Acceso                                       |
+| ------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| Static / GTFS | Red, recorridos, paradas, accesos, horarios y calendario                                                      | Archivo público; descarga oficial con claves |
+| Transit       | Más información en líneas, mobiliario y correspondencias de bus; servidor con todos los recursos del catálogo | Requiere credenciales                        |
+| iBus          | Próximos buses por parada, con timestamp y control de antigüedad                                              | Requiere credenciales                        |
+| Planner       | Planificador oficial cuando el servidor está configurado; alternativa local sin acceso                        | Requiere credenciales                        |
 
 **Sin claves funcionan el mapa y las funciones basadas en GTFS. Las APIs autenticadas están integradas, pero no se han podido verificar con credenciales válidas.** No se usan claves ajenas ni se inventan respuestas. El portal consultado documenta tiempos de paso de bus, no posiciones GPS en directo de trenes.
 
