@@ -23,6 +23,13 @@ onmessage = async ({ data: m }) => {
     if (m.type === "init" || m.type === "day") result = { trips };
     if (m.type === "departures")
       result = nextDepartures(departures, m.stop, m.time, 12);
+    if (m.type === "station")
+      result = m.stops.flatMap((stop) =>
+        nextDepartures(departures, stop, m.time, 96).map((d) => ({
+          ...d,
+          stop,
+        })),
+      );
     if (m.type === "plan")
       result = planJourney(
         network,

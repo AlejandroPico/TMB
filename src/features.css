@@ -1,0 +1,612 @@
+:root {
+  --ui-bg: #101817;
+  --ui-surface: #16201d;
+  --ui-text: #e5e9df;
+  --ui-muted: #9ba9a1;
+  --ui-border: #34413b;
+  --ui-accent: #d7eaa1;
+  --lime: var(--ui-accent);
+  --muted: var(--ui-muted);
+  --border: var(--ui-border);
+  --surface: var(--ui-surface);
+}
+body,
+#app {
+  background: var(--ui-bg);
+  color: var(--ui-text);
+}
+.rail,
+.sidebar,
+.drawer-head,
+.detail,
+.timeline,
+.menu-toggle,
+dialog,
+.loading,
+.toast {
+  background: var(--ui-surface);
+  color: var(--ui-text);
+  border-color: var(--ui-border);
+}
+.rail-brand span,
+.rail-btn,
+.rail-btn.active,
+.rail-btn:hover,
+.rail-brand:hover,
+.text-link,
+.nearby,
+.drawer-head button {
+  color: var(--ui-text);
+}
+.rail-btn.active,
+.rail-btn:hover,
+.rail-brand:hover,
+.theme-option.active,
+.segmented button.active,
+.direction-switch button.active {
+  background: color-mix(in srgb, var(--ui-accent) 15%, var(--ui-surface));
+  border-color: var(--ui-accent);
+  color: var(--ui-text);
+}
+input,
+select,
+.city-picker select,
+.search-box,
+.nearby,
+.segmented,
+.direction-switch button,
+.detail-actions button,
+.filter-toolbar button {
+  background: var(--ui-bg);
+  border-color: var(--ui-border);
+  color: var(--ui-text);
+}
+.network-list button,
+.route-row,
+.line-station,
+.filter-section,
+.reach-card,
+.station-access,
+.journey-summary,
+.journey-leg,
+.gps-card {
+  background: var(--ui-surface);
+  color: var(--ui-text);
+  border-color: var(--ui-border);
+}
+.route-row strong,
+.route-row b,
+.route-detail-title h2,
+.detail h2,
+.story-card h3,
+.time-readout,
+.timeline time,
+#time-readout,
+.arrival b {
+  color: var(--ui-text);
+}
+.route-row small,
+.route-row p,
+.footnote,
+.muted,
+.detail-note,
+.coverage-note,
+.access-note,
+.eyebrow,
+.filter-check small,
+.list-heading,
+.operator-name {
+  color: var(--ui-muted);
+}
+.line-badge {
+  background: var(--line);
+  color: #fff;
+  min-width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+  letter-spacing: -0.6px;
+  text-shadow: 0 1px 2px #0008;
+  flex-shrink: 0;
+}
+.filter-toolbar {
+  display: flex;
+  gap: 8px;
+  margin: 0 0 20px;
+}
+.filter-toolbar button {
+  flex: 1;
+  padding: 10px;
+}
+.filter-tree,
+.filter-group {
+  border-bottom: 1px solid var(--ui-border);
+  margin-bottom: 12px;
+}
+.filter-tree summary,
+.filter-group summary {
+  cursor: pointer;
+  padding: 14px 0;
+  font-weight: 600;
+  font-size: 14px;
+  list-style-position: inside;
+}
+.filter-tree summary small {
+  float: right;
+  color: var(--ui-muted);
+  font-size: 11px;
+  font-weight: 400;
+}
+.filter-group {
+  margin: 0 0 0 14px;
+}
+.filter-group summary {
+  font-size: 12px;
+}
+.filter-group summary small {
+  display: block;
+  float: none;
+  margin: 5px 0 0 15px;
+  font-size: 10px;
+}
+.filter-line {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  padding: 3px 0;
+}
+.filter-line .filter-check {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+}
+.filter-line .filter-check > span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.filter-line .filter-check > span > span:last-child {
+  font-size: 10px;
+  line-height: 1.5;
+  color: var(--ui-muted);
+}
+.filter-line button {
+  font-size: 10px;
+  padding: 6px;
+  background: var(--ui-bg);
+  border: 1px solid var(--ui-border);
+  color: var(--ui-text);
+}
+.filter-check input {
+  accent-color: var(--ui-accent);
+}
+.theme-options {
+  display: grid;
+  gap: 12px;
+}
+.theme-option {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 5px 14px;
+  text-align: left;
+  padding: 16px;
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  color: var(--ui-text);
+}
+.theme-option > span {
+  grid-row: span 2;
+  height: 44px;
+  background: var(--sample-bg);
+  border-left: 8px solid var(--sample-accent);
+  border-top: 1px solid var(--ui-border);
+  border-bottom: 1px solid var(--ui-border);
+}
+.theme-option b {
+  font-size: 15px;
+}
+.theme-option small {
+  color: var(--ui-muted);
+  font-size: 11px;
+}
+.departure-display {
+  padding: 18px 0;
+  border-bottom: 1px solid var(--ui-border);
+}
+.departure-direction {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.departure-direction > span:last-child {
+  flex: 1;
+}
+.departure-direction small {
+  display: block;
+  color: var(--ui-muted);
+  font-size: 10px;
+}
+.departure-direction b {
+  display: block;
+  font-size: 15px;
+  line-height: 1.35;
+}
+.departure-times {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding-top: 12px;
+}
+.departure-times time {
+  font-size: 36px;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+  letter-spacing: -1.5px;
+}
+.departure-times small {
+  display: block;
+  font-size: 10px;
+  color: var(--ui-muted);
+  margin-top: 5px;
+}
+.departure-times .following time {
+  color: var(--ui-muted);
+  font-size: 31px;
+}
+.departure-display[data-operator="emt"] time {
+  color: #007cb8;
+}
+.departure-display[data-operator="tussam"] time {
+  font-family: monospace;
+  color: #d37626;
+}
+.departure-display[data-operator^="tram-"] time {
+  color: #008b70;
+}
+.operator-symbol {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  min-width: 30px;
+  flex-shrink: 0;
+  font-family: Arial, sans-serif;
+  font-weight: 800;
+  color: #fff;
+}
+.metro-bcn {
+  background: #e2001a;
+}
+.metro-bcn > span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  color: #e2001a;
+  width: 22px;
+  height: 22px;
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+  font-size: 13px;
+}
+.tram-mark {
+  background: #007b64;
+  padding: 0 6px;
+  font-size: 11px;
+}
+.fgc-mark {
+  background: #f5a000;
+  color: #111;
+  padding: 0 4px;
+  font-size: 12px;
+}
+.operator-name {
+  font-size: 9px;
+  max-width: 70px;
+}
+.detail-badges {
+  flex-wrap: wrap;
+}
+.operator-logo {
+  width: 48px;
+  height: 30px;
+  object-fit: contain;
+  background: #fff;
+  padding: 3px;
+}
+.station-extras > summary {
+  cursor: pointer;
+  font-size: 11px;
+  color: var(--ui-muted);
+  padding: 12px 0;
+}
+.station-extras .reach-card {
+  margin: 0 0 10px;
+}
+.station-extras {
+  margin: 8px 0;
+}
+.line-badge {
+  color: var(--line-text, #fff);
+  text-shadow: none;
+}
+.schematic-station > span {
+  background: var(--ui-text);
+}
+.panel-head h1,
+.panel-head h2,
+.panel-head h3,
+.detail h1,
+.detail h2,
+.detail h3,
+.stop-row b {
+  color: var(--ui-text);
+}
+.panel-head p,
+.detail p,
+.coverage-note {
+  color: var(--ui-muted);
+}
+.timeline button,
+.timeline button:hover {
+  color: var(--ui-text);
+}
+.map-bottom {
+  background: var(--ui-surface);
+  color: var(--ui-muted);
+  padding: 4px 8px;
+  max-width: calc(100% - 24px);
+}
+.map-bottom > span,
+.gps-status {
+  color: var(--ui-muted);
+}
+.raw-vehicle-data {
+  margin: 20px 0;
+  font-size: 11px;
+}
+.raw-vehicle-data summary {
+  cursor: pointer;
+}
+.raw-vehicle-data dl > div {
+  border-bottom: 1px solid var(--ui-border);
+  padding: 8px 0;
+}
+.raw-vehicle-data dt {
+  color: var(--ui-muted);
+}
+.raw-vehicle-data dd {
+  margin: 4px 0;
+  overflow-wrap: anywhere;
+  font-family: monospace;
+}
+.vehicle-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 10px 0 20px;
+}
+.vehicle-number {
+  font-family: monospace;
+  color: #e68444;
+  font-size: 13px;
+  border: 1px solid var(--ui-border);
+  padding: 6px;
+  word-break: break-all;
+  max-width: 200px;
+}
+.vehicle-countdown {
+  display: block;
+  font-size: 52px;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -2px;
+  font-variant-numeric: tabular-nums;
+  margin: 5px 0 24px;
+}
+.vehicle-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.vehicle-facts dt {
+  font-size: 10px;
+  color: var(--ui-muted);
+}
+.vehicle-facts dd {
+  margin: 4px 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+.vehicle-facts + .detail-actions {
+  margin-top: 22px;
+}
+.schematic {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: var(--ui-bg);
+  overflow-y: auto;
+  padding: 32px 24px 140px;
+}
+.schematic-heading {
+  margin-bottom: 30px;
+}
+.schematic-heading h1 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+.schematic-heading span,
+.schematic-heading small {
+  display: block;
+  color: var(--ui-muted);
+  font-size: 12px;
+  margin-top: 8px;
+}
+.schematic-line {
+  border-top: 1px solid var(--ui-border);
+  margin-bottom: 12px;
+}
+.schematic-line > summary {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  list-style: none;
+}
+.schematic-line > summary::after {
+  content: "+";
+  margin-left: auto;
+}
+.schematic-line[open] > summary::after {
+  content: "−";
+}
+.schematic-line > summary > span:last-child {
+  font-size: 13px;
+}
+.schematic-line summary small {
+  display: block;
+  color: var(--ui-muted);
+  font-size: 10px;
+  margin-top: 3px;
+}
+.schematic-route-info {
+  font-size: 11px;
+  color: var(--ui-accent);
+  background: transparent;
+  border: 0;
+  padding: 0 0 10px;
+}
+.schematic-scroll {
+  overflow-x: auto;
+  padding: 0 0 6px;
+  overscroll-behavior-x: contain;
+}
+.schematic-direction {
+  height: 185px;
+  position: relative;
+}
+.schematic-direction-title {
+  position: sticky;
+  left: 10px;
+  font-size: 12px;
+  width: max-content;
+  max-width: 80vw;
+  padding: 5px 0;
+  color: var(--line);
+}
+.schematic-direction-title small {
+  color: var(--ui-muted);
+  margin-left: 8px;
+}
+.schematic-wire {
+  position: absolute;
+  left: 70px;
+  top: 110px;
+  height: 8px;
+  background: var(--line);
+}
+.schematic-station {
+  position: absolute;
+  top: 101px;
+  width: 30px;
+  height: 30px;
+  transform: translateX(-50%);
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  color: var(--ui-text);
+}
+.schematic-station > span {
+  width: 17px;
+  height: 17px;
+  display: block;
+  background: var(--ui-surface);
+  border: 3px solid var(--ui-bg);
+  outline: 2px solid var(--line);
+  border-radius: 50% !important;
+  margin: auto;
+}
+.schematic-station b {
+  position: absolute;
+  bottom: 32px;
+  left: 13px;
+  transform: rotate(-40deg);
+  transform-origin: left bottom;
+  white-space: nowrap;
+  font-size: 11px;
+  font-weight: 500;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.schematic-station:hover > span,
+.schematic-station:focus > span {
+  outline-width: 4px;
+  background: var(--ui-accent);
+}
+.schematic-vehicle {
+  position: absolute;
+  top: 99px;
+  width: 34px;
+  height: 28px;
+  transform: translateX(-50%);
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  color: var(--ui-text);
+  z-index: 2;
+  transition: left 0.75s linear;
+}
+.schematic-vehicle svg {
+  width: 36px;
+  height: 22px;
+}
+.schematic-vehicle:hover {
+  color: var(--ui-accent);
+}
+@media (max-width: 700px) {
+  .rail-btn {
+    height: 48px;
+    min-height: 44px;
+  }
+  .schematic {
+    padding: 72px 12px 150px;
+  }
+  .schematic-heading h1 {
+    font-size: 20px;
+  }
+  .detail {
+    max-height: calc(100dvh - 192px);
+  }
+  .departure-times time {
+    font-size: 34px;
+  }
+  .schematic-line > summary {
+    padding: 10px 0;
+  }
+  .vehicle-facts {
+    gap: 12px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .schematic-vehicle {
+    transition: none;
+  }
+}
+
+.logo-dark {
+  background: #16201d;
+}
+[hidden] .schematic-line > summary::after {
+  content: none;
+}

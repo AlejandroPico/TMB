@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-06T08:12:56.709773+00:00",
+  "generatedAt": "2026-10-06T10:40:27.114753+00:00",
   "policy": "No stop-to-stop fallback. Missing shapes are empty and are neither drawn nor animated. Rail-network alignments are inferred infrastructure paths, not operator-confirmed service itineraries.",
   "cities": [
     {
@@ -15,7 +15,7 @@
     },
     {
       "id": "barcelona",
-      "shapes": 328,
+      "shapes": 352,
       "unavailableShapes": 0,
       "scheduledTripsByGeometry": {
         "tmb": {
@@ -23,6 +23,25 @@
         },
         "fgc": {
           "gtfs": 13518
+        },
+        "tram-tbx": {
+          "gtfs": 1811
+        },
+        "tram-tbs": {
+          "gtfs": 3203
+        }
+      }
+    },
+    {
+      "id": "bilbao",
+      "shapes": 87,
+      "unavailableShapes": 0,
+      "scheduledTripsByGeometry": {
+        "euskotren-bilbao": {
+          "gtfs": 4198
+        },
+        "metro-bilbao": {
+          "gtfs": 6184
         }
       }
     },
@@ -43,6 +62,16 @@
       "scheduledTripsByGeometry": {
         "ctan-cordoba": {
           "gtfs": 220
+        }
+      }
+    },
+    {
+      "id": "donostia",
+      "shapes": 51,
+      "unavailableShapes": 0,
+      "scheduledTripsByGeometry": {
+        "euskotren-donostia": {
+          "gtfs": 3232
         }
       }
     },
@@ -140,6 +169,16 @@
         },
         "ctas": {
           "gtfs": 4621
+        }
+      }
+    },
+    {
+      "id": "vitoria",
+      "shapes": 5,
+      "unavailableShapes": 0,
+      "scheduledTripsByGeometry": {
+        "euskotren-vitoria": {
+          "gtfs": 529
         }
       }
     },

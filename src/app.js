@@ -34,6 +34,10 @@ import {
   TrainFront,
   X,
 } from "lucide";
+import { NetworkFilters, typeNames } from "./filters.js";
+import { stationPlatforms, departureGroups, countdown } from "./boards.js";
+import { Schematic } from "./schematic.js";
+import { themes, applyTheme } from "./themes.js";
 import { CityMap } from "./map.js";
 import { Movement, applyRouteColors } from "./geometry.js";
 import project from "../package.json";
@@ -62,6 +66,20 @@ let gps = null,
   gpsMessage = "Conectando con FGC…";
 import "./style.css";
 import "./layout.css";
+import "./features.css";
+let themeId = "night";
+try {
+  themeId = localStorage.getItem("enruta-theme") || "night";
+} catch {}
+if (!themes[themeId]) themeId = "night";
+applyTheme(themeId);
+let networkFilters,
+  schematic,
+  linearView = false,
+  detailContext = null,
+  vehicleDetail = null,
+  stationBoard = null,
+  boardBusy = false;
 const $ = (s) => document.querySelector(s),
   esc = (s) =>
     String(s ?? "").replace(
@@ -180,6 +198,8 @@ $("#app").innerHTML = `
   <button class="rail-btn" data-tab="stories" aria-label="Historias" title="Historias">${icon("book-open")}<span>Historias</span></button>
   <button class="rail-btn" data-tab="favorites" aria-label="Guardados" title="Guardados">${icon("bookmark")}<span>Guardados</span></button>
   <button class="rail-btn" data-tab="filters" aria-label="Filtros" title="Filtros">${icon("sliders-horizontal")}<span>Filtros</span></button>
+  <button class="rail-btn" id="linear-toggle" aria-label="Vista lineal" aria-pressed="false">${icon("arrow-down-up")}<span>Lineal</span></button>
+  <button class="rail-btn" data-tab="appearance" aria-label="Temas">${icon("compass")}<span>Temas</span></button>
   <div class="rail-spacer"></div>
   <button class="rail-btn" id="home-map" aria-label="Vista general" title="Vista general">${icon("scan")}<span>Vista</span></button>
   <button class="rail-btn" id="tilt" aria-label="Alternar vista 3D" title="Alternar vista 3D"><b>3D</b></button>
@@ -191,7 +211,7 @@ $("#app").innerHTML = `
  <div class="explore-tools"><label class="city-picker"><span>CIUDAD O RED</span><select id="city-selector" aria-label="Ciudad o red de transporte"></select></label><button id="locate" class="nearby">${icon("locate-fixed")} Paradas cerca de mí</button><button id="source-state" class="text-link">${icon("database")} Fuentes y cobertura</button></div>
  <div id="panel"></div>
 </aside>
-<main class="map-area"><div id="map" aria-label="Mapa interactivo del transporte público"></div><div id="detail" class="detail" hidden></div>
+<main class="map-area"><div id="map" aria-label="Mapa interactivo del transporte público"></div><section id="schematic" class="schematic" aria-label="Diagrama lineal del transporte" hidden></section><div id="detail" class="detail" hidden></div>
  <div class="timeline" aria-label="Reloj del transporte">
   <div class="clock-row"><button id="play" aria-label="Pausar" title="Pausar">${icon("pause")}</button><time id="time-readout">${clock(simTime)}</time><button id="time-options" aria-label="Cambiar fecha y velocidad" aria-expanded="false">${icon("clock-3")}</button><button id="reset-time" aria-label="Volver a ahora" title="Volver a ahora">${icon("rotate-ccw")}</button><span id="clock-note">Ahora</span></div>
   <input id="time-slider" type="range" min="0" max="86399" step="60" value="${simTime}" aria-label="Hora del servicio">
@@ -201,14 +221,43 @@ $("#app").innerHTML = `
 </main></div>
 <div id="loading" class="loading"><img src="${favicon}" alt="" width="44" height="44"><h2>Cargando la red</h2><p>Preparando mapa y horarios…</p><div class="loading-line"></div></div><div id="toast" role="status" class="toast" hidden></div><dialog id="data-dialog"></dialog><dialog id="about-dialog" aria-labelledby="about-title"></dialog>`;
 refreshIcons();
+$("#linear-toggle").onclick = () => {
+  linearView = !linearView;
+  $("#schematic").hidden = !linearView;
+  $("#map").hidden = linearView;
+  $("#linear-toggle").classList.toggle("active", linearView);
+  $("#linear-toggle").setAttribute("aria-pressed", String(linearView));
+  $("#linear-toggle").setAttribute(
+    "aria-label",
+    linearView ? "Volver al mapa" : "Vista lineal",
+  );
+  closePanel();
+  $("#app").classList.remove("menu-open");
+  $("#menu-toggle").setAttribute("aria-expanded", "false");
+  $("#menu-toggle").setAttribute("aria-label", "Abrir menú");
+  if (linearView) {
+    refreshSchematic();
+  } else {
+    map?.map.resize();
+  }
+};
 function toast(message) {
   $("#toast").textContent = message;
   $("#toast").hidden = false;
   clearTimeout(toast.timer);
   toast.timer = setTimeout(() => ($("#toast").hidden = true), 5500);
 }
-const badge = (r) =>
-  `<span class="line-badge" style="--line:${r.color}">${esc(r.name)}</span>`;
+const badge = (r) => {
+  const color = r.sourceColor || r.color || "#596c68",
+    hex = color.slice(1),
+    rgb = [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16)),
+    textColor =
+      r.textColor ||
+      (rgb[0] * 0.299 + rgb[1] * 0.587 + rgb[2] * 0.114 > 175
+        ? "#151515"
+        : "#ffffff");
+  return `<span class="line-badge" style="--line:${color};--line-text:${textColor}">${esc(r.name)}</span>`;
+};
 const num = (x) => new Intl.NumberFormat("es-ES").format(x);
 function header(title, subtitle) {
   return `<div class="panel-head"><div class="eyebrow">${esc(city.name.toUpperCase())} · ${esc(city.region.toUpperCase())}</div><h2>${title}</h2><p>${subtitle}</p></div>`;
@@ -232,19 +281,23 @@ function renderPanel() {
     <div class="network-list" id="network-list">${networkList()}</div>${coverageNotice()}`;
   }
   if (tab === "filters") {
-    const hasOther = n.routes.some(
-      (r) => !["rail", "bus"].includes(transportGroup(r)),
-    );
-    const check = (id, label, value, note = "") =>
-      `<label class="filter-check"><input id="${id}" type="checkbox" ${value ? "checked" : ""}><span>${label}${note ? `<small>${note}</small>` : ""}</span></label>`;
     html =
-      header("Filtros", "Elige qué mostrar en el mapa.") +
-      `<fieldset class="filter-section"><legend>Red y paradas</legend>${check("filter-routes", "Recorridos", routesVisible)}${check("filter-rail-stops", "Metro, tren y tranvía", railStopsVisible, "Paradas sobre raíles")}${check("filter-bus-stops", "Autobús", busStopsVisible, "Paradas de bus")}${hasOther ? check("filter-other-stops", "Barco y otros", otherStopsVisible) : ""}</fieldset>
-    <fieldset class="filter-section"><legend>Movimiento por horario</legend>${check("filter-rail-motion", "Metro, tren y tranvía", railMovement)}${check("filter-bus-motion", "Autobús", busMovement)}${hasOther ? check("filter-other-motion", "Barco y otros", otherMovement) : ""}<p class="footnote">Posiciones estimadas sobre trazados disponibles, sin información de retrasos. Los recorridos sin geometría válida no se animan.</p></fieldset>
-    <fieldset class="filter-section"><legend>Datos en directo</legend>${check("filter-gps", "GPS de FGC", gpsVisible, "Barcelona · solo en la hora actual")}</fieldset>
-    <fieldset class="filter-section"><legend>Descubrir</legend>${check("filter-stories", "Historias", storiesVisible)}</fieldset>
-    <p class="footnote">Rueda del ratón o pellizco: zoom. Arrastra con el botón derecho o con dos dedos: girar. Doble clic derecho: orientar al norte.</p>`;
+      header("Filtros", "Por tipo, operador y línea.") +
+      `<div class="filter-toolbar"><button id="filters-reset">Restablecer</button><button id="filters-none">Ocultar todo</button></div>` +
+      filterTree() +
+      `<fieldset class="filter-section"><legend>Otros datos</legend><label class="filter-check"><input id="filter-gps" type="checkbox" ${gpsVisible ? "checked" : ""}><span>GPS de FGC<small>Solo en la hora actual; respeta las líneas seleccionadas en Vehículos.</small></span></label><label class="filter-check"><input id="filter-stories" type="checkbox" ${storiesVisible ? "checked" : ""}><span>Historias</span></label></fieldset>`;
   }
+  if (tab === "appearance")
+    html =
+      header("Temas", "Elige la luz y los colores de la interfaz.") +
+      `<div class="theme-options">${Object.entries(themes)
+        .map(
+          ([id, t]) =>
+            `<button data-theme="${id}" aria-pressed="${themeId === id}" class="theme-option ${themeId === id ? "active" : ""}" style="--sample-bg:${t.surface};--sample-accent:${t.accent}"><span></span><b>${t.name}</b><small>${id === "operator" ? "Colores identificativos de " + esc(city.name) : id === "morning" ? "Claro y fresco" : id === "afternoon" ? "Cálido" : "Oscuro"}</small></button>`,
+        )
+        .join(
+          "",
+        )}</div><p class="footnote">Las líneas conservan sus colores para reconocerlas en cualquier tema. El tema Ciudad se inspira en los operadores; esta aplicación es independiente.</p>`;
   if (tab === "stories") {
     html =
       header(
@@ -369,8 +422,172 @@ function bindList() {
   );
 }
 const $$ = (s) => [...document.querySelectorAll(s)];
+function filterTree() {
+  const groups = networkFilters.groups(),
+    all = groups.flatMap((g) => g.ids);
+  const check = (layer, ids, label, key) => {
+    const state = networkFilters.state(layer, ids);
+    return `<label class="filter-check"><input type="checkbox" data-filter-layer="${layer}" data-filter-key="${esc(key)}" ${state.checked ? "checked" : ""} ${state.mixed ? 'data-mixed="true"' : ""}><span>${label}</span></label>`;
+  };
+  return [
+    ["routes", "Recorridos"],
+    ["stops", "Paradas"],
+    ["motion", "Vehículos"],
+  ]
+    .map(
+      ([layer, label]) =>
+        `<details class="filter-tree"><summary>${label}<small>${networkFilters.ids(layer).length} líneas</small></summary>${check(layer, all, "Todos", "all")}${groups.map((g) => `<details class="filter-group"><summary>${typeNames[g.type]}<small>${esc(g.operator)}</small></summary>${check(layer, g.ids, "Todo este grupo", g.key)}${g.ids.map((i) => `<div class="filter-line">${check(layer, [i], badge(n.routes[i]) + `<span>${esc(n.routes[i].description)}</span>`, "line:" + i)}<button data-only-line="${i}" title="Mostrar solo ${esc(n.routes[i].name)}" aria-label="Mostrar solo ${esc(n.routes[i].name)}">Solo</button></div>`).join("")}</details>`).join("")}</details>`,
+    )
+    .join("");
+}
+function refreshFilterChecks() {
+  const groups = networkFilters.groups(),
+    all = groups.flatMap((g) => g.ids);
+  $$("[data-filter-layer]").forEach((input) => {
+    const key = input.dataset.filterKey,
+      ids =
+        key === "all"
+          ? all
+          : key.startsWith("line:")
+            ? [+key.slice(5)]
+            : groups.find((g) => g.key === key).ids;
+    const state = networkFilters.state(input.dataset.filterLayer, ids);
+    input.checked = state.checked;
+    input.indeterminate = state.mixed;
+    input.setAttribute(
+      "aria-checked",
+      state.mixed ? "mixed" : String(state.checked),
+    );
+  });
+  $$(".filter-tree > summary > small").forEach(
+    (label, i) =>
+      (label.textContent =
+        networkFilters.ids(["routes", "stops", "motion"][i]).length +
+        " líneas"),
+  );
+}
+function refreshSchematic() {
+  if (!schematic || !n) return;
+  const ids = networkFilters
+    .ids("routes")
+    .filter(
+      (i) =>
+        (mode === "all" || transportGroup(n.routes[i]) === mode) &&
+        (selectedRoute == null || selectedRoute === i),
+    );
+  schematic.render(n, s, ids);
+  schematic.update(
+    rawMovementFeatures.filter((f) =>
+      networkFilters.layers.motion.has(f.properties.route),
+    ),
+  );
+}
+function rememberDetail() {
+  if (!detailContext && map)
+    detailContext = {
+      view: map.view(),
+      linear: schematic?.view(),
+      mode,
+      route: selectedRoute,
+    };
+}
+function closeDetail(restore = true) {
+  detailToken++;
+  stationBoard = null;
+  vehicleDetail = null;
+  selectedStop = null;
+  $("#detail").hidden = true;
+  map?.set("selection", []);
+  map?.set("reach", []);
+  const previousLinear = detailContext?.linear;
+  if (detailContext) {
+    mode = detailContext.mode;
+    selectedRoute = detailContext.route;
+    if (restore) map?.restore(detailContext.view);
+    detailContext = null;
+  } else selectedRoute = null;
+  applyFilters();
+  if (linearView) {
+    refreshSchematic();
+    schematic.restore(previousLinear);
+  }
+  if (n) renderPanel();
+}
 function bindPanel() {
   bindList();
+  if (networkFilters && tab === "filters") {
+    $$(".filter-tree > summary,.filter-group > summary").forEach(
+      (summary) =>
+        (summary.onclick = (e) => {
+          e.preventDefault();
+          summary.parentElement.open = !summary.parentElement.open;
+        }),
+    );
+    refreshFilterChecks();
+    $$("[data-filter-layer]").forEach(
+      (input) =>
+        (input.onchange = () => {
+          const key = input.dataset.filterKey,
+            groups = networkFilters.groups(),
+            ids =
+              key === "all"
+                ? groups.flatMap((g) => g.ids)
+                : key.startsWith("line:")
+                  ? [+key.slice(5)]
+                  : groups.find((g) => g.key === key).ids;
+          networkFilters.set(input.dataset.filterLayer, ids, input.checked);
+          routesVisible = true;
+          refreshFilterChecks();
+          applyFilters();
+          drawMovement();
+          if (linearView) refreshSchematic();
+        }),
+    );
+    $$("[data-only-line]").forEach(
+      (b) =>
+        (b.onclick = () => {
+          networkFilters.only([+b.dataset.onlyLine]);
+          mode = "all";
+          selectedRoute = null;
+          refreshFilterChecks();
+          applyFilters();
+          drawMovement();
+          if (linearView) refreshSchematic();
+        }),
+    );
+    $("#filters-reset").onclick = () => {
+      networkFilters = new NetworkFilters(n);
+      routesVisible = stopsVisible = vehiclesVisible = true;
+      mode = "all";
+      selectedRoute = null;
+      railMovement = busMovement = otherMovement = true;
+      storiesVisible = false;
+      renderPanel();
+      applyFilters();
+      drawMovement();
+      if (linearView) refreshSchematic();
+    };
+    $("#filters-none").onclick = () => {
+      for (const layer of Object.keys(networkFilters.layers))
+        networkFilters.layers[layer].clear();
+      refreshFilterChecks();
+      applyFilters();
+      drawMovement();
+      if (linearView) refreshSchematic();
+    };
+  }
+  $$("button[data-theme]").forEach(
+    (b) =>
+      (b.onclick = () => {
+        themeId = b.dataset.theme;
+        try {
+          localStorage.setItem("enruta-theme", themeId);
+        } catch {}
+        const style = applyTheme(themeId, city.id);
+        map?.theme(style);
+        renderPanel();
+      }),
+  );
   for (const id of [
     "routes",
     "rail-stops",
@@ -476,6 +693,14 @@ function setTab(next, force = false) {
 function applyFilters() {
   map?.filters({
     mode,
+    routeIds: networkFilters?.ids("routes"),
+    stopIds: networkFilters
+      ?.stops()
+      .filter(
+        (i) =>
+          selectedRoute == null || n.routes[selectedRoute].stops.includes(i),
+      ),
+    motionIds: networkFilters?.ids("motion"),
     route: selectedRoute,
     stops: stopsVisible,
     railStops: railStopsVisible,
@@ -499,21 +724,21 @@ function showDetail(html) {
     `<button class="close-detail" aria-label="Cerrar detalle">${icon("x")}</button>${html}`;
   $("#detail").hidden = false;
   refreshIcons();
-  $(".close-detail").onclick = () => {
-    detailToken++;
-    $("#detail").hidden = true;
-    map.set("selection", []);
-  };
+  $(".close-detail").onclick = () => closeDetail();
 }
 async function showStop(i) {
+  if (i < 0 || !n.stops[i]) return;
+  rememberDetail();
+  vehicleDetail = null;
   selectedStop = i;
   const token = ++detailToken,
     st = n.stops[i],
-    rs = n.routes.filter((r) => r.stops.includes(i));
+    platforms = stationPlatforms(n, i),
+    rs = n.routes.filter((r) => r.stops.some((st) => platforms.includes(st)));
   closePanel();
   map.focusStop(i);
   showDetail(
-    `<div class="eyebrow">${esc(modeLabel(st.mode).toUpperCase())} · ${esc(st.feed.toUpperCase())} · ${esc(st.code)}</div><h2>${esc(st.name)}</h2><div class="detail-badges">${rs.map(badge).join("")}</div><div class="detail-actions"><button id="save-stop">${icon(favorites.includes(st.id) ? "bookmark-check" : "bookmark")} ${favorites.includes(st.id) ? "Guardada" : "Guardar"}</button><button id="route-from">${icon("route")} Salir de aquí</button></div><div class="access-note">${icon("accessibility")} ${st.accessible === 1 ? "Embarque accesible según GTFS" : st.accessible === 2 ? "Embarque no accesible según GTFS" : "Accesibilidad sin especificar"}</div><div class="list-heading"><span>PRÓXIMAS SALIDAS</span><span id="arrival-label">HORARIO</span></div><div id="arrivals"><p class="muted">Consultando el horario…</p></div><small class="detail-note">Predicción por horario publicado. El movimiento del mapa es una interpolación; no representa posiciones GPS. Las horas intermedias sin dato se estiman entre las salidas publicadas.</small>`,
+    `<div class="eyebrow">${esc(modeLabel(st.mode).toUpperCase())} · ${esc(st.feed.toUpperCase())} · ${esc(st.code)}</div><h2>${esc(st.name)}</h2><div class="detail-badges">${rs.map((r) => operatorSymbol(r) + badge(r)).join("")}</div><div class="detail-actions"><button id="save-stop">${icon(favorites.includes(st.id) ? "bookmark-check" : "bookmark")} ${favorites.includes(st.id) ? "Guardada" : "Guardar"}</button><button id="route-from">${icon("route")} Salir de aquí</button></div><div class="access-note">${icon("accessibility")} ${st.accessible === 1 ? "Embarque accesible según GTFS" : st.accessible === 2 ? "Embarque no accesible según GTFS" : "Accesibilidad sin especificar"}</div><div class="list-heading"><span>PRÓXIMAS LLEGADAS</span><span id="arrival-label">HORARIO</span></div><div id="arrivals"><p class="muted">Consultando el horario…</p></div><small class="detail-note">Predicción por horario publicado. El movimiento del mapa es una interpolación; no representa posiciones GPS. Las horas intermedias sin dato se estiman entre las salidas publicadas.</small>`,
   );
   attachStopTools(i);
   showStationAccess(i);
@@ -532,17 +757,17 @@ async function showStop(i) {
     $("#from").value = i;
   };
   try {
-    const deps = await ask("departures", { stop: i, time: simTime });
+    const deps = await ask("station", { stops: platforms, time: simTime });
     if (token !== detailToken) return;
-    $("#arrivals").innerHTML = deps.length
-      ? deps
-          .slice(0, 8)
-          .map(
-            (d) =>
-              `<div class="arrival">${badge(n.routes[d.trip.t[0]])}<span>${esc(s.heads[d.trip.t[3]])}<small>${d.trip.frequency ? "Intervalo estimado GTFS" : "Salida programada"}</small></span><b>${Math.max(0, Math.ceil((d.time - simTime) / 60))}<small>min</small></b></div>`,
-          )
-          .join("")
-      : '<p class="muted">No hay más salidas en este día de servicio. Prueba otra hora o fecha.</p>';
+    stationBoard = {
+      index: i,
+      token,
+      platforms,
+      deps,
+      source: "schedule",
+      refresh: Date.now() + 30000,
+    };
+    renderStationBoard();
     if (st.feed === "tmb" && st.mode === "bus" && syncClock)
       loadLive(st, token);
   } catch (e) {
@@ -568,24 +793,142 @@ async function loadLive(st, token) {
             name: l.nom_linia,
             destination: l.desti_trajecte,
             time: b.temps_arribada,
+            vehicle: b.id_bus,
           })),
         ),
       )
       .sort((a, b) => a.time - b.time);
     if (token !== detailToken || !arrivals.length) return;
-    $("#arrival-label").textContent = "iBUS · EN DIRECTO";
-    $("#arrivals").innerHTML = arrivals
-      .slice(0, 8)
-      .map(
-        (a) =>
-          `<div class="arrival"><span class="line-badge" style="--line:#62877a">${esc(a.name)}</span><span>${esc(a.destination)}<small>Predicción TMB · ${new Date(data.timestamp).toLocaleTimeString("es-ES", { timeZone: "Europe/Madrid" })}</small></span><b>${Math.max(0, Math.ceil((a.time - Date.now()) / 60000))}<small>min</small></b></div>`,
-      )
-      .join("");
-    $(".detail-note").textContent =
-      "Previsión iBus consultada en directo. La animación del mapa sigue basada en el horario GTFS.";
+    if (!stationBoard || stationBoard.token !== token) return;
+    stationBoard = {
+      ...stationBoard,
+      source: "live",
+      arrivals,
+      timestamp: data.timestamp,
+      refresh: Date.now() + 20000,
+    };
+    renderStationBoard();
   } catch {}
 }
+function renderStationBoard() {
+  if (!stationBoard || stationBoard.token !== detailToken || !$("#arrivals"))
+    return;
+  const board = stationBoard;
+  if (board.source === "live" && Date.now() - board.timestamp > 90000) {
+    board.source = "schedule";
+    board.arrivals = [];
+  }
+  $("#arrival-label").textContent =
+    board.source === "live" ? "iBUS · EN DIRECTO" : "HORARIO · ESTIMADO";
+  let groups =
+    board.source === "live"
+      ? [
+          ...new Set(board.arrivals.map((a) => a.name + ":" + a.destination)),
+        ].map((key) => {
+          const first = board.arrivals.find(
+              (a) => a.name + ":" + a.destination === key,
+            ),
+            r = n.routes.find((r) => r.feed === "tmb" && r.name === first.name);
+          return {
+            r: r || {
+              name: first.name,
+              color: "#da001b",
+              feed: "tmb",
+              mode: "bus",
+            },
+            head: first.destination,
+            values: board.arrivals
+              .filter((a) => a.name + ":" + a.destination === key)
+              .slice(0, 2)
+              .map((a) => ({
+                remaining: (a.time - Date.now()) / 1000,
+                label: a.vehicle ? "Bus " + a.vehicle : "Previsión iBus",
+              })),
+          };
+        })
+      : departureGroups(
+          board.deps.filter((d) => d.time >= simTime),
+          s,
+        )
+          .map((g) => ({
+            r: n.routes[g.route],
+            head: g.head,
+            values: g.departures
+              .filter((d) => d.time >= simTime)
+              .map((d) => ({
+                remaining:
+                  d.trip.start + s.patterns[d.trip.t[4]][1][d.k] - simTime,
+                label: d.trip.frequency
+                  ? "Intervalo GTFS"
+                  : "Horario " +
+                    clock(d.trip.start + s.patterns[d.trip.t[4]][1][d.k]),
+              })),
+          }))
+          .filter((g) => g.values.length);
+  $("#arrivals").innerHTML = groups.length
+    ? groups
+        .map(
+          (g) =>
+            `<section class="departure-display" data-operator="${esc(g.r.feed)}"><div class="departure-direction">${operatorSymbol(g.r)}${badge(g.r)}<span><small>Dirección</small><b>${esc(g.head)}</b></span></div><div class="departure-times">${g.values.map((v, j) => `<div class="${j ? "following" : ""}"><time>${countdown(v.remaining)}</time><small>${esc(v.label)}</small></div>`).join("")}</div></section>`,
+        )
+        .join("")
+    : '<p class="muted">No hay salidas publicadas para esta fecha y hora. Comprueba el calendario en Fuentes.</p>';
+  $(".detail-note").textContent =
+    board.source === "live"
+      ? "Cuenta atrás de la previsión publicada por TMB. Se actualiza cada 20 segundos."
+      : "Cuenta atrás calculada con el horario publicado; no incluye retrasos ni confirma la llegada real. Todas las líneas y sentidos de esta estación se muestran juntos.";
+}
+async function refreshStationBoard() {
+  if (
+    boardBusy ||
+    !stationBoard ||
+    Date.now() < stationBoard.refresh ||
+    loadingCity ||
+    $("#detail").hidden
+  )
+    return;
+  const board = stationBoard;
+  board.refresh = Date.now() + 30000;
+  boardBusy = true;
+  try {
+    const deps = await ask("station", {
+      stops: board.platforms,
+      time: simTime,
+    });
+    if (stationBoard !== board) return;
+    board.deps = deps;
+    const st = n.stops[board.index];
+    if (st.feed === "tmb" && st.mode === "bus" && syncClock)
+      await loadLive(st, board.token);
+    renderStationBoard();
+  } catch {
+  } finally {
+    boardBusy = false;
+  }
+}
+function operatorSymbol(r) {
+  if (r.feed === "tmb" && r.mode === "metro")
+    return '<img class="operator-symbol" src="./brands/metro-barcelona.svg" alt="Metro de Barcelona">';
+  if (r.feed?.startsWith("tram-"))
+    return '<img class="operator-symbol operator-logo" src="./brands/tram.png" alt="TRAM">';
+  if (r.feed === "fgc")
+    return '<img class="operator-symbol operator-logo" src="./brands/fgc.png" alt="FGC">';
+  const logo = r.feed?.startsWith("euskotren-")
+    ? ["euskotren.svg", "Euskotren"]
+    : {
+        "metro-madrid": ["metro-madrid.svg", "Metro de Madrid"],
+        "metro-sevilla": ["metro-sevilla.png", "Metro de Sevilla"],
+        tussam: ["tussam.png", "TUSSAM"],
+      }[r.feed];
+  if (logo)
+    return `<img class="operator-symbol operator-logo ${r.feed === "metro-sevilla" ? "logo-dark" : ""}" src="./brands/${logo[0]}" alt="${logo[1]}">`;
+  return `<span class="operator-name">${esc(r.operator || r.feed || "")}</span>`;
+}
 function showRoute(i) {
+  rememberDetail();
+  stationBoard = null;
+  vehicleDetail = null;
+  selectedStop = null;
   selectedRoute = i;
   const r = n.routes[i];
   mode = transportGroup(r);
@@ -631,6 +974,9 @@ function bindDetailStops() {
   );
 }
 function showStory(id) {
+  rememberDetail();
+  stationBoard = null;
+  vehicleDetail = null;
   const st = stories.find((x) => x.id === id);
   if (!st) return;
   $(".sidebar").classList.remove("open");
@@ -654,6 +1000,9 @@ function showStory(id) {
   };
 }
 function showTour(i) {
+  rememberDetail();
+  stationBoard = null;
+  vehicleDetail = null;
   const t = tours[i];
   mode = "rail";
   selectedRoute = null;
@@ -684,12 +1033,30 @@ function showTour(i) {
   bindDetailStops();
 }
 function showVehicle(id) {
-  const f = lastFeatures.find((x) => x.properties.id === id);
+  const f = rawMovementFeatures.find((x) => x.properties.id === id);
   if (!f) return;
+  rememberDetail();
+  stationBoard = null;
+  selectedStop = null;
+  vehicleDetail = id;
   const r = n.routes[f.properties.route];
-  toast(
-    `${r.name} → ${f.properties.head} · Próxima parada: ${n.stops[f.properties.next].name}. Posición interpolada del horario.`,
+  detailToken++;
+  showDetail(
+    `<div class="vehicle-heading">${operatorSymbol(r)}${badge(r)}<span class="vehicle-number">${esc(s.tripIds[+id.split("-")[0]] || id)}</span></div><p class="eyebrow">${esc(typeNames[r.mode] || "Vehículo")} · ${esc(r.operator)}</p><div id="vehicle-live-detail"></div><div class="detail-actions"><button id="vehicle-stop">Ver próxima parada</button><button id="vehicle-route">Ver línea</button></div><small class="detail-note">Posición y llegada estimadas por horario. El identificador corresponde al viaje GTFS, no al número de convoy. El operador no publica aquí ocupación, vía ni serie.</small>`,
   );
+  $("#vehicle-stop").onclick = () => {
+    const current = rawMovementFeatures.find((x) => x.properties.id === id);
+    if (current) showStop(current.properties.next);
+  };
+  $("#vehicle-route").onclick = () => showRoute(f.properties.route);
+  updateVehicleDetail();
+}
+function updateVehicleDetail() {
+  if (!vehicleDetail || !$("#vehicle-live-detail")) return;
+  const f = rawMovementFeatures.find((x) => x.properties.id === vehicleDetail);
+  $("#vehicle-live-detail").innerHTML = f
+    ? `<p class="eyebrow">Próxima parada</p><h2>${esc(n.stops[f.properties.next].name)}</h2><p class="eyebrow">Llegada estimada</p><time class="vehicle-countdown">${countdown(f.properties.arrival - simTime)}</time><dl class="vehicle-facts"><div><dt>Destino</dt><dd>${esc(f.properties.head)}</dd></div><div><dt>Última parada</dt><dd>${esc(n.stops[f.properties.current].name)}</dd></div><div><dt>Hora prevista</dt><dd>${clock(f.properties.arrival)}</dd></div><div><dt>Fuente</dt><dd>${f.properties.frequency ? "Intervalo GTFS" : "Horario GTFS"}</dd></div></dl>`
+    : '<p class="muted">Este viaje ya ha terminado en el horario seleccionado.</p>';
 }
 async function plan(e) {
   e.preventDefault();
@@ -869,10 +1236,11 @@ $("#about").onclick = () => {
 };
 $("#source-state").onclick = showData;
 $("#home-map").onclick = () => {
+  closeDetail(false);
   selectedRoute = null;
+  mode = "all";
   applyFilters();
   map.home();
-  $("#detail").hidden = true;
 };
 $("#tilt").onclick = () => {
   const active = map.map.getPitch() < 15;
@@ -1039,51 +1407,60 @@ document.addEventListener("keydown", (e) => {
     $("#search").focus();
   }
   if (e.key === "Escape") {
-    $("#detail").hidden = true;
+    closeDetail();
     closePanel();
     $("#app").classList.remove("menu-open");
     $("#menu-toggle").setAttribute("aria-expanded", "false");
+    $("#menu-toggle").setAttribute("aria-label", "Abrir menú");
   }
 });
-let lastFeatures = [],
+let rawMovementFeatures = [],
+  lastFeatures = [],
   last = performance.now(),
   lastDraw = 0;
 function drawMovement() {
   if (!movement || !map?.ready || loadingCity) return;
-  lastFeatures = movement
-    .features(trips, simTime)
-    .filter(
-      (f) =>
-        !(
-          syncClock &&
-          gpsVisible &&
-          gps?.vehicles.length &&
-          Date.now() - gps.timestamp <= 180000 &&
-          n.routes[f.properties.route].feed === "fgc"
-        ),
-    );
+  rawMovementFeatures = movement.features(trips, simTime);
+  lastFeatures = rawMovementFeatures.filter(
+    (f) =>
+      !(
+        syncClock &&
+        gpsVisible &&
+        gps?.vehicles.length &&
+        Date.now() - gps.timestamp <= 180000 &&
+        n.routes[f.properties.route].feed === "fgc"
+      ),
+  );
   map.set("vehicles", lastFeatures);
-  const filtered = lastFeatures.filter(
+  const filtered = (linearView ? rawMovementFeatures : lastFeatures).filter(
     (f) =>
       (mode === "all" || f.properties.mode === mode) &&
       (selectedRoute == null || f.properties.route === selectedRoute),
   );
   $("#moving-count").textContent =
     num(
-      filtered.filter((f) =>
-        f.properties.mode === "rail"
-          ? railMovement
-          : f.properties.mode === "bus"
-            ? busMovement
-            : otherMovement,
-      ).length,
+      filtered
+        .filter((f) => networkFilters.layers.motion.has(f.properties.route))
+        .filter((f) =>
+          f.properties.mode === "rail"
+            ? railMovement
+            : f.properties.mode === "bus"
+              ? busMovement
+              : otherMovement,
+        ).length,
     ) + " estimados";
+  if (linearView)
+    schematic.update(
+      rawMovementFeatures.filter((f) =>
+        networkFilters.layers.motion.has(f.properties.route),
+      ),
+    );
 }
 function attachStopTools(i) {
   const st = n.stops[i];
   $(".access-note").insertAdjacentHTML(
     "afterend",
-    `<div class="reach-card"><div class="eyebrow">TU RADIO DE CIUDAD</div><p>¿Hasta dónde llegas desde aquí?</p><div class="reach-buttons">${[15, 30, 45].map((m) => `<button data-reach="${m}">${m} min</button>`).join("")}<button id="clear-reach" aria-label="Quitar alcance">×</button></div><small id="reach-summary">Descubre las paradas alcanzables por horario.</small></div>${st.feed !== "tmb" || st.mode !== "bus" ? "" : `<button class="transit-button" id="stop-transit">${icon("database")} Mobiliario y correspondencias TMB</button><div id="stop-transit-result"></div>`}`,
+    `<details class="station-extras"><summary>Conexiones y alcance</summary><div class="reach-card"><p>Paradas alcanzables desde aquí</p><div class="reach-buttons">${[15, 30, 45].map((m) => `<button data-reach="${m}">${m} min</button>`).join("")}<button id="clear-reach" aria-label="Quitar alcance">×</button></div><small id="reach-summary">Descubre las paradas alcanzables por horario.</small></div>${st.feed !== "tmb" || st.mode !== "bus" ? "" : `<button class="transit-button" id="stop-transit">${icon("database")} Mobiliario y correspondencias TMB</button><div id="stop-transit-result"></div>`}</details>`,
   );
   $$("[data-reach]").forEach(
     (b) =>
@@ -1235,6 +1612,9 @@ function tick(now) {
       drawGPS();
       refreshGPS();
       updateClock();
+      renderStationBoard();
+      refreshStationBoard();
+      updateVehicleDetail();
       lastDraw = now;
     }
   }
@@ -1258,11 +1638,24 @@ function coverageNotice() {
   return `<p class="coverage-note">${esc(city.coverage)}${expired.length ? `<br><strong>${expired.map((f) => esc(f.publisher)).join(", ")}: archivo fuera del calendario actual. Consulta sus fechas en Fuentes.</strong>` : ""}</p>`;
 }
 function showGPS(id) {
+  rememberDetail();
+  stationBoard = null;
+  vehicleDetail = null;
+  selectedStop = null;
   const v = gps?.vehicles.find((v) => v.id === id);
   if (!v || Date.now() - v.timestamp > 180000 || !syncClock) return;
   detailToken++;
   showDetail(
-    `<div class="eyebrow gps-text">POSICIÓN PUBLICADA · FGC</div><h2>Línea ${esc(v.line)}</h2><p class="story-subtitle">${v.trainType ? "Serie " + esc(v.trainType) + " · " : ""}Destino ${esc(v.destination)}</p><div class="gps-card"><strong>${v.occupancy === null ? "Sin dato" : v.occupancy + "%"}</strong><span>Ocupación media de coches con dato</span></div><p class="story-body">${v.onTime === true ? "El operador indica circulación en hora." : v.onTime === false ? "El operador indica circulación fuera de hora." : "Puntualidad sin especificar."}${v.station ? " Código de estación: " + esc(v.station) + "." : ""}</p><small class="detail-note">Publicación del conjunto FGC: ${new Date(v.timestamp).toLocaleTimeString("es-ES", { timeZone: "Europe/Madrid" })}. Esta hora corresponde a la actualización del conjunto, no a una medición individual del tren. Los códigos de destino son los del operador.</small><a class="text-link" href="${FGC_SOURCE}" target="_blank" rel="noopener">Fuente FGC · CC BY 4.0 ↗</a>`,
+    `<div class="eyebrow gps-text">POSICIÓN PUBLICADA · FGC</div><div class="detail-badges">${operatorSymbol({ feed: "fgc" })}${n.routes.find((r) => r.feed === "fgc" && r.name === v.line) ? badge(n.routes.find((r) => r.feed === "fgc" && r.name === v.line)) : ""}</div><h2>Línea ${esc(v.line)}</h2><p class="story-subtitle">${v.trainType ? "Serie " + esc(v.trainType) + " · " : ""}Destino ${esc(v.destination)}</p><div class="gps-card"><strong>${v.occupancy === null ? "Sin dato" : v.occupancy + "%"}</strong><span>Ocupación media de coches con dato</span></div><p class="story-body">${v.onTime === true ? "El operador indica circulación en hora." : v.onTime === false ? "El operador indica circulación fuera de hora." : "Puntualidad sin especificar."}${v.station ? " Código de estación: " + esc(v.station) + "." : ""}</p><small class="detail-note">Publicación del conjunto FGC: ${new Date(v.timestamp).toLocaleTimeString("es-ES", { timeZone: "Europe/Madrid" })}. Esta hora corresponde a la actualización del conjunto, no a una medición individual del tren. Los códigos de destino son los del operador.</small><details class="raw-vehicle-data"><summary>Todos los campos publicados</summary><dl>${Object.entries(
+      v.details || {},
+    )
+      .map(
+        ([key, value]) =>
+          `<div><dt>${esc(key)}</dt><dd>${esc(typeof value === "object" ? JSON.stringify(value) : value)}</dd></div>`,
+      )
+      .join(
+        "",
+      )}</dl></details><a class="text-link" href="${FGC_SOURCE}" target="_blank" rel="noopener">Fuente FGC · CC BY 4.0 ↗</a>`,
   );
 }
 function drawGPS() {
@@ -1291,11 +1684,11 @@ function drawGPS() {
   map.set("gps", features);
   let label = $("#gps-status");
   if (label) {
-    label.hidden = city?.id !== "barcelona" || !gpsVisible;
+    label.hidden = linearView || city?.id !== "barcelona" || !gpsVisible;
     label.textContent = !syncClock
       ? "FGC GPS · vuelve a «Ahora» para verlo"
       : visible
-        ? `${features.length} posiciones FGC · ${new Date(gps.timestamp).toLocaleTimeString("es-ES", { timeZone: "Europe/Madrid" })}`
+        ? `${features.filter((f) => networkFilters.layers.motion.has(f.properties.route) && (mode === "all" || mode === "rail") && (selectedRoute == null || selectedRoute === f.properties.route)).length} posiciones FGC · ${new Date(gps.timestamp).toLocaleTimeString("es-ES", { timeZone: "Europe/Madrid" })}`
         : gpsMessage;
   }
 }
@@ -1355,6 +1748,10 @@ async function loadCity(id) {
     gps = null;
     gpsNext = 0;
     [n, s] = data;
+    detailContext = stationBoard = vehicleDetail = null;
+    networkFilters = new NetworkFilters(n);
+    railMovement = busMovement = otherMovement = true;
+    const mapTheme = applyTheme(themeId, next.id);
     applyRouteColors(n);
     city = next;
     stories = cityStories[id] || [];
@@ -1388,6 +1785,7 @@ async function loadCity(id) {
     const ready = ask("init", { network: n, schedule: s });
     const currentMap = new CityMap(n, {
       movement,
+      theme: mapTheme,
       onStop: showStop,
       onRoute: showRoute,
       onStory: showStory,
@@ -1421,6 +1819,13 @@ async function loadCity(id) {
     currentMap.map.on("moveend", reflectView);
     reflectView();
     trips = (await ready).trips;
+    schematic = new Schematic($("#schematic"), {
+      onStop: showStop,
+      onVehicle: showVehicle,
+      onRoute: showRoute,
+      badge,
+    });
+    refreshSchematic();
     $("#loading").classList.add("gone");
     setTimeout(() => {
       if (epoch === cityEpoch) $("#loading").hidden = true;

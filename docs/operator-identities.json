@@ -1,0 +1,51 @@
+{
+  "checked": "2026-10-06",
+  "note": "Marcas de sus respectivos titulares, utilizadas para identificar operadores. Interfaz independiente; las paletas de Ciudad se inspiran en ellos y no son sistemas de diseño oficiales.",
+  "assets": [
+    {
+      "file": "public/brands/metro-barcelona.svg",
+      "owner": "TMB",
+      "source": "https://static-web.tmb.cat/o/tmb-theme/images/jotmbe/24px/svg/24px_Metro_vermell.svg"
+    },
+    {
+      "file": "public/brands/fgc.png",
+      "owner": "FGC",
+      "source": "https://www.fgc.cat/wp-content/uploads/2023/01/logo-fgc-header.png"
+    },
+    {
+      "file": "public/brands/tram.png",
+      "owner": "TRAM",
+      "source": "https://www.tram.cat/assets/images/tram_logo.png"
+    },
+    {
+      "file": "public/brands/metro-madrid.svg",
+      "owner": "Metro de Madrid",
+      "source": "https://www.metromadrid.es/sites/default/files/logos/MetroMadridLogo_9_0.svg"
+    },
+    {
+      "file": "public/brands/euskotren.svg",
+      "owner": "Euskotren",
+      "source": "https://www.euskotren.eus/themes/custom/euskotren/logo.svg"
+    },
+    {
+      "file": "public/brands/metro-sevilla.png",
+      "owner": "Metro de Sevilla",
+      "source": "https://www.metro-sevilla.es/static/images/logos/metroDeSevillaFooterLogoBlanco.png"
+    },
+    {
+      "file": "public/brands/tussam.png",
+      "owner": "TUSSAM",
+      "source": "https://www.tussam.es/sites/default/files/logo_tussam.png"
+    }
+  ],
+  "lineBadges": "Código, fondo y color de texto publicados en GTFS; si falta color de texto se elige uno legible. Los colores diferenciados del mapa se conservan por separado del símbolo de línea.",
+  "palettes": {
+    "barcelona": "https://www.tmb.cat/",
+    "madrid": "https://datos.crtm.es/",
+    "sevilla": "https://www.tussam.es/",
+    "zaragoza": "https://www.tranviasdezaragoza.es/",
+    "euskadi": "https://www.euskotren.eus/",
+    "espana": "https://www.renfe.com/",
+    "andalucia": "https://api.ctan.es/"
+  }
+}

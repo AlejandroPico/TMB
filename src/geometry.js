@@ -204,6 +204,12 @@ export class Movement {
           mode: transportGroup(r),
           next: p[0][next],
           head: this.s.heads[t[3]],
+          pattern: t[4],
+          segment: k,
+          fraction: mix,
+          arrival: trip.start + p[1][next],
+          current: p[0][k],
+          frequency: trip.frequency,
         },
       });
     }

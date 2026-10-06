@@ -12,23 +12,29 @@ También puedes cambiarlo en GitHub → Settings → Secrets and variables → A
 
 ## Cobertura
 
-| Vista          | Operadores                                                                                         |
-| -------------- | -------------------------------------------------------------------------------------------------- |
-| Barcelona      | TMB y FGC, incluidas sus líneas regionales publicadas                                              |
-| Madrid         | Metro, EMT y Metro Ligero                                                                          |
-| Sevilla        | TUSSAM, Metro y Consorcio del Área de Sevilla                                                      |
-| Zaragoza       | Avanza urbana y tranvía                                                                            |
-| Andalucía      | Consorcios de Bahía de Cádiz, Granada, Málaga, Campo de Gibraltar, Almería, Jaén, Córdoba y Huelva |
-| España · Renfe | AVE, Larga y Media Distancia, Cercanías y Rodalies                                                 |
+| Vista           | Operadores                                                                                         |
+| --------------- | -------------------------------------------------------------------------------------------------- |
+| Barcelona       | TMB, FGC y TRAM (T1–T6), incluidas sus líneas regionales publicadas                                |
+| Madrid          | Metro, EMT y Metro Ligero                                                                          |
+| Sevilla         | TUSSAM, Metro y Consorcio del Área de Sevilla                                                      |
+| Zaragoza        | Avanza urbana y tranvía                                                                            |
+| Andalucía       | Consorcios de Bahía de Cádiz, Granada, Málaga, Campo de Gibraltar, Almería, Jaén, Córdoba y Huelva |
+| Bilbao          | Metro Bilbao, Euskotren, tranvía y funicular de Larreineta                                         |
+| Donostia        | Euskotren E1 y E2                                                                                  |
+| Vitoria-Gasteiz | Tranvía Euskotren TG1 y TG2                                                                        |
+| España · Renfe  | AVE, Larga y Media Distancia, Cercanías y Rodalies                                                 |
 
-Trece vistas: cuatro ciudades iniciales, ocho áreas adicionales de consorcios andaluces y la red nacional de Renfe. Las áreas adicionales muestran los servicios del consorcio, no todos los autobuses urbanos de cada ciudad. No cubre todavía todos los operadores de España. Cercanías se explora en la vista nacional; no se planifican enlaces entre vistas. Las líneas GTFS pueden representar variantes de un servicio, no números comerciales únicos. Los datos se cargan al seleccionar cada vista. Puedes compartirla con `?city=madrid`, `sevilla`, `zaragoza`, `barcelona` o `espana`.
+Dieciséis vistas: siete ciudades, ocho áreas adicionales de consorcios andaluces y la red nacional de Renfe. Las áreas adicionales muestran los servicios del consorcio, no todos los autobuses urbanos de cada ciudad. No cubre todavía todos los operadores de España. Cercanías se explora en la vista nacional; no se planifican enlaces entre vistas. Las líneas GTFS pueden representar variantes de un servicio, no números comerciales únicos. Los datos se cargan al seleccionar cada vista. Puedes compartirla con `?city=madrid`, `sevilla`, `zaragoza`, `barcelona` `bilbao`, `donostia`, `vitoria` o `espana`.
 
 **El calendario público consultado de Metro de Madrid termina el 27 de mayo de 2026, y el de Avanza Zaragoza el 5 de octubre de 2026.** Se conservan sus redes y horarios archivados con un aviso visible. No se extienden las fechas. El resto de operadores tiene calendarios independientes. «Fuentes» muestra procedencia, licencia, versión, vigencia y SHA-256 por operador.
 
 ## Funciones
 
 - Mapa a pantalla completa, menú lateral contraído y paneles que se despliegan a la derecha. En móvil, hamburguesa. Sin cabecera ni tarjetas promocionales. Paneles y botones con esquinas rectas.
-- Filtros separados de recorridos, paradas de bus/raíles, movimiento de bus/raíles, GPS e historias. Historias y movimiento de autobuses apagados al iniciar.
+- Filtros jerárquicos independientes de recorridos, paradas y vehículos: todos, tipo/operador y línea. Botón «Solo» para aislar una línea; estados parciales y reinicio. Historias y movimiento de autobuses apagados al iniciar.
+- Vista lineal con líneas ordenadas, sentidos paralelos, ramales, paradas y vehículos estimados seleccionables. Desplazamiento horizontal sincronizado entre sentidos.
+- Fichas de estación con líneas y destinos, dos llegadas por sentido y cuenta atrás en segundos. Fichas de vehículos con próxima parada, destino e identificador del viaje. Cerrar la ficha recupera la cámara, selección y desplazamiento previos.
+- Temas Mañana, Tarde, Noche y Ciudad, guardados localmente. Ciudad adapta la paleta a la identidad del operador; no es una interfaz oficial. Símbolos descargados de operadores y colores de línea GTFS: [procedencia](docs/operator-identities.json).
 - Rueda/pellizco para zoom; giro con botón derecho o dos dedos. Doble clic derecho restablece norte y vista plana. Vista general y 3D en el lateral.
 - Selección de red por geolocalización si no hay ciudad explícita en la URL. Requiere permiso del navegador; coordenadas procesadas localmente. Si no hay una red urbana cercana, se abre Renfe. «Paradas cerca de mí» está en Explorar.
 - Acerca de: favicon original, nombre configurable, versión de package.json, autor, portfolio y repositorio.
@@ -44,6 +50,10 @@ En Barcelona, los **puntos azules** son coordenadas de la [API pública de FGC](
 
 Se consulta cada 30 segundos con el reloj en «Ahora», movimiento activado y página visible. Se ocultan publicaciones de más de tres minutos. La hora corresponde a la actualización del **conjunto** de FGC, no a la medición individual de cada tren. Al cambiar fecha, acelerar o pausar desaparece GPS. Con GPS vigente se omiten los vehículos estimados de FGC para evitar duplicaciones.
 
+La vista lineal usa siempre posiciones estimadas, también para FGC, y lo indica en su cabecera. El mapa conserva las posiciones publicadas de FGC cuando están vigentes.
+
+Los contadores de metro, tren y tranvía proceden del horario GTFS: **actualizar un contador cada segundo no convierte la previsión en una llegada real**. La API TMB consultada no publica predicciones de metro. El adaptador iBus usa previsiones oficiales y antigüedad máxima de 90 segundos cuando se conecta el servidor. Campos como vía, serie o ocupación solo se muestran cuando el operador los facilita.
+
 Los demás puntos son **interpolaciones por horario, no GPS**. Los recorridos sin geometría válida conservan horarios y paradas, pero no se dibujan ni se animan. No hay líneas rectas de sustitución. Las horas intermedias vacías se estiman; los servicios por frecuencia también. Se contemplan viajes del día anterior después de medianoche.
 
 EMT publica itinerarios completos en `stop_times` y ventanas de frecuencia asociadas a esos mismos viajes. Su adaptador conserva las horas individuales y evita expandir repetidamente ventanas, que multiplicarían artificialmente los vehículos. La política específica figura en `tools/providers.json` y los metadatos.
@@ -54,7 +64,7 @@ No se incluyen incidencias, cancelaciones ni ascensores fuera de servicio. Los e
 
 `tools/geometry.py` recupera trazados ausentes y guarda la procedencia individual en `shapeInfo`:
 
-- TMB, FGC, Madrid, Consorcios y Zaragoza: geometría GTFS del operador.
+- TMB, FGC, TRAM, Euskotren, Metro Bilbao, Madrid, Consorcios y Zaragoza: geometría GTFS del operador.
 - TUSSAM: [recorridos municipales del Ayuntamiento de Sevilla](https://www.arcgis.com/home/item.html?id=c5e6ecf63aa944c8a09eb1e65e72d8f4), asociados a línea y secuencia de paradas. Se rechazan emparejamientos a más de 120 m.
 - Metro de Sevilla: [relación OSM 255088](https://www.openstreetmap.org/relation/255088), ensamblada sin unir piezas desconectadas. ODbL.
 - Renfe sin shapes: grafo de [enlaces ferroviarios IGN / INSPIRE](https://api-features.idee.es/collections/railwaylink?f=html). Pasa por las estaciones publicadas, con preferencia por vías de 1435 mm en AVE/Avlo y reparación de precisión de extremos inferior a un metro. Las curvas se simplifican con tolerancia de 8 m.
@@ -95,6 +105,8 @@ pnpm preview
 
 Actions renueva, valida, compila y publica con cada subida a `main`, los lunes a las 04:23 UTC y manualmente. Si una ciudad falla conserva su copia publicada. No genera commits automáticos. Descargar hoy un archivo no garantiza que su calendario esté vigente: se muestran sus fechas reales.
 
+La incorporación de TRAM incluye la T4 hasta Verdaguer, Sicília y Monumental. Euskadi añade las redes publicadas, no toda la cobertura de autobuses urbanos. Metro Bilbao agrupa L1/L2 en una ruta GTFS del operador: no se inventan números de línea ausentes. [Investigación de redes y APIs](docs/network-research.md).
+
 ## Expandir la cobertura
 
 [tools/providers.json](tools/providers.json) separa operadores y vistas. Añade una fuente GTFS con ID, URL, web, licencia y caché; después una vista con fuentes, centro, zoom y descripción de cobertura. El importador normaliza tipos estándar y extendidos y aísla los IDs por operador. Las APIs en directo se incorporan como adaptadores independientes, con procedencia y control de antigüedad.
@@ -104,6 +116,7 @@ El [Punto de Acceso Nacional](https://nap.transportes.gob.es/) reúne GTFS, GTFS
 ## Atribuciones
 
 - [TMB](https://developer.tmb.cat/) y [condiciones](https://developer.tmb.cat/docs/terms-conditions).
+- [TRAM Open Data](https://opendata.tram.cat/), [Open Data Euskadi](https://opendata.euskadi.eus/) y [Euskotren](https://www.euskotren.eus/).
 - [FGC](https://dadesobertes.fgc.cat/), [CRTM](https://datos.crtm.es/) y [EMT](https://datos.emtmadrid.es/).
 - [Consorcios de Andalucía](https://api.ctan.es/), [TUSSAM](https://www.tussam.es/) y [Metro de Sevilla](https://www.metro-sevilla.es/).
 - [Zaragoza](https://www.zaragoza.es/web/espacio-de-datos/servicio/catalogo/335), [Tranvía de Zaragoza](https://www.tranviasdezaragoza.es/) y [Renfe](https://data.renfe.com/).

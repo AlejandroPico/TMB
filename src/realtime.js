@@ -42,6 +42,7 @@ export function fgcSnapshot(records, metadata, now = Date.now()) {
           ? Math.round(occupancy.reduce((a, b) => a + b, 0) / occupancy.length)
           : null,
         timestamp,
+        details: r,
       },
     ];
   });

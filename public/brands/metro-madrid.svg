@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Acceso no disponible | Metro de Madrid</title>
+
+<style>
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: #ffffff;
+    color: #3f4447;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .topbar {
+    height: 46px;
+    background: #f4f4f4;
+    border-bottom: 1px solid #eeeeee;
+  }
+
+  .header {
+    min-height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid #f1f1f1;
+    background: #ffffff;
+  }
+
+  .logo {
+    width: 250px;
+    max-width: 58%;
+    height: auto;
+    display: block;
+  }
+
+  .main {
+    max-width: 1050px;
+    margin: 0 auto;
+    padding: 65px 40px 70px 40px;
+  }
+
+  h1 {
+    margin: 0 0 38px 0;
+    color: #2864a5;
+    font-size: 48px;
+    line-height: 1.15;
+    font-weight: 400;
+    letter-spacing: -0.5px;
+  }
+
+  .layout {
+    display: flex;
+    gap: 55px;
+    align-items: flex-start;
+  }
+
+  .status {
+    flex: 0 0 165px;
+  }
+
+  .status-box {
+    width: 150px;
+    height: 115px;
+    border: 6px solid #2864a5;
+    border-radius: 10px;
+    position: relative;
+    text-align: center;
+    padding-top: 38px;
+    color: #e6302f;
+    font-size: 30px;
+    font-weight: bold;
+  }
+
+  .status-box:before {
+    content: "•••";
+    position: absolute;
+    top: 2px;
+    left: 12px;
+    color: #2864a5;
+    font-size: 23px;
+    letter-spacing: 2px;
+  }
+
+  .text {
+    flex: 1;
+    max-width: 700px;
+  }
+
+  .intro {
+    font-size: 19px;
+    line-height: 1.7;
+    margin: 0 0 22px 0;
+  }
+
+  .notice {
+    margin: 30px 0;
+    padding: 22px 25px;
+    background: #f7f9fb;
+    border-left: 5px solid #2864a5;
+  }
+
+  .notice-title {
+    margin: 0 0 13px 0;
+    color: #2864a5;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 22px;
+  }
+
+  li {
+    margin: 8px 0;
+    font-size: 16px;
+    line-height: 1.55;
+  }
+
+  .support {
+    margin-top: 30px;
+    padding: 22px 25px;
+    background: #f7f9fb;
+    border: 1px solid #e1e6eb;
+    font-size: 16px;
+    line-height: 1.65;
+  }
+
+  .support-title {
+    margin: 0 0 12px 0;
+    color: #2864a5;
+    font-size: 19px;
+    font-weight: bold;
+  }
+
+  .support p {
+    margin: 0 0 14px 0;
+  }
+
+  .support a {
+    color: #2864a5;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  .support a:hover {
+    text-decoration: underline;
+  }
+
+  .support-id-label {
+    margin-top: 18px;
+    font-size: 15px;
+  }
+
+  .support-id {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 10px 14px;
+    background: #ffffff;
+    border: 1px solid #d5dadd;
+    border-radius: 4px;
+    font-family: Consolas, Monaco, monospace;
+    font-size: 15px;
+    font-weight: bold;
+    color: #30353a;
+    word-break: break-all;
+  }
+
+  .actions {
+    margin-top: 32px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .button {
+    display: inline-block;
+    padding: 13px 24px;
+    background: #2864a5;
+    border: 2px solid #2864a5;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 3px;
+  }
+
+  .button:hover {
+    background: #1f5189;
+    border-color: #1f5189;
+  }
+
+  .button-secondary {
+    background: #ffffff;
+    color: #2864a5;
+  }
+
+  .button-secondary:hover {
+    background: #f4f7fa;
+    color: #1f5189;
+    border-color: #1f5189;
+  }
+
+  .footer {
+    margin-top: 65px;
+    padding-top: 22px;
+    border-top: 1px solid #e7e7e7;
+    font-size: 13px;
+    color: #777d81;
+  }
+
+  @media (max-width: 700px) {
+
+    .topbar {
+      height: 24px;
+    }
+
+    .header {
+      min-height: 105px;
+    }
+
+    .logo {
+      width: 200px;
+    }
+
+    .main {
+      padding: 38px 24px 45px 24px;
+    }
+
+    h1 {
+      font-size: 34px;
+      margin-bottom: 28px;
+    }
+
+    .layout {
+      display: block;
+    }
+
+    .status {
+      margin-bottom: 30px;
+    }
+
+    .status-box {
+      width: 125px;
+      height: 95px;
+      padding-top: 31px;
+      font-size: 25px;
+    }
+
+    .intro {
+      font-size: 17px;
+    }
+
+    .actions {
+      display: block;
+    }
+
+    .button {
+      display: block;
+      width: 100%;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+  }
+
+</style>
+</head>
+
+<body>
+
+  <div class="topbar"></div>
+
+  <div class="header">
+    <img
+      class="logo"
+      src="https://www.metromadrid.es/sites/default/files/logos/MetroMadridLogo_9_0.svg"
+      alt="Metro de Madrid">
+  </div>
+
+  <main class="main">
+
+    <h1>No ha sido posible acceder a esta página</h1>
+
+    <div class="layout">
+
+      <div class="status">
+        <div class="status-box">!</div>
+      </div>
+
+      <div class="text">
+
+        <p class="intro">
+          La solicitud ha sido bloqueada por los sistemas de seguridad
+          que protegen este servicio.
+        </p>
+
+        <p class="intro">
+          En determinadas circunstancias, la configuración del navegador,
+          de la conexión o de algunas extensiones puede provocar que una
+          solicitud legítima sea identificada como no permitida.
+        </p>
+
+        <div class="notice">
+
+          <div class="notice-title">
+            Antes de volver a intentarlo
+          </div>
+
+          <ul>
+            <li>Utilice un navegador actualizado y de uso habitual.</li>
+            <li>Pruebe a acceder desde una ventana privada o en modo incógnito.</li>
+            <li>Borre las cookies y la caché del navegador.</li>
+            <li>Desactive temporalmente extensiones que puedan modificar la navegación.</li>
+            <li>Evite, si es posible, conexiones mediante VPN, proxy o herramientas de automatización.</li>
+            <li>Vuelva a acceder al servicio desde la página principal de Metro de Madrid.</li>
+          </ul>
+
+        </div>
+
+        <div class="support">
+
+          <div class="support-title">
+            ¿Sigue sin poder acceder?
+          </div>
+
+          <p>
+            Puede ponerse en contacto con el Centro de Atención al Cliente
+            de Metro de Madrid a través de nuestra página de
+            <a href="https://www.metromadrid.es/es/contacto">contacto</a>
+            o llamando al teléfono <strong>900 444 404</strong>.
+          </p>
+
+          <p>
+            Para ayudarnos a localizar el bloqueo, indique el siguiente
+            identificador cuando comunique la incidencia.
+          </p>
+
+          <div class="support-id-label">
+            <strong>Identificador de la incidencia (Support ID):</strong>
+          </div>
+
+          <div class="support-id">
+            <14059281727220431724>
+          </div>
+
+        </div>
+
+        <div class="actions">
+
+          <a class="button"
+             href="https://www.metromadrid.es/">
+            Volver a la portada
+          </a>
+
+          <a class="button button-secondary"
+             href="https://www.metromadrid.es/es/contacto">
+            Contactar con Metro
+          </a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="footer">
+      Metro de Madrid
+    </div>
+
+  </main>
+
+</body>
+</html>

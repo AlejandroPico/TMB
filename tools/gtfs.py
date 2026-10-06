@@ -52,8 +52,11 @@ def parse_gtfs(raw, feed, source):
     stopindex = {st['sourceId']: i for i, st in enumerate(stops)}
     routes = []
     for route in rows('routes.txt'):
+        if feed.get('includeRouteNames') and route.get('route_short_name') not in feed['includeRouteNames']: continue
         if feed.get('agency') and route.get('agency_id') != feed['agency']: continue
         mode = transport_mode(route['route_type'])
+        if feed.get('forceMode'): mode = feed['forceMode']
+        mode = feed.get('routeModes', {}).get(route.get('route_short_name'), mode)
         if mode in feed.get('excludeModes', []): continue
         if feed.get('railMode') and mode == 'metro': mode = feed['railMode']
         color = route.get('route_color') or feed.get('color', '709774')
@@ -62,6 +65,8 @@ def parse_gtfs(raw, feed, source):
                        'operator': feed['name'], 'name': route.get('route_short_name') or route.get('route_long_name') or route['route_id'],
                        'description': route.get('route_long_name') or '', 'type': number(route['route_type']), 'mode': mode,
                        'color': '#' + color, 'url': route.get('route_url') or feed['website']})
+        text_color = route.get('route_text_color', '')
+        if len(text_color) == 6 and all(c in '0123456789abcdefABCDEF' for c in text_color): routes[-1]['textColor'] = '#'+text_color
     routeindex = {r['sourceId']: i for i, r in enumerate(routes)}
     triprows = {t['trip_id']: t for t in rows('trips.txt') if t['route_id'] in routeindex}
     times = collections.defaultdict(list)

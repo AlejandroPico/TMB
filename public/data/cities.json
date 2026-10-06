@@ -17,7 +17,7 @@
           "source": "https://files.mobilitydatabase.org/mdb-2359/mdb-2359-202610030154/mdb-2359-202610030154.zip",
           "website": "https://developer.tmb.cat/",
           "license": "https://developer.tmb.cat/docs/terms-conditions",
-          "fetchedAt": "2026-10-06T07:58:45.775115+00:00",
+          "fetchedAt": "2026-10-06T10:37:34.062444+00:00",
           "version": "082602102026002",
           "start": "20261002",
           "end": "20270529",
@@ -29,9 +29,8 @@
           "approximateShapes": 0,
           "timezone": "Europe/Madrid",
           "frequencyPolicy": "expand",
-          "originalMissingShapes": 0,
           "missingShapes": 0,
-          "reconstructedShapes": 0
+          "retainedShapes": 0
         },
         {
           "id": "fgc",
@@ -39,7 +38,7 @@
           "source": "https://www.fgc.cat/google/google_transit.zip",
           "website": "https://dadesobertes.fgc.cat/",
           "license": "https://creativecommons.org/licenses/by/4.0/",
-          "fetchedAt": "2026-10-06T07:58:48.317586+00:00",
+          "fetchedAt": "2026-10-06T10:37:37.971627+00:00",
           "version": "2026-10-02T13:25:51+02:00_not tagged",
           "start": "20240101",
           "end": "20261231",
@@ -51,20 +50,61 @@
           "approximateShapes": 0,
           "timezone": "Europe/Madrid",
           "frequencyPolicy": "expand",
-          "originalMissingShapes": 0,
           "missingShapes": 0,
-          "reconstructedShapes": 0
+          "retainedShapes": 0
+        },
+        {
+          "id": "tram-tbx",
+          "publisher": "TRAM · Trambaix",
+          "source": "https://opendata.tram.cat/GTFS/zip/TBX.zip",
+          "website": "https://www.tram.cat/",
+          "license": "https://opendata.tram.cat/privacy",
+          "fetchedAt": "2026-10-06T10:37:39.384751+00:00",
+          "version": "8029d3dc22fe",
+          "start": "20261006",
+          "end": "20261105",
+          "sha256": "8029d3dc22fea4bb781af2b73e474dbe04cf97612113d7ea35e82e98ec2fd164",
+          "routes": 3,
+          "stops": 57,
+          "trips": 1811,
+          "skippedTrips": 0,
+          "approximateShapes": 0,
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand",
+          "missingShapes": 0,
+          "retainedShapes": 0
+        },
+        {
+          "id": "tram-tbs",
+          "publisher": "TRAM · Trambesòs",
+          "source": "https://opendata.tram.cat/GTFS/zip/TBS.zip",
+          "website": "https://www.tram.cat/",
+          "license": "https://opendata.tram.cat/privacy",
+          "fetchedAt": "2026-10-06T10:37:39.974532+00:00",
+          "version": "d38a9cc232f4",
+          "start": "20261006",
+          "end": "20261105",
+          "sha256": "d38a9cc232f4af8b8f850697d00844df88ef506c031969ab7c12fde81ea6e53d",
+          "routes": 3,
+          "stops": 56,
+          "trips": 3203,
+          "skippedTrips": 0,
+          "approximateShapes": 0,
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand",
+          "missingShapes": 0,
+          "retainedShapes": 0
         }
       ],
       "source": "https://developer.tmb.cat/",
-      "coverage": "TMB y FGC. No incluye todos los operadores del área metropolitana.",
+      "coverage": "TMB, FGC y TRAM (Trambaix y Trambesòs). No incluye todos los operadores del área metropolitana.",
       "journey": [
         "Catalunya",
         "Sagrada Família"
       ],
-      "routes": 137,
-      "stops": 2969,
-      "trips": 70623,
+      "routes": 143,
+      "stops": 3082,
+      "trips": 75637,
       "network": "./data/barcelona/network.json",
       "schedule": "./data/barcelona/schedule.json"
     },
@@ -678,6 +718,159 @@
       "trips": 563,
       "network": "./data/huelva/network.json",
       "schedule": "./data/huelva/schedule.json"
+    },
+    {
+      "id": "bilbao",
+      "name": "Bilbao",
+      "region": "Euskadi",
+      "center": [
+        -2.935,
+        43.263
+      ],
+      "zoom": 12.2,
+      "feeds": [
+        {
+          "id": "euskotren-bilbao",
+          "publisher": "Euskotren",
+          "source": "https://opendata.euskadi.eus/transport/moveuskadi/euskotren/gtfs_euskotren.zip",
+          "website": "https://www.euskotren.eus/",
+          "license": "https://opendata.euskadi.eus/como-reutilizar/-/reutilizar-datos-abiertos/",
+          "fetchedAt": "2026-10-06T10:37:46.430083+00:00",
+          "version": "20261006043347",
+          "start": "20261006",
+          "end": "20261115",
+          "sha256": "9437bdbd929ca681ac31b75bf738c47e6e7cc0c3ad0fdb0c8783881679040e3b",
+          "routes": 7,
+          "stops": 152,
+          "trips": 4198,
+          "skippedTrips": 0,
+          "approximateShapes": 0,
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand",
+          "missingShapes": 0,
+          "retainedShapes": 0
+        },
+        {
+          "id": "metro-bilbao",
+          "publisher": "Metro Bilbao",
+          "source": "https://opendata.euskadi.eus/transport/moveuskadi/metro_bilbao/gtfs_metro_bilbao.zip",
+          "website": "https://www.metrobilbao.eus/",
+          "license": "https://opendata.euskadi.eus/como-reutilizar/-/reutilizar-datos-abiertos/",
+          "fetchedAt": "2026-10-06T10:37:48.351769+00:00",
+          "version": "8dd134cf7ccd",
+          "start": "20261005",
+          "end": "20261105",
+          "sha256": "8dd134cf7ccd38dd13be947b641b40c929de94a96b1e5c875613d04b2eeeb345",
+          "routes": 1,
+          "stops": 42,
+          "trips": 6184,
+          "skippedTrips": 0,
+          "approximateShapes": 0,
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand",
+          "missingShapes": 0,
+          "retainedShapes": 0
+        }
+      ],
+      "source": "https://www.euskadi.eus/contenidos/ds_movilidad/md_ideeu_moveuskadi/es_def/index.shtml",
+      "coverage": "Euskotren y Metro Bilbao. El archivo de Metro Bilbao agrupa L1/L2 en una sola ruta. No incluye todos los autobuses urbanos ni otros operadores. La E1 es interurbana entre Bilbao y Donostia.",
+      "journey": [
+        "Matiko",
+        "Zazpikaleak"
+      ],
+      "routes": 8,
+      "stops": 194,
+      "trips": 10382,
+      "network": "./data/bilbao/network.json",
+      "schedule": "./data/bilbao/schedule.json"
+    },
+    {
+      "id": "donostia",
+      "name": "Donostia / San Sebastián",
+      "region": "Euskadi",
+      "center": [
+        -1.981,
+        43.318
+      ],
+      "zoom": 12.2,
+      "feeds": [
+        {
+          "id": "euskotren-donostia",
+          "publisher": "Euskotren",
+          "source": "https://opendata.euskadi.eus/transport/moveuskadi/euskotren/gtfs_euskotren.zip",
+          "website": "https://www.euskotren.eus/",
+          "license": "https://opendata.euskadi.eus/como-reutilizar/-/reutilizar-datos-abiertos/",
+          "fetchedAt": "2026-10-06T10:37:51.995638+00:00",
+          "version": "20261006043347",
+          "start": "20261006",
+          "end": "20261115",
+          "sha256": "9437bdbd929ca681ac31b75bf738c47e6e7cc0c3ad0fdb0c8783881679040e3b",
+          "routes": 2,
+          "stops": 120,
+          "trips": 3232,
+          "skippedTrips": 0,
+          "approximateShapes": 0,
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand",
+          "missingShapes": 0,
+          "retainedShapes": 0
+        }
+      ],
+      "source": "https://www.euskadi.eus/contenidos/ds_movilidad/md_ideeu_moveuskadi/es_def/index.shtml",
+      "coverage": "Red ferroviaria publicada por Euskotren. No incluye todos los autobuses urbanos ni otros operadores. La E1 es interurbana entre Bilbao y Donostia.",
+      "journey": [
+        "Amara",
+        "Hendaia"
+      ],
+      "routes": 2,
+      "stops": 120,
+      "trips": 3232,
+      "network": "./data/donostia/network.json",
+      "schedule": "./data/donostia/schedule.json"
+    },
+    {
+      "id": "vitoria",
+      "name": "Vitoria-Gasteiz",
+      "region": "Euskadi",
+      "center": [
+        -2.673,
+        42.846
+      ],
+      "zoom": 12.2,
+      "feeds": [
+        {
+          "id": "euskotren-vitoria",
+          "publisher": "Euskotren",
+          "source": "https://opendata.euskadi.eus/transport/moveuskadi/euskotren/gtfs_euskotren.zip",
+          "website": "https://www.euskotren.eus/",
+          "license": "https://opendata.euskadi.eus/como-reutilizar/-/reutilizar-datos-abiertos/",
+          "fetchedAt": "2026-10-06T10:37:54.713152+00:00",
+          "version": "20261006043347",
+          "start": "20261006",
+          "end": "20261115",
+          "sha256": "9437bdbd929ca681ac31b75bf738c47e6e7cc0c3ad0fdb0c8783881679040e3b",
+          "routes": 3,
+          "stops": 55,
+          "trips": 529,
+          "skippedTrips": 0,
+          "approximateShapes": 0,
+          "timezone": "Europe/Madrid",
+          "frequencyPolicy": "expand",
+          "missingShapes": 0,
+          "retainedShapes": 0
+        }
+      ],
+      "source": "https://www.euskadi.eus/contenidos/ds_movilidad/md_ideeu_moveuskadi/es_def/index.shtml",
+      "coverage": "Tranvía de Vitoria-Gasteiz publicado por Euskotren. No incluye los autobuses urbanos.",
+      "journey": [
+        "Ibaiondo",
+        "Salburua"
+      ],
+      "routes": 3,
+      "stops": 55,
+      "trips": 529,
+      "network": "./data/vitoria/network.json",
+      "schedule": "./data/vitoria/schedule.json"
     },
     {
       "id": "espana",

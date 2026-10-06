@@ -7,15 +7,28 @@ maplibregl.setWorkerUrl(mapWorkerUrl);
 export class CityMap {
   constructor(
     network,
-    { onStop, onRoute, onStory, onVehicle, onGPS, onReady, onError, movement },
+    {
+      onStop,
+      onRoute,
+      onStory,
+      onVehicle,
+      onGPS,
+      onReady,
+      onError,
+      movement,
+      theme = "dark",
+    },
   ) {
     this.network = network;
     this.movement = movement;
     this.callbacks = { onStop, onRoute, onStory, onVehicle };
+    this.onReady = onReady;
     this.ready = false;
+    this.savedSources = {};
+    this.themeStyle = theme;
     this.map = new maplibregl.Map({
       container: "map",
-      style: "https://tiles.openfreemap.org/styles/dark",
+      style: "https://tiles.openfreemap.org/styles/" + theme,
       center: network.meta.center || [2.165, 41.391],
       zoom: network.meta.zoom || 12.5,
       pitch: 35,
@@ -39,12 +52,18 @@ export class CityMap {
       if (!this.ready) return;
       for (const [layer, cb, field] of [
         ["gps", onGPS, "id"],
+        ["vehicles", onVehicle, "id"],
         ["stops", onStop, "index"],
         ["stories", onStory, "id"],
-        ["vehicles", onVehicle, "id"],
         ["routes", onRoute, "index"],
       ]) {
-        const features = this.map.queryRenderedFeatures(e.point, {
+        const target = ["gps", "vehicles"].includes(layer)
+          ? [
+              [e.point.x - 8, e.point.y - 8],
+              [e.point.x + 8, e.point.y + 8],
+            ]
+          : e.point;
+        const features = this.map.queryRenderedFeatures(target, {
           layers: [layer],
         });
         if (features.length) {
@@ -88,7 +107,7 @@ export class CityMap {
       );
     }
   }
-  source(name, features = []) {
+  source(name, features = this.savedSources[name] || []) {
     this.map.addSource(name, {
       type: "geojson",
       data: { type: "FeatureCollection", features },
@@ -341,6 +360,7 @@ export class CityMap {
       );
   }
   set(name, features) {
+    this.savedSources[name] = features;
     if (this.ready)
       this.map
         .getSource(name)
@@ -360,10 +380,14 @@ export class CityMap {
     busMovement = false,
     otherMovement = false,
     gps = true,
+    routeIds = this.network.routes.map((_, i) => i),
+    stopIds = this.network.stops.map((_, i) => i),
+    motionIds = this.network.routes.map((_, i) => i),
   }) {
     if (!this.ready) return;
     const routeFilter = [
       "all",
+      ["in", ["get", "index"], ["literal", routeIds]],
       ...(mode === "all" ? [] : [["==", ["get", "mode"], mode]]),
       ...(route == null ? [] : [["==", ["get", "index"], route]]),
     ];
@@ -379,6 +403,7 @@ export class CityMap {
     for (const id of ["stops", "stop-labels"]) {
       this.map.setFilter(id, [
         "all",
+        ["in", ["get", "index"], ["literal", stopIds]],
         ["in", ["get", "mode"], ["literal", stopModes]],
         ...(mode === "all" ? [] : [["==", ["get", "mode"], mode]]),
       ]);
@@ -403,6 +428,7 @@ export class CityMap {
       );
       this.map.setFilter(id, [
         "all",
+        ["in", ["get", "route"], ["literal", motionIds]],
         ...(id.startsWith("gps")
           ? []
           : [
@@ -439,6 +465,31 @@ export class CityMap {
       duration: 1200,
       padding: { left: 70, right: 100 },
     });
+  }
+  view() {
+    return {
+      center: this.map.getCenter().toArray(),
+      zoom: this.map.getZoom(),
+      bearing: this.map.getBearing(),
+      pitch: this.map.getPitch(),
+      padding: this.map.getPadding(),
+    };
+  }
+  restore(view) {
+    if (view) this.map.easeTo({ ...view, duration: 650 });
+  }
+  theme(style) {
+    if (this.themeStyle === style) return;
+    this.themeStyle = style;
+    this.ready = false;
+    const epoch = (this.styleEpoch = (this.styleEpoch || 0) + 1);
+    this.map.once("style.load", () => {
+      if (epoch !== this.styleEpoch) return;
+      this.setup();
+      this.ready = true;
+      this.onReady();
+    });
+    this.map.setStyle("https://tiles.openfreemap.org/styles/" + style);
   }
   focusRoute(i) {
     const points = this.network.routes[i].directions.flatMap((d) =>
