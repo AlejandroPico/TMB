@@ -1,0 +1,54 @@
+{
+  "sources": [
+    "https://developer.tmb.cat/assets/api-docs/v1/transit/swagger.json",
+    "https://developer.tmb.cat/assets/api-docs/v1/ibus/swagger.json",
+    "https://developer.tmb.cat/assets/api-docs/v1/planner/swagger.json"
+  ],
+  "transit": [
+    "/elements/superficie/corresp/{lon}/{lat}/{dist}",
+    "/elements/superficie/{lon}/{lat}/{dist}",
+    "/elements/superficie/{tipus}/{lon}/{lat}/{dist}",
+    "/estacions",
+    "/estacions/{codi_grup_estacio}/accessos",
+    "/estacions/{codi_grup_estacio}/accessos/{codi_acces}/corresp",
+    "/estacions/{codi_grup_estacio}/accessos/{codi_acces}/fisics",
+    "/interc",
+    "/interc/{codi_interc}/corresp",
+    "/interc/{codi_interc}/parades",
+    "/limits/municipis",
+    "/linies",
+    "/linies/altres",
+    "/linies/bus",
+    "/linies/bus/{codi_linia_base}/parades/{codi_parada}/corresp",
+    "/linies/bus/{codi_linia}/horaris",
+    "/linies/bus/{codi_linia}/parades",
+    "/linies/bus/{codi_linia}/parades/cons",
+    "/linies/bus/{codi_linia}/parades/reals",
+    "/linies/bus/{codi_linia}/parades/{codi_parada}/horaris",
+    "/linies/bus/{codi_linia}/parades/{codi_parada}/horespas",
+    "/linies/bus/{codi_linia}/recs",
+    "/linies/bus/{codi_linia}/recs/cons",
+    "/linies/bus/{codi_linia}/recs/reals",
+    "/linies/metro",
+    "/linies/metro/{codi_linia}/estacions",
+    "/linies/metro/{codi_linia}/estacions/central",
+    "/linies/metro/{codi_linia}/estacions/{codi_estacio}/accessos",
+    "/linies/metro/{codi_linia}/estacions/{codi_estacio}/accessos/fisics",
+    "/linies/metro/{codi_linia}/estacions/{codi_estacio}/accessos/{codi_acces}/corresp",
+    "/linies/metro/{codi_linia}/estacions/{codi_estacio}/corresp",
+    "/linies/metro/{codi_linia}/horaris",
+    "/linies/metro/{codi_linia}/recs",
+    "/linies/metro/{codi_linia}/trams",
+    "/mobiliari",
+    "/parades",
+    "/parades/{codi_parada}/corresp",
+    "/parades/{codi_parada}/mobiliari"
+  ],
+  "ibus": [
+    "/bus/parades/{codi_parada}"
+  ],
+  "planner": [
+    "/plan"
+  ],
+  "checked": "2026-10-06"
+}
