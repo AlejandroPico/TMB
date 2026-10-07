@@ -2,6 +2,12 @@
 
 Transporte público de España: mapa en 3D, horarios, viajes e historias con fuentes. **[Abrir la aplicación](https://alejandropico.github.io/TMB/)**.
 
+## Directo y simulación
+
+El modo predeterminado solo muestra **posiciones y previsiones publicadas**. La simulación GTFS se activa expresamente en «Reloj y horarios»; una caída del servicio nunca la activa. FGC Geotren conecta directamente cada cuatro segundos y ofrece paneles oficiales de salidas. AMB/Nitbus, Renfe e iBus necesitan el servidor incluido; iBus requiere además las claves TMB. [Fuentes verificadas, límites y activación paso a paso](docs/directo.md).
+
+[Activar el servidor en Render](https://render.com/deploy?repo=https://github.com/AlejandroPico/TMB). El repositorio incluye Dockerfile y render.yaml.
+
 ## Nombre y favicon
 
 Edita `name` en **[app.config.json](app.config.json)**. Alimenta la marca, el título y los textos de la aplicación. También contiene la descripción y la ciudad inicial. El nombre no depende del nombre del repositorio.
@@ -30,7 +36,7 @@ Dieciséis vistas: siete ciudades, ocho áreas adicionales de consorcios andaluc
 
 ## Autobuses nocturnos
 
-«Explorar → Nocturnos» filtra el mapa y la vista lineal. Filtros separa los nocturnos por operador y línea. Se respetan calendarios, excepciones y la continuidad después de medianoche; no todas las líneas circulan todas las noches. [Fuentes, cobertura y revisión](docs/night-services-review.md). Las fuentes se renuevan diariamente; las posiciones por horario siguen siendo estimaciones.
+«Explorar → Nocturnos» filtra el mapa y la vista lineal. Filtros separa los nocturnos por operador y línea. Se respetan calendarios, excepciones y la continuidad después de medianoche; no todas las líneas circulan todas las noches. [Fuentes, cobertura y revisión](docs/night-services-review.md). Las fuentes estáticas se renuevan diariamente; las posiciones por horario solo se muestran en la simulación explícita. Las previsiones AMB requieren la conexión al servidor.
 
 ## Funciones
 
@@ -53,19 +59,15 @@ Dieciséis vistas: siete ciudades, ocho áreas adicionales de consorcios andaluc
 
 ## GPS, horarios y límites
 
-En Barcelona, los **puntos azules** son coordenadas de la [API pública de FGC](https://dadesobertes.fgc.cat/explore/dataset/posicionament-dels-trens/). Al pulsarlos aparecen línea, serie del tren, códigos de destino, puntualidad publicada y ocupación cuando existe. La ocupación es la media de los coches con información, no una medición de todo el tren. Licencia CC BY 4.0.
+En Barcelona, los **puntos azules** son coordenadas del [visor oficial Geotren FGC](https://geotren.fgc.cat/). Se consultan cada cuatro segundos y se ocultan tras 20 segundos sin una respuesta válida. La ficha muestra un nombre legible, destino, serie, puntualidad y ocupación cuando existe; los identificadores opacos quedan en un apartado desplegable. La hora indicada es la de consulta: Geotren no facilita una hora individual de medición de posición.
 
-Se consulta cada 30 segundos con el reloj en «Ahora», movimiento activado y página visible. Se ocultan publicaciones de más de tres minutos. La hora corresponde a la actualización del **conjunto** de FGC, no a la medición individual de cada tren. Al cambiar fecha, acelerar o pausar desaparece GPS. Con GPS vigente se omiten los vehículos estimados de FGC para evitar duplicaciones.
+El mapa y la vista lineal utilizan las mismas posiciones publicadas. Los paneles oficiales de salidas FGC se consultan cada ocho segundos en las estaciones disponibles. Renfe necesita el servidor para acceder a coordenadas de Cercanías y larga distancia. iBus y AMB utilizan previsiones oficiales de llegada, no una interpolación GTFS; AMB no publica posiciones GPS en ese servicio. Se descartan respuestas caducadas y viajes cancelados. Sin conexión o sin cobertura en directo no aparecen vehículos inventados ni cuenta atrás por horario.
 
-La vista lineal utiliza estimaciones para FGC. En España también puede representar GPS de Cercanías cuando el servidor está conectado y la medición se puede proyectar al trazado del viaje. Se indica la procedencia en cada vehículo.
-
-Los contadores de metro, tren y tranvía proceden del horario GTFS: **actualizar un contador cada segundo no convierte la previsión en una llegada real**. La API TMB consultada no publica predicciones de metro. El adaptador iBus usa previsiones oficiales y antigüedad máxima de 90 segundos cuando se conecta el servidor. Campos como vía, serie o ocupación solo se muestran cuando el operador los facilita.
-
-Los demás puntos son **interpolaciones por horario, no GPS**. Los recorridos sin geometría válida conservan horarios y paradas, pero no se dibujan ni se animan. No hay líneas rectas de sustitución. Las horas intermedias vacías se estiman; los servicios por frecuencia también. Se contemplan viajes del día anterior después de medianoche.
+La **simulación por horario** permanece como opción explícita. Proyecta las paradas y calcula movimientos y pausas sobre trazados válidos. El mapa muestra un rótulo de simulación. No se dibujan líneas rectas de sustitución para recorridos sin geometría. **Actualizar un contador cada segundo no aumenta la precisión de la previsión del operador**. El catálogo público TMB consultado no incluye una API de tiempos de metro; sería necesario confirmar acceso específico con TMB. [Detalle y activación del servidor](docs/directo.md).
 
 EMT publica itinerarios completos en `stop_times` y ventanas de frecuencia asociadas a esos mismos viajes. Su adaptador conserva las horas individuales y evita expandir repetidamente ventanas, que multiplicarían artificialmente los vehículos. La política específica figura en `tools/providers.json` y los metadatos.
 
-No se incluyen incidencias, cancelaciones ni ascensores fuera de servicio. Los enlaces peatonales entre paradas próximas se calculan de forma aproximada y no se dibujan como trazados. Los tramos de transporte de los viajes utilizan la geometría del viaje elegido, recortada entre embarque y desembarque; el mismo recorrido sirve para animar vehículos. Se respetan los transbordos prohibidos y restricciones de embarque/desembarque. El filtro accesible exige `wheelchair_boarding=1`; no garantiza todo el itinerario. El alcance muestra puntos por horario, no una isócrona peatonal.
+La planificación local no incorpora incidencias ni ascensores fuera de servicio. Los horarios estáticos no incorporan cancelaciones; el adaptador AMB sí respeta las cancelaciones de su publicación en directo. Los enlaces peatonales entre paradas próximas se calculan de forma aproximada y no se dibujan como trazados. Los tramos de transporte de los viajes utilizan la geometría del viaje elegido, recortada entre embarque y desembarque; el mismo recorrido sirve para animar vehículos. Se respetan los transbordos prohibidos y restricciones de embarque/desembarque. El filtro accesible exige `wheelchair_boarding=1`; no garantiza todo el itinerario. El alcance muestra puntos por horario, no una isócrona peatonal.
 
 ## Geometrías y revisión
 
@@ -78,7 +80,7 @@ No se incluyen incidencias, cancelaciones ni ascensores fuera de servicio. Los e
 
 **Los corredores reconstruidos de Renfe son inferidos sobre infraestructura real; no son confirmaciones del itinerario exacto de un servicio.** El GTFS no aporta esa información. No se enlazan componentes ferroviarios desconectados. En esta revisión se recuperaron 839 de 984 shapes ausentes de larga/media distancia y cuatro de Cercanías; 145 siguen sin recorrido verificable, incluyendo servicios internacionales y casos de infraestructura o estaciones que no encajan. Se omiten sus líneas y vehículos. TUSSAM recupera 225 shapes y Metro de Sevilla cuatro.
 
-La animación proyecta paradas sobre segmentos del trazado, conserva el avance y recorre sus vértices. Los vehículos no saltan de una parada a otra. Se omite una animación si sus paradas no encajan con el trazado (150 m en bus, 550 m sobre raíles). Se dibujan también variantes de trazado utilizadas por los viajes. En redes de bus con un único color oficial, una paleta estable distingue líneas; el color original se conserva en `sourceColor`.
+La simulación opcional proyecta paradas sobre segmentos del trazado, conserva el avance y recorre sus vértices. Los vehículos no saltan de una parada a otra. Se omite una animación si sus paradas no encajan con el trazado (150 m en bus, 550 m sobre raíles). Se dibujan también variantes de trazado utilizadas por los viajes. En redes de bus con un único color oficial, una paleta estable distingue líneas; el color original se conserva en `sourceColor`.
 
 `python tools/audit_geometry.py` revisa todas las referencias y geometrías y publica [el informe](public/data/geometry-audit.json). Los tests verifican curvas, proyección, itinerarios compartidos, rechazo de geometrías ausentes o desconectadas y el corredor AVE Barcelona–Madrid, de unos 671 km. Una auditoría estructural no confirma cierres de calles, cambios de vía o incidencias en tiempo real.
 
@@ -93,7 +95,7 @@ La descarga oficial GTFS con los secretos de GitHub se ha comprobado en Actions.
 3. En desarrollo inicia también `pnpm dev`; Vite conecta con ese servidor.
 4. Para Pages, aloja el servidor en HTTPS, configura `HOST=0.0.0.0` y `ALLOWED_ORIGINS=https://alejandropico.github.io`, y añade su URL en «Fuentes → Servidor TMB para datos en directo».
 
-Las claves permanecen en el servidor. Se limitan consultas y recursos y se cachean respuestas. iBus solo se consulta en paradas TMB y con respuestas recientes. El planificador oficial se utiliza entre paradas TMB; el cálculo local es la alternativa. Estas APIs autenticadas en directo no se han podido verificar con las claves de GitHub, que no son legibles después de guardarlas.
+Las claves permanecen en el servidor. Se limitan consultas y recursos y se cachean respuestas. iBus solo se consulta en paradas TMB y con respuestas recientes. AMB proporciona previsiones GTFS-RT de bus/Nitbus sin claves adicionales; no proporciona posiciones GPS. El planificador oficial se utiliza entre paradas TMB; el cálculo local es la alternativa. Estas APIs autenticadas en directo no se han podido verificar con las claves de GitHub, que no son legibles después de guardarlas.
 
 ## Desarrollo y actualización
 

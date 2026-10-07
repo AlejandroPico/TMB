@@ -561,6 +561,23 @@ select,
 }
 .detail {
   --detail-padding: 24px;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+  max-height: calc(100% - 32px);
+  min-height: 0;
+}
+.detail-body {
+  padding: 0 var(--detail-padding) var(--detail-padding);
+  overflow-y: auto;
+  min-height: 0;
+  overscroll-behavior: contain;
+}
+.detail > .detail-toolbar {
+  position: relative;
+  flex-shrink: 0;
+  margin: 0 0 14px;
 }
 dialog {
   --detail-padding: 28px;
@@ -813,6 +830,22 @@ dialog {
   margin: 4px 0;
   overflow-wrap: anywhere;
   font-family: monospace;
+}
+.fgc-live-display {
+  display: block;
+  width: 100%;
+  min-width: 640px;
+  height: auto;
+  margin: 12px 0;
+}
+.fgc-display-viewport {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  background: #000;
+  margin: 12px 0;
+}
+.schematic-vehicle.published-position {
+  transition: none;
 }
 .vehicle-heading {
   display: flex;
@@ -1069,7 +1102,8 @@ dialog {
     font-size: 20px;
   }
   .detail {
-    max-height: calc(100dvh - 192px);
+    padding: 0;
+    max-height: calc(100dvh - 90px - env(safe-area-inset-bottom));
   }
   .departure-times time {
     font-size: 34px;
@@ -1080,6 +1114,29 @@ dialog {
   .vehicle-facts {
     gap: 12px;
   }
+}
+.data-mode select {
+  display: block;
+  width: 100%;
+  margin: 8px 0 16px;
+  padding: 10px;
+}
+#data-mode-indicator {
+  position: absolute;
+  left: 16px;
+  bottom: 32px;
+  z-index: 6;
+  padding: 7px 10px;
+  background: var(--ui-surface);
+  color: var(--ui-text);
+  border: 1px solid var(--ui-border);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+}
+.raw-vehicle-data dd {
+  overflow-wrap: anywhere;
+  min-width: 0;
 }
 @media (prefers-reduced-motion: reduce) {
   .schematic-vehicle {

@@ -93,7 +93,7 @@ export class Schematic {
             numeric: true,
           }),
       );
-    this.container.innerHTML = `<div class="schematic-heading"><h1>Vista lineal</h1><span>${routes.length} ${routes.length === 1 ? "línea" : "líneas"} · posiciones por horario o GPS disponible</span><small>Arrastra para recorrer la línea o desliza con el dedo. Las etiquetas bajo las paradas indican transbordos.</small></div><div class="schematic-lines">${
+    this.container.innerHTML = `<div class="schematic-heading"><h1>Vista lineal</h1><span>${routes.length} ${routes.length === 1 ? "línea" : "líneas"} · posiciones publicadas</span><small>Arrastra para recorrer la línea o desliza con el dedo. Las etiquetas bajo las paradas indican transbordos.</small></div><div class="schematic-lines">${
       routes
         .map((i) => {
           const r = network.routes[i];
@@ -338,8 +338,9 @@ export class Schematic {
         b.style.left = 70 + at * 112 + "px";
         b.querySelector("svg").style.transform =
           track.dataset.reverse === "true" ? "scaleX(-1)" : "";
+        b.classList.toggle("published-position", !!f.properties.actual);
         b.classList.toggle("in-station", !!f.properties.stopped);
-        b.title = `${this.n.routes[id].name} → ${f.properties.head} · ${this.n.stops[f.properties.stopped ? f.properties.current : f.properties.next].name} · ${f.properties.actual ? "GPS publicado" : f.properties.stopped ? (f.properties.dwellSource === "simulated" ? "en parada · pausa simulada" : "en parada · horario") : "estimado"}`;
+        b.title = `${this.n.routes[id].name} → ${f.properties.head} · ${this.n.stops[f.properties.stopped ? f.properties.current : f.properties.next]?.name || ""} · ${f.properties.actual ? "posición publicada" : f.properties.stopped ? (f.properties.dwellSource === "simulated" ? "en parada · pausa simulada" : "en parada · horario") : "estimado"}`;
         b.setAttribute("aria-label", b.title);
       }
       for (const b of existing.values()) b.remove();

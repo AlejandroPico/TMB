@@ -3,6 +3,7 @@ import { existsSync, createReadStream } from "node:fs";
 import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { fetchAMB } from "./amb-realtime.mjs";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const appName = JSON.parse(
   await readFile(path.join(root, "app.config.json"), "utf8"),
@@ -20,7 +21,7 @@ const cache = new Map(),
   limits = new Map();
 const origins = (
   process.env.ALLOWED_ORIGINS ||
-  "http://127.0.0.1:5173,http://localhost:5173,http://127.0.0.1:8787,http://localhost:8787"
+  "http://127.0.0.1:5173,http://localhost:5173,http://127.0.0.1:8787,http://localhost:8787,https://alejandropico.github.io"
 ).split(",");
 const configured = () => !!(process.env.TMB_APP_ID && process.env.TMB_APP_KEY);
 const mime = {
@@ -62,7 +63,7 @@ const server = http.createServer(async (req, res) => {
     if (url.pathname === "/api/status") {
       json(200, {
         configured: configured(),
-        services: ["transit", "ibus", "planner", "static", "renfe"],
+        services: ["transit", "ibus", "planner", "static", "renfe", "amb"],
         time: new Date().toISOString(),
       });
       return;
@@ -78,6 +79,28 @@ const server = http.createServer(async (req, res) => {
       limits.set(address, bucket);
       if (++bucket.count > 60) {
         json(429, { error: "Demasiadas consultas. Inténtalo en un minuto." });
+        return;
+      }
+      if (url.pathname === "/api/amb/arrivals") {
+        const key = url.pathname,
+          saved = cache.get(key);
+        if (saved && now - saved.time < 10000) {
+          json(200, saved.data);
+          return;
+        }
+        if (!inflight.has(key))
+          inflight.set(
+            key,
+            fetchAMB().then((data) => {
+              cache.set(key, { time: Date.now(), data });
+              return data;
+            }),
+          );
+        try {
+          json(200, await inflight.get(key));
+        } finally {
+          inflight.delete(key);
+        }
         return;
       }
       if (
@@ -238,7 +261,7 @@ const server = http.createServer(async (req, res) => {
         error:
           e.status === 401 || e.status === 403
             ? "TMB ha rechazado las credenciales del servidor."
-            : "El servicio no está disponible. Se mantienen los horarios locales.",
+            : "El servicio en directo no está disponible. No se sustituyen sus datos por estimaciones.",
       });
     else res.end();
   }

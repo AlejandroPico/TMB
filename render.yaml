@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: enruta-directo
+    runtime: docker
+    plan: free
+    branch: main
+    healthCheckPath: /api/status
+    envVars:
+      - key: TMB_APP_ID
+        sync: false
+      - key: TMB_APP_KEY
+        sync: false
+      - key: HOST
+        value: 0.0.0.0
+      - key: ALLOWED_ORIGINS
+        value: https://alejandropico.github.io
