@@ -86,6 +86,15 @@ import {
 import fgcStations from "./fgc-stations.json";
 import fgcDisplays from "./fgc-displays.json";
 import {
+  fetchMalaga,
+  malagaFeatures,
+  MALAGA_SOURCE,
+} from "./malaga-realtime.js";
+let malagaGPS = null,
+  malagaAvailable = false,
+  malagaBusy = false,
+  malagaNext = 0;
+import {
   fetchRenfe,
   fetchRenfeLongDistance,
   RENFE_LD_SOURCE,
@@ -716,7 +725,10 @@ function fgcFeatures() {
   return dataMode === "live" && syncClock && gpsVisible && gps && movement
     ? publishedFGCFeatures(gps, n, s, movement).map((feature) => ({
         ...feature,
-        properties: { ...feature.properties, head: fgcStations[feature.properties.head] || feature.properties.head },
+        properties: {
+          ...feature.properties,
+          head: fgcStations[feature.properties.head] || feature.properties.head,
+        },
       }))
     : [];
 }
@@ -1059,6 +1071,7 @@ function navigateDetail(target) {
     showStop(n.stops.findIndex((st) => st.id === target.ref));
   if (target.kind === "vehicle") showVehicle(target.ref);
   if (target.kind === "gps") showGPS(target.ref);
+  if (target.kind === "observed") showPublishedVehicle(target.ref);
 }
 $("#detail").addEventListener("click", (e) => {
   const link = e.target.closest("a[data-detail-kind]");
@@ -1541,7 +1554,70 @@ function showTour(i) {
   );
   bindDetailStops();
 }
+function showPublishedVehicle(id) {
+  const f = rawMovementFeatures.find(
+    (x) => x.properties.id === id && x.properties.actual,
+  );
+  if (!f) {
+    toast("No hay una posición reciente publicada para este vehículo.");
+    return;
+  }
+  rememberDetail();
+  enterDetail({ kind: "observed", ref: id });
+  stationBoard = null;
+  selectedStop = null;
+  vehicleDetail = id;
+  vehicleFollow.start(id);
+  selectedRoute = f.properties.route;
+  const r = n.routes[selectedRoute];
+  mode = transportGroup(r);
+  if (linearView) $("#linear-toggle").click();
+  applyFilters();
+  detailToken++;
+  showDetail(
+    `<div class="vehicle-heading">${operatorSymbol(r)}${routeLink(r)}<span class="vehicle-number">Autobús ${esc(f.properties.number)}</span></div><p class="eyebrow">${esc(r.operator)}</p><div class="detail-actions"><button id="vehicle-follow" aria-pressed="true" title="Pausar el seguimiento de la cámara">Seguimiento activo · pausar</button>${detailLink("route", r.id, "Ver línea", "Ver recorrido completo de " + r.name)}</div><div id="vehicle-live-detail"></div>`,
+  );
+  focusVehicle(f);
+  bindVehicleFollow();
+  updatePublishedVehicle();
+}
+function updatePublishedVehicle() {
+  const f = rawMovementFeatures.find(
+    (x) => x.properties.id === vehicleDetail && x.properties.actual,
+  );
+  const body = $("#vehicle-live-detail");
+  if (!body) return;
+  const key = f
+    ? f.properties.measured + ":" + f.properties.reference
+    : "missing";
+  if (body.dataset.key !== key) {
+    const p = f?.properties;
+    body.innerHTML = p
+      ? `<p class="service-state">Posición publicada · EMT Málaga</p><dl class="vehicle-facts"><div><dt>Actualización publicada</dt><dd>${new Date(p.measured).toLocaleTimeString("es-ES", { timeZone: "Europe/Madrid" })}</dd></div><div><dt>Actualización del operador</dt><dd>Cada minuto</dd></div>${p.reference != null ? `<div><dt>Parada de referencia publicada</dt><dd>${detailLink("stop", n.stops[p.reference].id, esc(n.stops[p.reference].name), "Ver parada " + n.stops[p.reference].name)}</dd></div>` : ""}<div><dt>Sentido publicado</dt><dd>${esc(p.direction)}</dd></div></dl><p class="detail-note">Esta fuente no publica una previsión de llegada a la parada.</p><details class="raw-vehicle-data"><summary>Datos publicados del autobús</summary><dl>${Object.entries(
+          p.publishedDetails || {},
+        )
+          .map(
+            ([k, v]) =>
+              `<div><dt>${esc(k)}</dt><dd>${esc(typeof v === "object" ? JSON.stringify(v) : v)}</dd></div>`,
+          )
+          .join(
+            "",
+          )}</dl><a href="${MALAGA_SOURCE}" target="_blank" rel="noopener">Ayuntamiento de Málaga · CC BY 4.0 ↗</a></details>`
+      : '<p class="muted">El operador no ha publicado una posición reciente para este autobús.</p>';
+    body.dataset.key = key;
+  }
+  $("#vehicle-follow").disabled = !f;
+  map.set("selection", f ? [f] : []);
+  if (f)
+    vehicleFollow.update(
+      map.map,
+      vehicleDetail,
+      f.geometry.coordinates,
+      vehicleCameraPadding(),
+    );
+}
 function showVehicle(id) {
+  if (id.startsWith("emt-malaga:bus:")) return showPublishedVehicle(id);
   const trip = trips.find((t) => t.id === id);
   if (!trip) {
     toast("Este servicio no está disponible en el calendario seleccionado.");
@@ -1621,6 +1697,8 @@ function bindVehicleFollow() {
 }
 function updateVehicleDetail() {
   if (!vehicleDetail || !$("#vehicle-live-detail")) return;
+  if (vehicleDetail.startsWith("emt-malaga:bus:"))
+    return updatePublishedVehicle();
   const trip = trips.find((t) => t.id === vehicleDetail);
   if (!trip) {
     $("#vehicle-live-detail").innerHTML =
@@ -1750,7 +1828,7 @@ async function plan(e) {
 }
 function showData() {
   const dialog = $("#data-dialog");
-  dialog.innerHTML = `<div class="detail-toolbar"><span></span><button id="close-data" class="close-detail" aria-label="Cerrar datos">${icon("x")}</button></div><div class="eyebrow">DATOS CON PROCEDENCIA</div><h2>Fuentes y cobertura</h2><p>${esc(APP_NAME)} reúne redes publicadas por sus operadores. La cobertura crece ciudad a ciudad; cada calendario tiene su propia vigencia.</p><div class="coverage-grid">${cities.map((c) => `<button data-city="${c.id}" class="coverage-city ${city.id === c.id ? "selected" : ""}"><b>${esc(c.name)}</b><span>${num(c.routes)} líneas · ${num(c.stops)} embarques</span><small>${esc(c.coverage)}</small></button>`).join("")}</div><h3>${esc(city.name)} · archivos publicados</h3>${n.meta.feeds.map((f) => `<div class="data-source"><span class="data-status ${feedCurrent(f) ? "ready" : "waiting"}">${feedCurrent(f) ? "CALENDARIO VIGENTE" : "FUERA DEL CALENDARIO"}</span><h3>${esc(f.publisher)}</h3><p>${num(f.routes)} líneas · ${num(f.trips)} viajes en el archivo.</p><small>Calendario ${formatDate(f.start)} — ${formatDate(f.end)}<br>Normalizado ${new Date(f.fetchedAt).toLocaleString("es-ES", { timeZone: "Europe/Madrid" })}${f.skippedTrips ? `<br>${num(f.skippedTrips)} viajes omitidos por tiempos incompletos o inválidos.` : ""}${f.approximateShapes ? "<br>Hay variantes sin trazado disponible o descartadas por incoherencias. Se conservan sus paradas y horarios; no se dibujan ni se animan sus estimaciones en el mapa." : ""}</small><a href="${esc(f.source)}" target="_blank" rel="noopener">Archivo utilizado ↗</a> · <a href="${esc(f.website)}" target="_blank" rel="noopener">Operador ↗</a> · <a href="${esc(f.license)}" target="_blank" rel="noopener">Licencia ↗</a></div>`).join("")}<div class="data-source"><span class="data-status ready">API PÚBLICA · BARCELONA</span><h3>FGC · Posiciones y ocupación</h3><p>Puntos azules: coordenadas del visor oficial Geotren, consultadas cada cuatro segundos, sin extrapolación. Se ocultan tras 20 segundos sin una respuesta válida. La hora mostrada es la de consulta: el operador no publica la hora de medición de cada posición. Ocupación cuando existe y paneles oficiales de salidas con actualización cada ocho segundos.</p><a href="${FGC_SOURCE}" target="_blank" rel="noopener">FGC · Geotren ↗</a></div><div class="data-source"><span class="data-status ${serverConfigured ? "ready" : "waiting"}">${serverConfigured ? "SERVIDOR CONECTADO" : "REQUIERE SERVIDOR"}</span><h3>TMB · Transit, iBus y Planner</h3><p>Las claves de GitHub actualizan el archivo de horarios. Para consultar iBus, detalles Transit y el planificador oficial desde esta web, conecta el servidor incluido con esas claves. El modo en directo no utiliza horarios como sustituto de una previsión ausente.</p></div><div class="data-source"><span class="data-status ${renfeAvailable ? "ready" : "waiting"}">${renfeAvailable ? "SERVIDOR DISPONIBLE" : "REQUIERE CONEXIÓN"}</span><h3>Renfe · Posiciones publicadas</h3><p>Cercanías se vincula por el identificador exacto del viaje. AVE y otros servicios de larga distancia se vinculan por el número comercial publicado en el GTFS y sus terminales, con una única coincidencia de calendario. Ambas fuentes se consultan cada 20 segundos. Su API no permite consultas desde otros sitios: GitHub Pages necesita el servidor incluido, sin claves Renfe. Solo se muestran mediciones de menos de 90 segundos; las llegadas continúan siendo horarios, sin inferir retrasos a partir de GPS.</p><a href="${RENFE_POSITION_SOURCE}" target="_blank" rel="noopener">Cercanías · Renfe Data · CC BY 4.0 ↗</a> · <a href="${RENFE_LD_SOURCE}" target="_blank" rel="noopener">Visor oficial de larga distancia ↗</a></div><div class="data-source"><h3>AMB · Bus metropolità y Nitbus</h3><p>GTFS-RT público: previsiones de llegada por parada, consultadas cada 20 segundos mediante el servidor incluido. No publica posiciones GPS ni identifica necesariamente el vehículo físico. Los tiempos no se convierten en vehículos animados.</p><a href="https://www.amb.cat/ca/web/area-metropolitana/dades-obertes/cataleg/detall/-/dataset/servei-gtfs-real-time-autobusos/6332347/11692" target="_blank" rel="noopener">Servicio oficial AMB ↗</a></div><div class="data-source"><h3>Metro TMB y otros operadores</h3><p>No hay una conexión de posiciones o llegadas en directo disponible aquí. Las líneas y estaciones permanecen visibles; sus vehículos solo aparecen en la simulación explícita. iBus publica llegadas de autobús, no posiciones GPS de toda la flota.</p></div><div class="data-source"><h3>Trazados y cartografía</h3><p>OpenStreetMap vía OpenFreeMap. Historias con fuentes enlazadas. Los vehículos por horario son interpolaciones sobre geometrías publicadas. Renfe sin shapes: corredores reconstruidos sobre vías del IGN pasando por las estaciones GTFS, con preferencia por ancho estándar en AVE; no son itinerarios confirmados por el operador. Las geometrías desconectadas se omiten. TUSSAM: recorridos municipales. Metro de Sevilla: relación cartográfica de OpenStreetMap. En «Viajar», los transbordos son aproximados y no se incorporan incidencias.</p><a href="https://api-features.idee.es/collections/railwaylink?f=html" target="_blank" rel="noopener">© IGN · vías ferroviarias ↗</a> · <a href="https://www.ign.es/resources/licencia/Condiciones_licenciaUso_IGN.pdf" target="_blank" rel="noopener">Licencia IGN ↗</a> · <a href="https://www.arcgis.com/home/item.html?id=c5e6ecf63aa944c8a09eb1e65e72d8f4" target="_blank" rel="noopener">Ayuntamiento de Sevilla · TUSSAM ↗</a> · <a href="https://www.openstreetmap.org/relation/255088" target="_blank" rel="noopener">Metro de Sevilla · OSM/ODbL ↗</a> · <a href="https://www.transportes.gob.es" target="_blank" rel="noopener">Powered by MIMTRANS ↗</a> · <a href="https://mobilitydatabase.org" target="_blank" rel="noopener">Archivos de Mobility Database ↗</a></div><form id="connection-form"><label class="field-label">SERVIDOR PARA DATOS EN DIRECTO<input type="url" id="api-url" placeholder="https://tu-servidor.example" value="${esc(apiBase)}"></label><p class="footnote">Opcional. Las claves permanecen en el servidor.</p><button class="primary" type="submit">Guardar conexión</button><span id="connection-state"></span></form><a class="text-link" href="https://nap.transportes.gob.es/" target="_blank" rel="noopener">Más redes españolas: Punto de Acceso Nacional ↗</a>`;
+  dialog.innerHTML = `<div class="detail-toolbar"><span></span><button id="close-data" class="close-detail" aria-label="Cerrar datos">${icon("x")}</button></div><div class="eyebrow">DATOS CON PROCEDENCIA</div><h2>Fuentes y cobertura</h2><p>${esc(APP_NAME)} reúne redes publicadas por sus operadores. La cobertura crece ciudad a ciudad; cada calendario tiene su propia vigencia.</p><div class="coverage-grid">${cities.map((c) => `<button data-city="${c.id}" class="coverage-city ${city.id === c.id ? "selected" : ""}"><b>${esc(c.name)}</b><span>${num(c.routes)} líneas · ${num(c.stops)} embarques</span><small>${esc(c.coverage)}</small></button>`).join("")}</div><h3>${esc(city.name)} · archivos publicados</h3>${n.meta.feeds.map((f) => `<div class="data-source"><span class="data-status ${feedCurrent(f) ? "ready" : "waiting"}">${feedCurrent(f) ? "CALENDARIO VIGENTE" : "FUERA DEL CALENDARIO"}</span><h3>${esc(f.publisher)}</h3><p>${num(f.routes)} líneas · ${num(f.trips)} viajes en el archivo.</p><small>Calendario ${formatDate(f.start)} — ${formatDate(f.end)}<br>Normalizado ${new Date(f.fetchedAt).toLocaleString("es-ES", { timeZone: "Europe/Madrid" })}${f.skippedTrips ? `<br>${num(f.skippedTrips)} viajes omitidos por tiempos incompletos o inválidos.` : ""}${f.approximateShapes ? "<br>Hay variantes sin trazado disponible o descartadas por incoherencias. Se conservan sus paradas y horarios; no se dibujan ni se animan sus estimaciones en el mapa." : ""}</small><a href="${esc(f.source)}" target="_blank" rel="noopener">Archivo utilizado ↗</a> · <a href="${esc(f.website)}" target="_blank" rel="noopener">Operador ↗</a> · <a href="${esc(f.license)}" target="_blank" rel="noopener">Licencia ↗</a></div>`).join("")}<div class="data-source"><span class="data-status ready">API PÚBLICA · BARCELONA</span><h3>FGC · Posiciones y ocupación</h3><p>Puntos azules: coordenadas del visor oficial Geotren, consultadas cada cuatro segundos, sin extrapolación. Se ocultan tras 20 segundos sin una respuesta válida. La hora mostrada es la de consulta: el operador no publica la hora de medición de cada posición. Ocupación cuando existe y paneles oficiales de salidas con actualización cada ocho segundos.</p><a href="${FGC_SOURCE}" target="_blank" rel="noopener">FGC · Geotren ↗</a></div><div class="data-source"><span class="data-status ${serverConfigured ? "ready" : "waiting"}">${serverConfigured ? "SERVIDOR CONECTADO" : "REQUIERE SERVIDOR"}</span><h3>TMB · Transit, iBus y Planner</h3><p>Las claves de GitHub actualizan el archivo de horarios. Para consultar iBus, detalles Transit y el planificador oficial desde esta web, conecta el servidor incluido con esas claves. El modo en directo no utiliza horarios como sustituto de una previsión ausente.</p></div><div class="data-source"><span class="data-status ${renfeAvailable ? "ready" : "waiting"}">${renfeAvailable ? "SERVIDOR DISPONIBLE" : "REQUIERE CONEXIÓN"}</span><h3>Renfe · Posiciones publicadas</h3><p>Cercanías se vincula por el identificador exacto del viaje. AVE y otros servicios de larga distancia se vinculan por el número comercial publicado en el GTFS y sus terminales, con una única coincidencia de calendario. Ambas fuentes se consultan cada 20 segundos. Su API no permite consultas desde otros sitios: GitHub Pages necesita el servidor incluido, sin claves Renfe. Solo se muestran mediciones de menos de 90 segundos; las llegadas continúan siendo horarios, sin inferir retrasos a partir de GPS.</p><a href="${RENFE_POSITION_SOURCE}" target="_blank" rel="noopener">Cercanías · Renfe Data · CC BY 4.0 ↗</a> · <a href="${RENFE_LD_SOURCE}" target="_blank" rel="noopener">Visor oficial de larga distancia ↗</a></div><div class="data-source"><h3>AMB · Bus metropolità y Nitbus</h3><p>GTFS-RT público: previsiones de llegada por parada, consultadas cada 20 segundos mediante el servidor incluido. No publica posiciones GPS ni identifica necesariamente el vehículo físico. Los tiempos no se convierten en vehículos animados.</p><a href="https://www.amb.cat/ca/web/area-metropolitana/dades-obertes/cataleg/detall/-/dataset/servei-gtfs-real-time-autobusos/6332347/11692" target="_blank" rel="noopener">Servicio oficial AMB ↗</a></div><div class="data-source"><span class="data-status ${malagaAvailable ? "ready" : "waiting"}">${malagaAvailable ? "SERVIDOR DISPONIBLE" : "REQUIERE CONEXIÓN"}</span><h3>EMT Málaga · Posiciones publicadas</h3><p>Coordenadas y número físico de autobús del portal municipal. El catálogo indica actualización cada minuto; se consulta cada 30 segundos y se ocultan publicaciones de más de 90 segundos. No se interpolan movimientos ni llegadas. En el diagrama solo aparecen cuando el trazado y la parada de referencia identifican un recorrido sin ambigüedad.</p><a href="${MALAGA_SOURCE}" target="_blank" rel="noopener">Ayuntamiento de Málaga · CC BY 4.0 ↗</a></div><div class="data-source"><h3>Metro TMB y otros operadores</h3><p>No hay una conexión de posiciones o llegadas en directo disponible aquí. Las líneas y estaciones permanecen visibles; sus vehículos solo aparecen en la simulación explícita. iBus publica llegadas de autobús, no posiciones GPS de toda la flota.</p></div><div class="data-source"><h3>Trazados y cartografía</h3><p>OpenStreetMap vía OpenFreeMap. Historias con fuentes enlazadas. Los vehículos por horario son interpolaciones sobre geometrías publicadas. Renfe sin shapes: corredores reconstruidos sobre vías del IGN pasando por las estaciones GTFS, con preferencia por ancho estándar en AVE; no son itinerarios confirmados por el operador. Las geometrías desconectadas se omiten. TUSSAM: recorridos municipales. Metro de Sevilla: relación cartográfica de OpenStreetMap. En «Viajar», los transbordos son aproximados y no se incorporan incidencias.</p><a href="https://api-features.idee.es/collections/railwaylink?f=html" target="_blank" rel="noopener">© IGN · vías ferroviarias ↗</a> · <a href="https://www.ign.es/resources/licencia/Condiciones_licenciaUso_IGN.pdf" target="_blank" rel="noopener">Licencia IGN ↗</a> · <a href="https://www.arcgis.com/home/item.html?id=c5e6ecf63aa944c8a09eb1e65e72d8f4" target="_blank" rel="noopener">Ayuntamiento de Sevilla · TUSSAM ↗</a> · <a href="https://www.openstreetmap.org/relation/255088" target="_blank" rel="noopener">Metro de Sevilla · OSM/ODbL ↗</a> · <a href="https://www.transportes.gob.es" target="_blank" rel="noopener">Powered by MIMTRANS ↗</a> · <a href="https://mobilitydatabase.org" target="_blank" rel="noopener">Archivos de Mobility Database ↗</a></div><form id="connection-form"><label class="field-label">SERVIDOR PARA DATOS EN DIRECTO<input type="url" id="api-url" placeholder="https://tu-servidor.example" value="${esc(apiBase)}"></label><p class="footnote">Opcional. Las claves permanecen en el servidor.</p><button class="primary" type="submit">Guardar conexión</button><span id="connection-state"></span></form><a class="text-link" href="https://nap.transportes.gob.es/" target="_blank" rel="noopener">Más redes españolas: Punto de Acceso Nacional ↗</a>`;
   $$("[data-city]").forEach(
     (b) =>
       (b.onclick = () => {
@@ -1775,12 +1853,16 @@ function showData() {
       const data = await r.json();
       serverConfigured = !!data.configured;
       renfeAvailable = data.services?.includes("renfe") || false;
+      malagaAvailable = data.services?.includes("malaga") || false;
+      malagaNext = 0;
       renfeNext = 0;
       $("#connection-state").textContent = data.configured
         ? "Conectado. Credenciales configuradas."
-        : "Servidor conectado: AMB y Renfe disponibles. TMB necesita sus claves.";
+        : "Servidor conectado: AMB, Renfe y Málaga disponibles. TMB necesita sus claves.";
     } catch {
       renfeAvailable = false;
+      malagaAvailable = false;
+      malagaGPS = null;
       serverConfigured = false;
       renfeGPS = null;
       $("#connection-state").textContent =
@@ -1799,6 +1881,7 @@ async function checkServer() {
       const status = await r.json();
       serverConfigured = !!status.configured;
       renfeAvailable = status.services?.includes("renfe") || false;
+      malagaAvailable = status.services?.includes("malaga") || false;
     }
   } catch {}
 }
@@ -2202,13 +2285,45 @@ async function refreshRenfe() {
     renfeBusy = false;
   }
 }
+async function refreshMalaga(force = false) {
+  if (
+    !malagaAvailable ||
+    city?.id !== "malaga" ||
+    dataMode !== "live" ||
+    !syncClock ||
+    (!force &&
+      (!gpsVisible ||
+        !vehiclesVisible ||
+        document.hidden ||
+        loadingCity ||
+        Date.now() < malagaNext)) ||
+    malagaBusy
+  )
+    return;
+  const epoch = cityEpoch;
+  malagaBusy = true;
+  malagaNext = Date.now() + 30000;
+  try {
+    const snapshot = await fetchMalaga(apiBase);
+    if (epoch === cityEpoch) malagaGPS = snapshot;
+  } catch {
+    if (epoch === cityEpoch) malagaGPS = null;
+  } finally {
+    malagaBusy = false;
+  }
+}
 function drawMovement() {
   if (!movement || !map?.ready || loadingCity) return;
   const measured =
     dataMode === "live" && syncClock && gpsVisible
-      ? renfeMatches(renfeGPS, trips, s, simTime).map(({ vehicle, trip }) =>
-          renfeFeature(vehicle, trip),
-        )
+      ? [
+          ...renfeMatches(renfeGPS, trips, s, simTime).map(
+            ({ vehicle, trip }) => renfeFeature(vehicle, trip),
+          ),
+          ...(city.id === "malaga"
+            ? malagaFeatures(malagaGPS, n, s, movement)
+            : []),
+        ]
       : [];
   const estimated =
     dataMode === "schedule" ? movement.features(trips, simTime) : [];
@@ -2398,6 +2513,7 @@ function tick(now) {
       drawGPS();
       refreshGPS();
       refreshRenfe();
+      refreshMalaga();
       updateClock();
       renderStationBoard();
       refreshStationBoard();
@@ -2585,6 +2701,8 @@ async function loadCity(id) {
     trips = [];
     vehicleFollow.stop();
     renfeGPS = null;
+    malagaGPS = null;
+    malagaNext = 0;
     renfeNext = 0;
     gps = null;
     gpsNext = 0;
@@ -2693,6 +2811,7 @@ async function loadCity(id) {
     if (city) $("#city-selector").value = city.id;
     refreshGPS();
     refreshRenfe();
+    refreshMalaga();
   }
 }
 async function init() {
@@ -2748,6 +2867,10 @@ async function openDetailURL(target) {
       toast(
         "El servicio de este enlace ya no está disponible en los horarios publicados.",
       );
+  } else if (target.kind === "observed") {
+    await refreshMalaga(true);
+    drawMovement();
+    showPublishedVehicle(target.ref);
   } else if (target.kind === "gps") {
     try {
       gps = await fetchFGC();

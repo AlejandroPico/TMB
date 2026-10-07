@@ -63,7 +63,15 @@ const server = http.createServer(async (req, res) => {
     if (url.pathname === "/api/status") {
       json(200, {
         configured: configured(),
-        services: ["transit", "ibus", "planner", "static", "renfe", "amb"],
+        services: [
+          "transit",
+          "ibus",
+          "planner",
+          "static",
+          "renfe",
+          "amb",
+          "malaga",
+        ],
         time: new Date().toISOString(),
       });
       return;
@@ -81,17 +89,32 @@ const server = http.createServer(async (req, res) => {
         json(429, { error: "Demasiadas consultas. Inténtalo en un minuto." });
         return;
       }
-      if (url.pathname === "/api/amb/arrivals") {
+      if (
+        ["/api/amb/arrivals", "/api/malaga/positions"].includes(url.pathname)
+      ) {
         const key = url.pathname,
           saved = cache.get(key);
-        if (saved && now - saved.time < 10000) {
+        if (
+          saved &&
+          now - saved.time < (key.includes("malaga") ? 30000 : 10000)
+        ) {
           json(200, saved.data);
           return;
         }
         if (!inflight.has(key))
           inflight.set(
             key,
-            fetchAMB().then((data) => {
+            (key.includes("malaga")
+              ? (async () => {
+                  const response = await fetch(
+                    "https://datosabiertos.malaga.eu/recursos/transporte/EMT/EMTlineasUbicaciones/lineasyubicaciones.geojson",
+                    { signal: AbortSignal.timeout(10000) },
+                  );
+                  if (!response.ok) throw new Error("EMT Málaga no disponible");
+                  return response.json();
+                })()
+              : fetchAMB()
+            ).then((data) => {
               cache.set(key, { time: Date.now(), data });
               return data;
             }),

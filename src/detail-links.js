@@ -1,6 +1,6 @@
 import { clock } from "./transit.js";
 
-const kinds = new Set(["stop", "route", "vehicle", "gps"]);
+const kinds = new Set(["stop", "route", "vehicle", "gps", "observed"]);
 
 export function detailURL(base, { city, kind, ref, date, time, start }) {
   const url = new URL(base);
