@@ -270,6 +270,9 @@ try {
   favorites = JSON.parse(localStorage.getItem("latido-favorites") || "[]");
 } catch {}
 let serverConfigured = false;
+let serverReady = false,
+  serverChecking = false,
+  serverNext = 0;
 let apiBase = "";
 try {
   apiBase =
@@ -1846,6 +1849,8 @@ function showData() {
   $("#connection-form").onsubmit = async (e) => {
     e.preventDefault();
     apiBase = $("#api-url").value.trim().replace(/\/$/, "");
+    serverReady = false;
+    serverNext = 0;
     try {
       localStorage.setItem("latido-api", apiBase);
     } catch {}
@@ -1855,6 +1860,8 @@ function showData() {
         signal: AbortSignal.timeout(7000),
       });
       const data = await r.json();
+      if (!r.ok) throw new Error("Servidor no disponible");
+      serverReady = true;
       serverConfigured = !!data.configured;
       renfeAvailable = data.services?.includes("renfe") || false;
       malagaAvailable = data.services?.includes("malaga") || false;
@@ -1877,17 +1884,40 @@ function showData() {
 const formatDate = (v) => `${v.slice(6, 8)}/${v.slice(4, 6)}/${v.slice(0, 4)}`;
 async function checkServer() {
   if (!apiBase && location.hostname.endsWith("github.io")) return;
+  if (
+    serverReady ||
+    serverChecking ||
+    Date.now() < serverNext ||
+    document.hidden
+  )
+    return;
+  const source = apiBase;
+  serverChecking = true;
+  serverNext = Date.now() + 15000;
   try {
-    const r = await fetch(apiBase + "/api/status", {
+    const r = await fetch(source + "/api/status", {
       signal: AbortSignal.timeout(5000),
     });
-    if (r.ok) {
+    if (r.ok && source === apiBase) {
       const status = await r.json();
+      serverReady = true;
       serverConfigured = !!status.configured;
       renfeAvailable = status.services?.includes("renfe") || false;
       malagaAvailable = status.services?.includes("malaga") || false;
+      if (stationBoard) stationBoard.refresh = 0;
+      renfeNext = malagaNext = 0;
+      if ($("#connection-state"))
+        $("#connection-state").textContent = serverConfigured
+          ? "Conectado. Credenciales configuradas."
+          : "Servidor conectado. TMB necesita sus claves.";
     }
-  } catch {}
+  } catch {
+    if (source === apiBase && $("#connection-state"))
+      $("#connection-state").textContent =
+        "Esperando al servidor. La conexión se reintentará automáticamente mientras la web esté abierta.";
+  } finally {
+    serverChecking = false;
+  }
 }
 function showStationAccess(i) {
   const st = n.stops[i];
@@ -2519,6 +2549,7 @@ function tick(now) {
       refreshIcons();
     }
     if (now - lastDraw > 800) {
+      if (dataMode === "live") checkServer();
       drawMovement();
       drawGPS();
       refreshGPS();
