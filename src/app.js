@@ -264,6 +264,7 @@ let apiBase = "";
 try {
   apiBase =
     localStorage.getItem("latido-api") || import.meta.env.VITE_API_BASE || "";
+  apiBase = apiBase.replace(/\/+$/, "");
 } catch {}
 const worker = new Worker(new URL("./transit-worker.js", import.meta.url), {
   type: "module",
@@ -2714,15 +2715,16 @@ async function init() {
     } catch {}
     const explicitCity = new URL(location.href).searchParams.get("city");
     const requested = explicitCity || saved || DEFAULT_CITY;
+    const serverCheck = checkServer();
     await loadCity(
       cities.some((c) => c.id === requested) ? requested : DEFAULT_CITY,
     );
+    await serverCheck;
     if (requestedDetail) await openDetailURL(requestedDetail);
     if (!explicitCity) {
       themeLocationAttempted = true;
       locate(true);
     } else if (themeId === "auto") requestThemeLocation();
-    checkServer();
     requestAnimationFrame(tick);
   } catch (e) {
     $("#loading").innerHTML =
