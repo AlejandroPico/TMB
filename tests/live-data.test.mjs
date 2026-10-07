@@ -13,17 +13,45 @@ import { Movement } from "../src/geometry.js";
 
 const now = Date.now();
 const estimated = { properties: { id: "model" } };
-const real = { properties: { id: "gps", actual: true, measured: now } };
+const real = {
+  geometry: { type: "Point", coordinates: [2.17, 41.39] },
+  properties: { id: "gps", actual: true, measured: now },
+};
 test("live mode never falls back to timetable vehicles, including stale feeds", () => {
-  assert.deepEqual(displayVehicles("live", [estimated], []), []);
-  assert.deepEqual(displayVehicles("live", [estimated], [real], now), [real]);
+  assert.deepEqual(displayVehicles("live", [estimated], now), []);
+  assert.deepEqual(displayVehicles("live", [estimated, real], now), [real]);
+  assert.deepEqual(displayVehicles("live", [real], now + 90001), []);
+  assert.deepEqual(displayVehicles("schedule", [estimated, real], now), []);
+});
+test("a vehicle number or prediction cannot stand in for measured coordinates", () => {
+  for (const geometry of [
+    undefined,
+    {
+      type: "LineString",
+      coordinates: [
+        [2, 41],
+        [2.1, 41.1],
+      ],
+    },
+    { type: "Point", coordinates: [NaN, 41] },
+    { type: "Point", coordinates: [2, Infinity] },
+    { type: "Point", coordinates: [200, 41] },
+    { type: "Point", coordinates: [2, 100] },
+  ]) {
+    assert.deepEqual(displayVehicles("live", [{ ...real, geometry }], now), []);
+  }
   assert.deepEqual(
-    displayVehicles("live", [estimated], [real], now + 90001),
+    displayVehicles(
+      "live",
+      [
+        {
+          ...real,
+          properties: { ...real.properties, measured: now + 30001 },
+        },
+      ],
+      now,
+    ),
     [],
-  );
-  assert.deepEqual(
-    displayVehicles("schedule", [estimated, real], [real], now),
-    [estimated],
   );
 });
 test("iBus preserves true arrival predictions and accepts a fresh empty response", () => {

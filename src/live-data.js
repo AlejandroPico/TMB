@@ -1,11 +1,18 @@
-// Timetable interpolation is never a fallback for a missing live feed.
-export function displayVehicles(mode, estimated, published, now = Date.now()) {
-  if (mode === "schedule") return estimated.filter((f) => !f.properties.actual);
+// Timetables never create map or diagram vehicles, even during a timetable query.
+export function displayVehicles(mode, published, now = Date.now()) {
+  if (mode !== "live") return [];
   return published.filter((f) => {
     const p = f.properties;
     const age = now - p.measured;
+    const coordinates = f.geometry?.coordinates;
     return (
       p.actual &&
+      f.geometry?.type === "Point" &&
+      Array.isArray(coordinates) &&
+      Number.isFinite(coordinates[0]) &&
+      Number.isFinite(coordinates[1]) &&
+      Math.abs(coordinates[0]) <= 180 &&
+      Math.abs(coordinates[1]) <= 90 &&
       Number.isFinite(age) &&
       age >= -30000 &&
       age <= (p.maxAge || 90000)

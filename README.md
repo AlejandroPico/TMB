@@ -2,9 +2,9 @@
 
 Transporte público de España: mapa en 3D, horarios, viajes e historias con fuentes. **[Abrir la aplicación](https://alejandropico.github.io/TMB/)**.
 
-## Directo y simulación
+## Directo y consulta de horarios
 
-El modo predeterminado solo muestra **posiciones y previsiones publicadas**. La simulación GTFS se activa expresamente en «Reloj y horarios»; una caída del servicio nunca la activa. FGC Geotren conecta directamente cada cuatro segundos y ofrece paneles oficiales de salidas. AMB/Nitbus, Renfe, EMT Málaga e iBus necesitan el servidor incluido; iBus requiere además las claves TMB. [Fuentes verificadas, límites y activación paso a paso](docs/directo.md).
+El modo predeterminado solo muestra **posiciones y previsiones publicadas**. Los horarios GTFS se consultan sin crear vehículos animados, incluso al cambiar la fecha o abrir un enlace antiguo. FGC Geotren conecta directamente cada cuatro segundos y ofrece paneles oficiales de salidas. AMB/Nitbus, Renfe, EMT Málaga e iBus necesitan el servidor incluido; iBus requiere además las claves TMB. [Fuentes verificadas, límites y activación paso a paso](docs/directo.md).
 
 [Activar el servidor en Render](https://render.com/deploy?repo=https://github.com/AlejandroPico/TMB). El repositorio incluye Dockerfile y render.yaml.
 
@@ -36,7 +36,7 @@ Dieciséis vistas: siete ciudades, ocho áreas adicionales de consorcios andaluc
 
 ## Autobuses nocturnos
 
-«Explorar → Nocturnos» filtra el mapa y la vista lineal. Filtros separa los nocturnos por operador y línea. Se respetan calendarios, excepciones y la continuidad después de medianoche; no todas las líneas circulan todas las noches. [Fuentes, cobertura y revisión](docs/night-services-review.md). Las fuentes estáticas se renuevan diariamente; las posiciones por horario solo se muestran en la simulación explícita. Las previsiones AMB requieren la conexión al servidor.
+«Explorar → Nocturnos» filtra el mapa y la vista lineal. Filtros separa los nocturnos por operador y línea. Se respetan calendarios, excepciones y la continuidad después de medianoche; no todas las líneas circulan todas las noches. [Fuentes, cobertura y revisión](docs/night-services-review.md). Las fuentes estáticas se renuevan diariamente; los horarios nunca se convierten en posiciones de vehículos. Las previsiones AMB requieren la conexión al servidor.
 
 ## Funciones
 
@@ -63,7 +63,7 @@ En Barcelona, los **puntos azules** son coordenadas del [visor oficial Geotren F
 
 El mapa y la vista lineal utilizan las mismas posiciones publicadas. EMT Málaga añade números físicos de autobús y coordenadas del portal municipal, sin interpolar; el diagrama exige un trazado inequívoco. Los paneles oficiales de salidas FGC se consultan cada ocho segundos en las estaciones disponibles. Renfe necesita el servidor para acceder a coordenadas de Cercanías y larga distancia. iBus y AMB utilizan previsiones oficiales de llegada, no una interpolación GTFS; AMB no publica posiciones GPS en ese servicio. Se descartan respuestas caducadas y viajes cancelados. Sin conexión o sin cobertura en directo no aparecen vehículos inventados ni cuenta atrás por horario.
 
-La **simulación por horario** permanece como opción explícita. Proyecta las paradas y calcula movimientos y pausas sobre trazados válidos. El mapa muestra un rótulo de simulación. No se dibujan líneas rectas de sustitución para recorridos sin geometría. **Actualizar un contador cada segundo no aumenta la precisión de la previsión del operador**. El catálogo público TMB consultado no incluye una API de tiempos de metro; sería necesario confirmar acceso específico con TMB. [Detalle y activación del servidor](docs/directo.md).
+La **consulta de horarios** muestra salidas previstas, con una etiqueta diferenciada, sin mover vehículos en el mapa ni en el diagrama. Al abrir otra ciudad se vuelve al directo. Los enlaces antiguos de servicios del horario abren su línea cuando no existe una posición publicada; no rebobinan el mapa. **Actualizar un contador cada segundo no aumenta la precisión de la previsión del operador**. El catálogo público TMB consultado no incluye una API de tiempos de metro; sería necesario confirmar acceso específico con TMB. [Detalle y activación del servidor](docs/directo.md).
 
 EMT publica itinerarios completos en `stop_times` y ventanas de frecuencia asociadas a esos mismos viajes. Su adaptador conserva las horas individuales y evita expandir repetidamente ventanas, que multiplicarían artificialmente los vehículos. La política específica figura en `tools/providers.json` y los metadatos.
 
@@ -80,7 +80,7 @@ La planificación local no incorpora incidencias ni ascensores fuera de servicio
 
 **Los corredores reconstruidos de Renfe son inferidos sobre infraestructura real; no son confirmaciones del itinerario exacto de un servicio.** El GTFS no aporta esa información. No se enlazan componentes ferroviarios desconectados. En esta revisión se recuperaron 839 de 984 shapes ausentes de larga/media distancia y cuatro de Cercanías; 145 siguen sin recorrido verificable, incluyendo servicios internacionales y casos de infraestructura o estaciones que no encajan. Se omiten sus líneas y vehículos. TUSSAM recupera 225 shapes y Metro de Sevilla cuatro.
 
-La simulación opcional proyecta paradas sobre segmentos del trazado, conserva el avance y recorre sus vértices. Los vehículos no saltan de una parada a otra. Se omite una animación si sus paradas no encajan con el trazado (150 m en bus, 550 m sobre raíles). Se dibujan también variantes de trazado utilizadas por los viajes. En redes de bus con un único color oficial, una paleta estable distingue líneas; el color original se conserva en `sourceColor`.
+La geometría proyecta las paradas sobre segmentos del trazado para presentar recorridos y planificar viajes. El mapa conserva exclusivamente coordenadas publicadas; la proyección del GPS en el diagrama requiere un trazado compatible (150 m en bus, 550 m sobre raíles). Se dibujan también variantes de trazado utilizadas por los viajes. En redes de bus con un único color oficial, una paleta estable distingue líneas; el color original se conserva en `sourceColor`.
 
 `python tools/audit_geometry.py` revisa todas las referencias y geometrías y publica [el informe](public/data/geometry-audit.json). Los tests verifican curvas, proyección, itinerarios compartidos, rechazo de geometrías ausentes o desconectadas y el corredor AVE Barcelona–Madrid, de unos 671 km. Una auditoría estructural no confirma cierres de calles, cambios de vía o incidencias en tiempo real.
 
@@ -147,7 +147,7 @@ Cercanías se agrupa por núcleo y línea comercial, conservando las variantes y
 
 Se priorizan trazados completos del operador. La reconstrucción del IGN descarta bucles y desvíos incoherentes; la animación suprime intervalos con velocidades incompatibles con el horario. Se conservan las paradas y tiempos aunque una variante no pueda dibujarse. El informe `public/data/renfe-audit.json` revisa todos los patrones y documenta las incoherencias detectadas. [Método, fuentes y límites](docs/renfe-review.md).
 
-El servidor consulta posiciones oficiales de Cercanías y del visor de larga distancia cada 20 segundos, sin claves Renfe ni TMB. `pnpm build` y `pnpm start` permiten probarlo localmente en el puerto 8787; para GitHub Pages hay que alojarlo y conectarlo en Fuentes. La API oficial bloquea consultas directas desde Pages. Se unen únicamente IDs GTFS exactos y se ocultan mediciones de más de 90 segundos. Las llegadas siguen siendo horarios, no tiempos corregidos por retrasos. AVE y otros servicios de larga distancia se vinculan exclusivamente por su número comercial GTFS publicado (`trip_short_name`), terminales y una única instancia de calendario. Las coincidencias ausentes o ambiguas se omiten; el resto de movimientos solo aparece en la simulación por horario explícita.
+El servidor consulta posiciones oficiales de Cercanías y del visor de larga distancia cada 20 segundos, sin claves Renfe ni TMB. `pnpm build` y `pnpm start` permiten probarlo localmente en el puerto 8787; para GitHub Pages hay que alojarlo y conectarlo en Fuentes. La API oficial bloquea consultas directas desde Pages. Se unen únicamente IDs GTFS exactos y se ocultan mediciones de más de 90 segundos. Las llegadas siguen siendo horarios, no tiempos corregidos por retrasos. AVE y otros servicios de larga distancia se vinculan exclusivamente por su número comercial GTFS publicado (`trip_short_name`), terminales y una única instancia de calendario. Las coincidencias ausentes o ambiguas se omiten; los servicios sin posición publicada no se dibujan como vehículos.
 
 ## Paradas y exploración · 1.6
 
