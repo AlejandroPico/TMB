@@ -2569,7 +2569,7 @@ function showGPS(id) {
   });
   detailToken++;
   showDetail(
-    `<div class="eyebrow gps-text">POSICIÓN PUBLICADA · FGC</div><div class="detail-badges">${operatorSymbol({ feed: "fgc" })}${r ? routeLink(r) : ""}</div><h2>${esc(fgcVehicleName(v))}</h2><p class="story-subtitle">${v.trainType ? "Serie " + esc(v.trainType) + " · " : ""}Destino ${esc(fgcStations[v.destination] || v.destination)}</p><div class="gps-card"><strong id="fgc-occupancy">${v.occupancy === null ? "Sin dato" : v.occupancy + "%"}</strong><span>Última ocupación publicada · media de coches con dato</span></div><p class="story-body">${v.onTime === true ? "El operador indica circulación en hora." : v.onTime === false ? "El operador indica circulación fuera de hora." : "Puntualidad sin especificar."}${v.station ? " Estación: " + esc(fgcStations[v.station] || v.station) + "." : ""}</p><small id="fgc-publication" class="detail-note">Consulta Geotren: ${new Date(v.timestamp).toLocaleTimeString("es-ES", { timeZone: "Europe/Madrid" })}. </small><details class="raw-vehicle-data"><summary>Identificadores y datos del operador</summary><dl>${Object.entries(
+    `<div class="eyebrow gps-text">POSICIÓN PUBLICADA · FGC</div><div class="detail-badges">${operatorSymbol({ feed: "fgc" })}${r ? routeLink(r) : ""}</div><h2>${esc(fgcVehicleName(v))}</h2><p class="story-subtitle">${v.trainType ? "Serie " + esc(v.trainType) + " · " : ""}Destino ${esc(fgcStations[v.destination] || v.destination)}</p><div class="gps-card"><strong id="fgc-occupancy" class="${v.occupancy == null ? "missing" : ""}">${v.occupancy === null ? "Sin dato" : v.occupancy + "%"}</strong><span>Última ocupación publicada · media de coches con dato</span></div><p class="story-body">${v.onTime === true ? "El operador indica circulación en hora." : v.onTime === false ? "El operador indica circulación fuera de hora." : "Puntualidad sin especificar."}${v.station ? " Estación: " + esc(fgcStations[v.station] || v.station) + "." : ""}</p><small id="fgc-publication" class="detail-note">Consulta Geotren: ${new Date(v.timestamp).toLocaleTimeString("es-ES", { timeZone: "Europe/Madrid" })}. </small><details class="raw-vehicle-data"><summary>Identificadores y datos del operador</summary><dl>${Object.entries(
       v.details || {},
     )
       .map(
@@ -2622,6 +2622,8 @@ function drawGPS() {
             ? "Sin dato"
             : v.occupancy + "%"
           : "Sin dato actual";
+    if (occupancy)
+      occupancy.classList.toggle("missing", !visible || v?.occupancy == null);
     if (timestamp)
       timestamp.textContent =
         visible && v

@@ -306,6 +306,16 @@ select,
   color: var(--ui-text);
   border-color: var(--ui-border);
 }
+.gps-card strong {
+  color: var(--ui-text);
+}
+.gps-card strong.missing {
+  font-size: 18px;
+}
+.gps-card span,
+.gps-text {
+  color: var(--ui-muted);
+}
 .route-row strong,
 .route-row b,
 .route-detail-title h2,
