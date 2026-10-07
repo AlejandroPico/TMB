@@ -93,6 +93,7 @@ import {
 let malagaGPS = null,
   malagaAvailable = false,
   malagaBusy = false,
+  malagaRequest = null,
   malagaNext = 0;
 import {
   fetchRenfe,
@@ -1554,10 +1555,15 @@ function showTour(i) {
   );
   bindDetailStops();
 }
+function publishedVehicle(id) {
+  return dataMode === "live" && syncClock && gpsVisible && city.id === "malaga"
+    ? malagaFeatures(malagaGPS, n, s, movement).find(
+        (x) => x.properties.id === id,
+      )
+    : null;
+}
 function showPublishedVehicle(id) {
-  const f = rawMovementFeatures.find(
-    (x) => x.properties.id === id && x.properties.actual,
-  );
+  const f = publishedVehicle(id);
   if (!f) {
     toast("No hay una posición reciente publicada para este vehículo.");
     return;
@@ -1582,9 +1588,7 @@ function showPublishedVehicle(id) {
   updatePublishedVehicle();
 }
 function updatePublishedVehicle() {
-  const f = rawMovementFeatures.find(
-    (x) => x.properties.id === vehicleDetail && x.properties.actual,
-  );
+  const f = publishedVehicle(vehicleDetail);
   const body = $("#vehicle-live-detail");
   if (!body) return;
   const key = f
@@ -2296,21 +2300,27 @@ async function refreshMalaga(force = false) {
         !vehiclesVisible ||
         document.hidden ||
         loadingCity ||
-        Date.now() < malagaNext)) ||
-    malagaBusy
+        Date.now() < malagaNext))
   )
     return;
+  if (malagaBusy) {
+    if (force) await malagaRequest;
+    return;
+  }
   const epoch = cityEpoch;
   malagaBusy = true;
   malagaNext = Date.now() + 30000;
-  try {
-    const snapshot = await fetchMalaga(apiBase);
-    if (epoch === cityEpoch) malagaGPS = snapshot;
-  } catch {
-    if (epoch === cityEpoch) malagaGPS = null;
-  } finally {
-    malagaBusy = false;
-  }
+  malagaRequest = fetchMalaga(apiBase)
+    .then((snapshot) => {
+      if (epoch === cityEpoch) malagaGPS = snapshot;
+    })
+    .catch(() => {
+      if (epoch === cityEpoch) malagaGPS = null;
+    })
+    .finally(() => {
+      malagaBusy = false;
+    });
+  await malagaRequest;
 }
 function drawMovement() {
   if (!movement || !map?.ready || loadingCity) return;
