@@ -8,6 +8,9 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const appName = JSON.parse(
   await readFile(path.join(root, "app.config.json"), "utf8"),
 ).name;
+const appVersion = JSON.parse(
+  await readFile(path.join(root, "package.json"), "utf8"),
+).version;
 if (existsSync(path.join(root, ".env")))
   process.loadEnvFile(path.join(root, ".env"));
 const transitPaths = JSON.parse(
@@ -19,10 +22,22 @@ const expressions = transitPaths.map(
 const cache = new Map(),
   inflight = new Map(),
   limits = new Map();
-const origins = (
-  process.env.ALLOWED_ORIGINS ||
-  "http://127.0.0.1:5173,http://localhost:5173,http://127.0.0.1:8787,http://localhost:8787,https://alejandropico.github.io"
-).split(",");
+const origins = new Set(
+  (
+    process.env.ALLOWED_ORIGINS ||
+    "http://127.0.0.1:5173,http://localhost:5173,http://127.0.0.1:8787,http://localhost:8787,https://alejandropico.github.io"
+  )
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean),
+);
+// Module scripts send Origin even when served by this same Render service.
+// Trust Render's configured URL, never the request Host or forwarded headers.
+if (process.env.RENDER_EXTERNAL_URL) {
+  const external = new URL(process.env.RENDER_EXTERNAL_URL);
+  if (["https:", "http:"].includes(external.protocol))
+    origins.add(external.origin);
+}
 const configured = () => !!(process.env.TMB_APP_ID && process.env.TMB_APP_KEY);
 const mime = {
   ".html": "text/html; charset=utf-8",
@@ -44,7 +59,7 @@ const server = http.createServer(async (req, res) => {
   };
   try {
     if (req.headers.origin) {
-      if (!origins.includes(req.headers.origin)) {
+      if (!origins.has(req.headers.origin)) {
         json(403, { error: "Origen no permitido" });
         return;
       }
@@ -62,6 +77,8 @@ const server = http.createServer(async (req, res) => {
     }
     if (url.pathname === "/api/status") {
       json(200, {
+        version: appVersion,
+        revision: process.env.RENDER_GIT_COMMIT || null,
         configured: configured(),
         services: [
           "transit",
@@ -298,7 +315,7 @@ server.listen(
         " · http://" +
         (process.env.HOST || "127.0.0.1") +
         ":" +
-        (process.env.PORT || 8787) +
+        server.address().port +
         " · APIs " +
         (configured() ? "configuradas" : "pendientes de credenciales"),
     ),

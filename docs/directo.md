@@ -1,4 +1,4 @@
-# Directo y consulta de horarios en EnRuta 1.8.1
+# Directo y consulta de horarios en EnRuta 1.8.2
 
 El modo predeterminado es **En directo · datos publicados**. Ningún fallo de red, ausencia de GPS o previsión caducada activa la interpolación GTFS. El mapa y el diagrama lineal comparten esta selección. Las posiciones publicadas permanecen en su última coordenada recibida; no se extrapolan por el horario ni se animan entre actualizaciones. La consulta de horarios no crea vehículos en el mapa ni en el diagrama. Sus controles solo se habilitan al elegir «Horarios publicados · sin vehículos». Los enlaces antiguos del horario no activan un modo simulado: abren el GPS actual si existe o la ficha de la línea. Cambiar de ciudad vuelve al directo.
 
@@ -57,3 +57,5 @@ El siguiente paso de acceso está preparado en [Solicitud de posiciones GPS](sol
 El despliegue de GitHub Pages y el de Render son independientes. Publicar `main` no demuestra que ambos estén actualizados. Si Render sigue mostrando «Simulación por horario», está sirviendo una versión anterior a esta corrección.
 
 En el servicio **enruta-directo**, seleccionar **Manual Deploy → Deploy latest commit** y esperar a **Live**. Este despliegue reutiliza las variables privadas ya configuradas. Después recargar la aplicación: en Tiempo debe aparecer «Horarios publicados · sin vehículos» y el directo no debe crear puntos a partir de horarios. No elegir «Deploy a specific commit» con una revisión antigua.
+
+Desde 1.8.2, el servidor añade su propia URL de Render a los orígenes permitidos usando `RENDER_EXTERNAL_URL`, [variable proporcionada automáticamente por Render](https://render.com/docs/environment-variables). Antes solo estaba permitido GitHub Pages y las peticiones de los módulos desde el propio Render se rechazaban con 403, dejando la aplicación en blanco. Los dominios ajenos siguen bloqueados. `/api/status` publica ahora la versión y la revisión desplegadas, sin exponer credenciales, para comprobar qué código está ejecutando el servidor.
